@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?compositeMetadataRepository version='1.0.0'?>
+<repository name='&quot;Eclipse Project Test Site&quot;'
+    type='org.eclipse.equinox.internal.p2.metadata.repository.CompositeMetadataRepository' version='1.0.0'>
+  <properties size='1'>
+    <property name='p2.timestamp' value='1243822502499'/>
+  </properties>
+ <children size='1'>
+    <child location='commonapi'/>
+    <child location='http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/'/>
+    <child location='https://franca.eclipselabs.org.codespot.com/git/update_site/releases'/>
+  </children>
+</repository>
+

@@ -1,0 +1,17 @@
+import "platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-SOMEIP_deployment_spec.fdepl"
+import "math_example.fidl"
+
+define org.genivi.commonapi.someip.deployment for interface commonapi.someip.math {
+	SomeIpServiceID	= 4661
+	
+	method calc {
+		SomeIpMethodID = 1029
+		SomeIpReliable = true
+	}
+
+	broadcast results {
+		SomeIpEventID = 41913
+		SomeIpReliable = true
+		SomeIpEventGroups = { 17749 }
+	}
+}

@@ -1,0 +1,48 @@
+package commonapi.someip
+
+interface attr {
+    version {
+        major 1
+        minor 42
+    }
+
+    attribute Int32 x
+
+    attribute myMap myMap
+
+    attribute myArray myArray
+
+    attribute myEnum myEnum
+
+    attribute myStruct myStruct
+
+    attribute myUnion myUnion
+
+    attribute myTypedef myTypedef
+
+    map myMap {
+        UInt16 to Int8
+    }
+
+    array myArray of UInt16
+
+    enumeration myEnum {
+        ONE = 1
+        TWO = 2
+        THREE = 3
+    }
+
+    struct myStruct {
+        myMap myStructField1
+        myArray myStructField2
+        myEnum myStructField3
+    }
+
+    union myUnion {
+        myMap myUnionField1
+        myArray myUnionField2
+        myEnum myUnionField3
+    }
+
+    typedef myTypedef is myArray
+}

@@ -1,0 +1,5 @@
+build
+src-gen
+.settings
+.cproject
+.project

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+             <extension
+                point="org.franca.core.dsl.francaValidator">
+                  <validator
+                        class="org.genivi.commonapi.someip.validator.ValidatorSomeIP"
+                        mode="FAST"
+                        name="ValidatorSomeIP">
+                  </validator>
+               </extension>
+               <extension
+                   point="org.eclipse.ui.preferencePages">
+                <page
+                      class="org.genivi.commonapi.someip.validator.preference.ValidatorSomeIPPreferencesPage"
+                      id="org.genivi.commonapi.someip.validator.preference"
+                      name="Validator Some/IP">
+                </page>
+             </extension>
+</plugin>

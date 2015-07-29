@@ -1,0 +1,67 @@
+GENIVI_org.genivi.commonapi.someip.verification
+-----------------------------------------------
+:doctitle: GENIVI_org.genivi.commonapi.someip.verification
+
+Copyright
++++++++++
+Copyright (C) 2013, GENIVI Alliance, Inc.
+Copyright (C) 2015, Bayerische Motoren Werke Aktiengesellschaft (BMW AG)
+
+This file is part of GENIVI Project IPC Common API.
+ 
+Contributions are licensed to the GENIVI Alliance under one or more
+Contribution License Agreements or MPL 2.0 .
+ 
+(C) Copyright
+This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a  copy of the MPL was not distributed with
+this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ 
+For further information see https://collab.genivi.org/wiki/display/genivi/SysInfraEGCommonIDLCommonAPIGuide
+
+License
++++++++
+This project is licensed under MPL 2.0
+
+Contribution is done under GENIVI CLA or MPL2.0. 
+
+Version
++++++++
+The current version can be taken from the git.
+
+Description
+~~~~~~~~~~~
+
+This project is used to create the gluecode for the SomeIP binding used for running the verification tests from
+org.genivi.commonapi.core.verification within CommonAPI-Tools package.
+
+Build Instructions
+~~~~~~~~~~~~~~~~~~
+
+To build the gluecode the following projects are needed:
+
+* CommonAPI
+* CommonAPI-Tools
+* CommonAPI-SomeIP
+* CommonAPI-SomeIP-Tools
+* vSomeIP
+
+Example call for cmake:
+
+----
+rm -rf src-gen
+rm -rf build
+mkdir build
+cd build/
+
+cmake \
+-DCOMMONAPI_TOOL_GENERATOR=$(readlink -f ../../../ascgit017.CommonAPI-Tools/org.genivi.commonapi.core.cli.product/target/products/org.genivi.commonapi.core.cli.product/linux/gtk/x86_64/commonapi-generator-linux-x86_64) \
+-DCOMMONAPI_SOMEIP_TOOL_GENERATOR=$(readlink -f ../../../ascgit017.CommonAPI-SomeIP-Tools/org.genivi.commonapi.someip.cli.product/target/products/org.genivi.commonapi.someip.cli.product/linux/gtk/x86_64/commonapi-someip-generator-linux-x86_64) \
+-DCommonAPI_DIR=$(readlink -f ../../../ascgit017.CommonAPI/build) \
+-DCommonAPI-SomeIP_DIR=$(readlink -f ../../../ascgit017.CommonAPI-SomeIP/build) \
+-Dvsomeip_DIR=$(readlink -f ../../../ascgit017.vSomeIP/build) \
+-DCOMMONAPI_TEST_FIDL_PATH=$(readlink -f ../../../ascgit017.CommonAPI-Tools/org.genivi.commonapi.core.verification/fidl) \
+..
+
+make
+----

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension point="org.eclipse.ui.handlers">
+      <handler
+            class="org.genivi.commonapi.someip.ui.SomeIPCommandExecutableExtensionFactory:org.genivi.commonapi.someip.ui.handler.SomeIPGenerationCommand"
+            commandId="org.genivi.commonapi.someip.ui.handler.SomeIPGenerationCommand">
+      </handler>
+   </extension>
+   <extension point="org.eclipse.ui.commands">
+      <command
+            id="org.genivi.commonapi.someip.ui.handler.SomeIPGenerationCommand"
+            name="Generate Some/IP C++ Code">
+      </command>
+   </extension>
+   <extension point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.genivi.commonapi.core.ui.popup.menu">
+         <command
+               commandId="org.genivi.commonapi.someip.ui.handler.SomeIPGenerationCommand"
+               label="Generate Some/IP C++ Code"
+               style="push">
+            <visibleWhen checkEnabled="false">
+               <reference definitionId="org.genivi.commonapi.core.ui.FrancaIDL.Resources.fdepl.selected"></reference>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="org.genivi.commonapi.someip.ui.preferences.CommonAPISomeIPPreferencePage"
+            id="org.genivi.commonapi.someip.ui.preferences.CommonAPISomeIPPreferencePage"
+            name="CommonAPI-Some/IP">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.genivi.commonapi.someip.ui.preferences.PreferenceInitializerSomeIP">
+      </initializer>
+   </extension>
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            class="org.genivi.commonapi.someip.ui.preferences.CommonAPISomeIPPreferencePage"
+            id="org.genivi.commonapi.someip.ui.preferences.property.CommonAPISomeIPPreferencePage"
+            name="CommonAPI-Some/IP"
+            objectClass="org.eclipse.core.resources.IProject">
+      </page>
+      <page
+            class="org.genivi.commonapi.someip.ui.preferences.CommonAPISomeIPPreferencePage"
+            id="org.genivi.commonapi.someip.ui.preferences.property.CommonAPISomeIPPreferencePage"
+            name="CommonAPI-Some/IP"
+            objectClass="org.eclipse.core.resources.IFolder">
+      </page>
+      <page
+            class="org.genivi.commonapi.someip.ui.preferences.CommonAPISomeIPPreferencePage"
+            id="org.genivi.commonapi.someip.ui.preferences.property.CommonAPISomeIPPreferencePage"
+            name="CommonAPI-Some/IP"
+            objectClass="org.eclipse.core.resources.IFile">
+      </page>
+   </extension>
+   <extension
+            point="org.eclipse.ui.bindings">
+          <key
+                 commandId="org.genivi.commonapi.someip.ui.handler.SomeIPGenerationCommand"
+                 contextId="org.eclipse.ui.contexts.window"
+                 schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+                 sequence="Ctrl+Alt+S">
+          </key>
+   </extension>   
+</plugin>

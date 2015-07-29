@@ -1,0 +1,13 @@
+# - Config file for the SomeIPGlue library
+# It defines the following variables
+#  SOMEIPGLUE_INCLUDE_DIRS - include directories for SomeIPGlue
+
+# Compute paths
+get_filename_component(SOMEIPGLUE_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+set(SOMEIPGLUE_INCLUDE_DIRS "@CONF_INCLUDE_DIRS@")
+
+# Our library dependencies (contains definitions for IMPORTED targets)
+include("${SOMEIPGLUE_CMAKE_DIR}/SomeIPGlueTargets.cmake")
+
+set(SOMEIPGLUE_VERSION @PACKAGE_VERSION@)
+set(SOMEIPGLUE_VERSION_STRING "@PACKAGE_VERSION@")

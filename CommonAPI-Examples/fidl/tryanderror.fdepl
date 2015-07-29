@@ -1,0 +1,26 @@
+import "platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-SOMEIP_deployment_spec.fdepl"
+import "tryanderror.fidl"
+
+define org.genivi.commonapi.someip.deployment for interface commonapi.tryanderror.TryInterface {
+	SomeIpServiceID = 4660
+
+	attribute my_int {
+		SomeIpGetterID = 40000
+		SomeIpSetterID = 40001
+		SomeIpNotifierID = 4000
+		SomeIpEventGroups = { 4000 }
+	}
+
+	attribute my_string {
+		SomeIpGetterID = 40002
+		SomeIpSetterID = 40003
+		SomeIpNotifierID = 4001
+		SomeIpEventGroups = { 4001 }
+		SomeIpStringEncoding = utf16be
+		SomeIpStringLengthWidth = 2
+	}
+
+	method my_method {
+		SomeIpMethodID = 1511
+	}
+}

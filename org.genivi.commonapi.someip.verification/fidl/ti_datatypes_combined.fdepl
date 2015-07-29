@@ -1,0 +1,28 @@
+import "platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-SOMEIP_deployment_spec.fdepl"
+import "../../../ascgit017.CommonAPI-Tools/org.genivi.commonapi.core.verification/fidl/ti_datatypes_combined.fidl"
+
+define org.genivi.commonapi.someip.deployment for interface commonapi.datatypes.combined.TestInterface {
+	SomeIpServiceID = 4664
+
+	attribute aStructL3 {
+		SomeIpGetterID = 3000
+		SomeIpSetterID = 3001
+		SomeIpNotifierID = 33000
+		SomeIpEventGroups = { 33000 }
+	}
+
+	method fTest {
+		SomeIpMethodID = 33000
+	}
+}
+
+define org.genivi.commonapi.someip.deployment for provider Service {
+	instance commonapi.datatypes.combined.TestInterface {
+		InstanceId = "commonapi.datatypes.combined.TestInterface"
+
+		// 0x5682 -> 22146
+		SomeIpInstanceID = 22146
+		SomeIpUnicastAddress = "127.0.0.1"
+		SomeIpUnicastPort = 31000
+	}
+}

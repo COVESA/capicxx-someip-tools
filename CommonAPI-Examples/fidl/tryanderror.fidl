@@ -1,0 +1,28 @@
+package commonapi.tryanderror
+
+interface TryInterface {
+    version { major 1 minor 42 }
+
+    attribute Int32 my_int
+    attribute String my_string
+
+    method my_method {
+        in {
+            bla one
+            blub two
+        }
+        out {
+            Int16 result
+        }
+    }
+
+    struct bla {
+        Int32 a
+        Int32 b
+    }
+
+    union blub {
+        bla total
+        Int64 krank
+    }
+}

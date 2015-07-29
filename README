@@ -1,0 +1,84 @@
+IPC CommonAPI C++ SomeIP Tools
+------------------------------
+:doctitle: IPC CommonAPI C++ SomeIP Tools
+:version:
+
+Copyright
++++++++++
+Copyright (C) 2015, Bayerische Motoren Werke Aktiengesellschaft (BMW AG).
+
+License
++++++++
+This Source Code Form is subject to the terms of the Mozilla Public License, v.
+2.0. If a copy of the MPL was not distributed with this file, you can obtain one
+at http://mozilla.org/MPL/2.0/.
+
+Version
++++++++
+{version}
+
+Build Instructions
+~~~~~~~~~~~~~~~~~~
+An automated build process via Maven for the update-site and the command line
+interface is provided.
+
+To build, change into the `org.genivi.commonapi.someip.releng` directory and
+run:
+----
+mvn clean verify -Dtarget.id=org.genivi.commonapi.someip.target
+----
+
+If no configuration files are changed, Maven should report successful
+compilation of the following items:
+
+----
+org.genivi.commonapi.someip.releng
+org.genivi.commonapi.someip.target
+org.genivi.commonapi.someip
+org.genivi.commonapi.someip.ui
+org.genivi.commonapi.someip.feature
+org.genivi.commonapi.someip.cli
+org.genivi.commonapi.someip.cli.feature
+org.genivi.commonapi.someip.cli.product
+org.genivi.commonapi.someip.validator
+org.genivi.commonapi.someip.validator.feature
+org.genivi.commonapi.someip.updatesite
+----
+
+The command line interface will be built for different platforms, with a zip-file
+as generated output. The zip-file can be found in
+`org.genivi.commonapi.someip.cli.product/target/products`.
+
+The unzipped results are located in
+`org.genivi.commonapi.someip.cli.product/target/products/org.genivi.commonapi.someip.cli.product`
+
+An osgi based application will be contained in the zip-file.
+If the application is started without any parameters, the available commandline
+parameters are printed. For example:
+
+----
+
+./org.genivi.commonapi.someip.cli.product/target/products/org.genivi.commonapi.someip.cli.product/linux/gtk/x86_64/commonapi-someip-generator-linux-x86_64
+Command: Console Help
+usage: commonapi-someip-generator-linux-x86_64 -h
+ -h,--help   display help of available console commands
+
+Command: Version Information
+usage: commonapi-someip-generator-linux-x86_64 [-a | -p]  -v
+ -a,--all       print code generator and plug-in versions
+ -p,--plugins   print plug-in versions
+ -v,--version   print code generator version
+
+Command: CommonAPI Some/IP Code Generation
+usage: commonapi-someip-generator-linux-x86_64 -d <arg> [-dc <arg>] [-dp <arg>]
+       [-ds <arg>] [-l <arg>] [-ll <arg>] [-np] [-ns]
+ -d,--dest <arg>           The default output directory
+ -dc,--dest-common <arg>   The directory for the common code
+ -dp,--dest-proxy <arg>    The directory for proxy code
+ -ds,--dest-stub <arg>     The directory for stub code
+ -l,--license <arg>        The file path to the license text that will be added
+                           to each generated file
+ -ll,--loglevel <arg>      The log level (quiet or verbose)
+ -np,--no-proxy            Switch off generation of proxy code
+ -ns,--no-stub             Switch off generation of stub code
+----

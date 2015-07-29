@@ -1,0 +1,18 @@
+package commonapi.someip
+
+interface methodSample {
+    version {
+        major 1
+        minor 0
+    }
+    
+    method setName {
+        in {
+            String familyName
+        }
+        out
+        {
+            String[] firstNames
+        }
+    }
+}

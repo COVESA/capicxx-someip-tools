@@ -1,0 +1,18 @@
+package commonapi.someip
+
+interface Map {
+    version {
+        major 1
+        minor 0
+    }
+
+    attribute myMap myMap
+
+    attribute myArray myArray
+
+    map myMap {
+        UInt16 to Int8
+    }
+
+    array myArray of UInt16
+}

@@ -1,0 +1,30 @@
+import "platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-SOMEIP_deployment_spec.fdepl"
+import "map.fidl"
+
+define org.genivi.commonapi.someip.deployment for interface commonapi.someip.Map {
+	SomeIpServiceID = 4661
+	
+	attribute myMap {
+		SomeIpGetterID = 2769
+		SomeIpGetterReliable = true
+		
+		SomeIpSetterID = 2770
+		SomeIpSetterReliable = true
+		
+		SomeIpNotifierID = 41911
+		SomeIpNotifierReliable = true
+		SomeIpEventGroups = { 17493, 17494, 17495 }
+	}
+	
+	attribute myArray {
+		SomeIpGetterID = 2771
+		SomeIpGetterReliable = true
+		
+		SomeIpSetterID = 2772
+		SomeIpSetterReliable = true
+		
+		SomeIpNotifierID = 41912
+		SomeIpNotifierReliable = true
+		SomeIpEventGroups = { 17493, 17494, 17495 }
+	}
+}

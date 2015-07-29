@@ -1,0 +1,76 @@
+import "platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-SOMEIP_deployment_spec.fdepl"
+import "minimal_example.fidl"
+
+define org.genivi.commonapi.someip.deployment for interface commonapi.someip.heartbeat {
+	SomeIpServiceID = 4660
+	
+    method echo_Int8 {
+        SomeIpMethodID = 515
+        SomeIpReliable = true
+    }
+
+    method echo_Int16 {
+        SomeIpMethodID = 516
+        SomeIpReliable = true
+    }
+
+    method echo_Int32 {
+        SomeIpMethodID = 517
+        SomeIpReliable = true
+    }
+
+    method echo_Int64 {
+        SomeIpMethodID = 518
+        SomeIpReliable = true
+    }
+
+    method echo_UInt8 {
+        SomeIpMethodID = 771
+        SomeIpReliable = true
+    }
+
+    method echo_UInt16 {
+        SomeIpMethodID = 772
+        SomeIpReliable = true
+    }
+
+    method echo_UInt32 {
+        SomeIpMethodID = 773
+        SomeIpReliable = true
+    }
+
+    method echo_UInt64 {
+        SomeIpMethodID = 774
+        SomeIpReliable = true
+    }
+
+    method echo_Boolean {
+        SomeIpMethodID = 1027
+        SomeIpReliable = true
+    }
+
+    method echo_Double {
+        SomeIpMethodID = 1028
+        SomeIpReliable = true
+    }
+
+    method echo_Float {
+        SomeIpMethodID = 1029
+        SomeIpReliable = true
+    }
+
+    method in_Only {
+        SomeIpMethodID = 1101
+        SomeIpReliable = true
+    }
+
+    method out_Only {
+        SomeIpMethodID = 1102
+        SomeIpReliable = true
+    }
+
+    method call_Only {
+        SomeIpMethodID = 1103
+        SomeIpReliable = true
+    }
+}

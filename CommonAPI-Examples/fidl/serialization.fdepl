@@ -1,0 +1,36 @@
+import "platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-SOMEIP_deployment_spec.fdepl"
+import "serialization.fidl"
+
+define org.genivi.commonapi.someip.deployment for interface commonapi.serialization.Sample {
+	SomeIpServiceID = 4661
+
+    attribute name {
+        SomeIpGetterID       	= 32769
+        SomeIpSetterID       	= 32770
+        SomeIpNotifierID    	= 1911
+        SomeIpGetterReliable    = true
+        SomeIpSetterReliable    = true
+        SomeIpNotifierReliable  = true
+        SomeIpEventGroups 		= { 17493, 17494, 17495 }
+    }
+
+    attribute values {
+        SomeIpGetterID       	= 32771
+        SomeIpSetterID       	= 32772
+        SomeIpNotifierID    	= 1920
+        SomeIpGetterReliable    = true
+        SomeIpSetterReliable    = true
+        SomeIpNotifierReliable  = true
+        SomeIpEventGroups 		= { 17493 }    	
+    }
+
+    attribute key {
+        SomeIpGetterID       	= 32773
+        SomeIpSetterID       	= 32774
+        SomeIpNotifierID    	= 1921
+        SomeIpGetterReliable    = true
+        SomeIpSetterReliable    = true
+        SomeIpNotifierReliable  = true
+        SomeIpEventGroups 		= { 17493 }
+    }
+}

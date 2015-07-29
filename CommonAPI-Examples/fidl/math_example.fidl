@@ -1,0 +1,23 @@
+package commonapi.someip
+
+interface math {
+    version { major 1 minor 42 }
+
+    method calc {
+        in {
+            Int32 num1
+            Int32 num2
+        }
+        out {
+            Int32 sum
+            Int32 diff
+        }
+    }
+
+    broadcast results {
+        out {
+            Int32 sum
+            Int32 diff
+        }
+    }
+}

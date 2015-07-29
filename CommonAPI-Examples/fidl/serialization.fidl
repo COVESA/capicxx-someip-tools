@@ -1,0 +1,31 @@
+package commonapi.serialization
+
+interface Sample {
+    version { major 1 minor 42 }
+
+    attribute Name name
+    attribute Values values
+    attribute Key key
+
+    struct Name {
+        String given
+        String family
+    }
+
+    union Key {
+        UInt32 identifier
+        Name name
+    }
+
+    struct Value {
+        UInt32 identifier
+        Name name
+    }
+
+    array Values of Value
+
+    enumeration Result {
+        FOUND
+        NOT_FOUND
+    }
+}

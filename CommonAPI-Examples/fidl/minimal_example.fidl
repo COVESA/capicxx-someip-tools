@@ -1,0 +1,119 @@
+package commonapi.someip
+
+interface heartbeat {
+    version { major 1 minor 42 }
+
+    method echo_Int8 {
+        in {
+            Int8 input
+        }
+        out {
+            Int8 output
+        }
+    }
+
+    method echo_Int16 {
+        in {
+            Int16 input
+        }
+        out {
+            Int16 output
+        }
+    }
+
+    method echo_Int32 {
+        in {
+            Int32 input
+        }
+        out {
+            Int32 output
+        }
+    }
+
+    method echo_Int64 {
+        in {
+            Int64 input
+        }
+        out {
+            Int64 output
+        }
+    }
+
+    method echo_UInt8 {
+        in {
+            UInt8 input
+        }
+        out {
+            UInt8 output
+        }
+    }
+
+    method echo_UInt16 {
+        in {
+            UInt16 input
+        }
+        out {
+            UInt16 output
+        }
+    }
+
+    method echo_UInt32 {
+        in {
+            UInt32 input
+        }
+        out {
+            UInt32 output
+        }
+    }
+
+    method echo_UInt64 {
+        in {
+            UInt64 input
+        }
+        out {
+            UInt64 output
+        }
+    }
+
+    method echo_Boolean {
+        in {
+            Boolean input
+        }
+        out {
+            Boolean output
+        }
+    }
+
+    method echo_Double {
+        in {
+            Double input
+        }
+        out {
+            Double output
+        }
+    }
+
+    method echo_Float {
+        in {
+            Float input
+        }
+        out {
+            Float output
+        }
+    }
+
+    method in_Only {
+        in {
+            Int8 input
+        }
+    }
+
+    method out_Only {
+        out {
+            Int8 output
+        }
+    }
+
+    method call_Only {
+    }
+}
