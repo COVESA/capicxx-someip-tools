@@ -66,6 +66,7 @@ public class SomeIPCommandlineToolMain {
 	protected Injector injector;
 	protected IGenerator francaGenerator;
 	public static final int ERROR_STATE = 1;
+	public static final int NO_ERROR_STATE = 0;
 	
 	/**
 	 * The constructor registers the needed bindings to use the generator 
@@ -122,6 +123,7 @@ public class SomeIPCommandlineToolMain {
 		}
 		ConsoleLogger.printLog("Using Franca Version " + francaversion);
 
+		int error_state = NO_ERROR_STATE;
 		for(String file : filelist) {
 			if(file.endsWith(FDEPL_EXTENSION)) {
 				URI uri = URI.createFileURI(file);
@@ -132,21 +134,22 @@ public class SomeIPCommandlineToolMain {
 						francaGenerator.doGenerate(resource, fsa);
 					}
 					catch (Exception e) {
-						ConsoleLogger.printErrorLog("Failed to generate code !");
-						System.exit(ERROR_STATE);
+						ConsoleLogger.printErrorLog("Failed to generate code: " + e.getMessage());
+						error_state = ERROR_STATE;
 					}	
 				}
 				else {
 					ConsoleLogger.printErrorLog(file + " contains validation errors !");
-					System.exit(ERROR_STATE);
+					error_state = ERROR_STATE;
 				}
 			} 
 			else {
 				ConsoleLogger.printLog("Cannot generate code for the following file, because it does not have the " + FDEPL_EXTENSION + " extension: \n    " + file);
-				System.exit(ERROR_STATE);
+				error_state = ERROR_STATE;
 			}
 		}
-	}		
+		System.exit(error_state);
+	}
 
 	private boolean validate(Resource resource) {
 		if(resource != null && resource.getURI().isFile())   {

@@ -14,7 +14,6 @@ import java.util.Map
 import java.util.Set
 import javax.inject.Inject
 import org.eclipse.emf.common.util.EList
-import org.eclipse.emf.ecore.EObject
 import org.franca.core.franca.FArgument
 import org.franca.core.franca.FAttribute
 import org.franca.core.franca.FBasicTypeId
@@ -32,6 +31,7 @@ import org.genivi.commonapi.core.generator.FrancaGeneratorExtensions
 import org.genivi.commonapi.someip.deployment.PropertyAccessor
 
 import static extension java.lang.Integer.*
+import org.franca.core.franca.FStructType
 
 class FrancaSomeIPGeneratorExtensions {
     @Inject private extension FrancaGeneratorExtensions
@@ -199,7 +199,7 @@ class FrancaSomeIPGeneratorExtensions {
         val Integer value = _accessor.getSomeIpGetterID(_attribute)
         if (value != null)
             return "0x" + value.toHexString
-        return "UNDEFINED_GETTER_ID"
+        return "0x0"
     }
 
     def String getSetterIdentifier(FAttribute _attribute, PropertyAccessor _accessor)
@@ -215,7 +215,7 @@ class FrancaSomeIPGeneratorExtensions {
         val Integer value = _accessor.getSomeIpNotifierID(_attribute)
         if (value != null)
             return "0x" + value.toHexString
-        return "UNDEFINED_GETTER_ID"
+        return "UNDEFINED_NOTIFIER_ID"
 
     }
 
@@ -292,7 +292,7 @@ class FrancaSomeIPGeneratorExtensions {
         
         if (_useTc) {
         	if (_type.eContainer instanceof FTypeCollection && !(_type.eContainer instanceof FInterface)) {
-        		deploymentType += (_type.eContainer as FModelElement).getElementName(_interface, false) + "_::"
+        		deploymentType += (_type.eContainer as FModelElement).getFullName + "_::"
         	}
         	else if (_interface != null) {
         		deploymentType += _interface.getElementName(_interface, false) + "_::"
@@ -305,8 +305,14 @@ class FrancaSomeIPGeneratorExtensions {
         deploymentType += _type.name + "Deployment_t"
     }
 
+    def dispatch String getDeploymentType(FAttribute _attribute, FInterface _interface, boolean _useTc) {
+        if(_attribute.array) 
+            return "CommonAPI::SomeIP::ArrayDeployment<" + _attribute.type.getDeploymentType(_interface, _useTc) + ">"
+        
+        return _attribute.type.getDeploymentType(_interface, _useTc)
+    }
     ////////////////////////////////////////
-    // Get deployment type for an element //
+    // Get deployment qualified name for an element //
     ////////////////////////////////////////
     def String getDeploymentName(FTypedElement _typedElement, FModelElement _element, FInterface _interface, PropertyAccessor _accessor) {
         if (_accessor.hasSpecificDeployment(_typedElement)) {
@@ -342,15 +348,6 @@ class FrancaSomeIPGeneratorExtensions {
     }
 
     def dispatch String getDeploymentName(FType _type, FInterface _interface, PropertyAccessor _accessor) {
-        if (_accessor.hasDeployment(_type)) {
-            var String name = ""
-            val EObject container = _type.eContainer()
-            if (container instanceof FTypeCollection) {
-                name += (container as FTypeCollection).getElementName(_interface, false) + "_::"
-            }
-            name += _type.name + "Deployment"
-            return name
-        }
         return ""
     }
 
@@ -552,7 +549,12 @@ class FrancaSomeIPGeneratorExtensions {
         val String name = _typedElement.getDeploymentName(_element, null, _accessor)
         if (name != "")
             return "&" + name
-            
+
+        if(_typedElement.type.derived != null) {
+           var containerName =_typedElement.type.derived.eContainer.fullName 
+           var typeName =_typedElement.type.derived.name
+            return "static_cast<" + containerName + "_::" + typeName + "Deployment_t*>(nullptr)"
+        }
         return "static_cast<" + _typedElement.getDeploymentType(null, false) + "*>(nullptr)"
     }
 
@@ -560,7 +562,16 @@ class FrancaSomeIPGeneratorExtensions {
         val String name = _typeRef.getDeploymentName(null, _accessor)
         if (name != "")
             return "&" + name
-            
+
+        if(_typeRef.derived != null) {
+            if(_typeRef.derived instanceof FEnumerationType) {
+                return "static_cast<CommonAPI::SomeIP::EnumerationDeployment*>(nullptr)"
+            }
+            var containerName =_typeRef.derived.eContainer.fullName 
+            var typeName =_typeRef.derived.name
+            return "static_cast<" + containerName + "_::" + typeName + "Deployment_t*>(nullptr)"
+        }
+
         return "static_cast<" + _typeRef.getDeploymentType(null, false) + "*>(nullptr)"
     }
     
@@ -591,9 +602,26 @@ class FrancaSomeIPGeneratorExtensions {
         return deploymentType
     }
 
+    def Set<String> getDeploymentInputIncludes(FTypeCollection _tc, PropertyAccessor _accessor) {
+        var Set<String> ret = new HashSet<String>()
+        for (t : _tc.types) {
+            if (t instanceof FStructType) {
+                for (e : t.elements) {
+                    if (e.type.derived != null) {
+                        ret.add(someipDeploymentHeaderPath(e.type.derived.eContainer as FTypeCollection))
+                    }
+                }
+            }
+        }
+        return ret
+    }
+
     def Set<String> getDeploymentInputIncludes(FInterface _interface, PropertyAccessor _accessor) {
        var Set<String> ret = new HashSet<String>()
        for(x: _interface.attributes) {
+       	  if (x.isArray()) {
+       	  	ret.add(someipDeploymentHeaderPath(x.eContainer as FInterface))
+       	  }
           if(x.type.derived != null) {
              ret.add(someipDeploymentHeaderPath(x.type.derived.eContainer as FTypeCollection))
           }

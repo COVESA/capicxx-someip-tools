@@ -5,7 +5,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.genivi.commonapi.someip.generator
 
-import java.util.HashSet
 import java.util.List
 import javax.inject.Inject
 import org.eclipse.core.resources.IResource
@@ -29,19 +28,15 @@ class FInterfaceSomeIPProxyGenerator {
     @Inject private extension FrancaGeneratorExtensions
     @Inject private extension FrancaSomeIPGeneratorExtensions
 
-    def generateProxy(FInterface fInterface, IFileSystemAccess fileSystemAccess,
-        PropertyAccessor deploymentAccessor, 
-        List<FDProvider> providers, 
-        IResource modelid) {
+    def generateProxy(FInterface fInterface, IFileSystemAccess fileSystemAccess, PropertyAccessor deploymentAccessor,
+        List<FDProvider> providers, IResource modelid) {
         fileSystemAccess.generateFile(fInterface.someipProxyHeaderPath, PreferenceConstantsSomeIP.P_OUTPUT_PROXIES_SOMEIP,
             fInterface.generateProxyHeader(deploymentAccessor, modelid))
         fileSystemAccess.generateFile(fInterface.someipProxySourcePath, PreferenceConstantsSomeIP.P_OUTPUT_PROXIES_SOMEIP,
             fInterface.generateProxySource(deploymentAccessor, providers, modelid))
     }
-    
-    def private generateProxyHeader(FInterface _interface, 
-                                    PropertyAccessor _accessor,
-                                    IResource _modelid) '''
+
+    def private generateProxyHeader(FInterface _interface, PropertyAccessor _accessor, IResource _modelid) '''
         «generateCommonApiLicenseHeader(_interface, _modelid)»
         «FTypeGenerator::generateComments(_interface, false)»
         #ifndef «_interface.defineName.toUpperCase»_SOMEIP_PROXY_HPP_
@@ -134,12 +129,10 @@ class FInterfaceSomeIPProxyGenerator {
         #endif // «_interface.defineName»_SOMEIP_PROXY_HPP_
     '''
 
-    def private generateProxySource(FInterface _interface, 
-                                    PropertyAccessor _accessor,
-                                    List<FDProvider> providers,
-                                    IResource _modelid) '''
-        «generateCommonApiLicenseHeader(_interface, _modelid)»
-        «FTypeGenerator::generateComments(_interface, false)»
+    def private generateProxySource(FInterface _interface, PropertyAccessor _accessor, List<FDProvider> providers,
+        IResource _modelid) '''
+              «generateCommonApiLicenseHeader(_interface, _modelid)»
+              «FTypeGenerator::generateComments(_interface, false)»
         #include <«_interface.someipProxyHeaderPath»>
         
         #if !defined (COMMONAPI_INTERNAL_COMPILATION)
@@ -202,56 +195,56 @@ class FInterfaceSomeIPProxyGenerator {
             }
         «ENDFOR»
 
-        «FOR method : _interface.methods»
-            «val timeout = method.getTimeout(_accessor)»
-            «val inParams = method.generateInParams(_accessor)»
-            «val outParams = method.generateOutParams(_accessor, false)»
-            «FTypeGenerator::generateComments(method, false)»
-            «method.generateDefinitionWithin(_interface.someipProxyClassName, false)» {
-                «method.generateProxyHelperDeployments(_interface, false, _accessor)»
-                «IF method.isFireAndForget»
-                    «method.generateProxyHelperClass(_interface, _accessor)»::callMethod(
-                «ELSE»
-                    «IF timeout != 0»
-                        static CommonAPI::CallInfo info(«timeout»);
-                    «ENDIF»
-                    «method.generateProxyHelperClass(_interface, _accessor)»::callMethodWithReply(
-                «ENDIF»
-                    *this,
-                    «method.getMethodIdentifier(_accessor)»,
-                    «method.isReliable(_accessor)»,
-                    «IF !method.isFireAndForget»(_info ? _info : «IF timeout != 0»&info«ELSE»&CommonAPI::SomeIP::defaultCallInfo«ENDIF»),«ENDIF»
-                    «IF inParams != ""»«inParams»,«ENDIF»
-                    _internalCallStatus«IF method.hasError»,
-                    deploy_error«ENDIF»«IF outParams != ""»,
-                    «outParams»«ENDIF»);
-                «method.generateOutParamsValue(_accessor)»
-            }
-            «IF !method.isFireAndForget»
-                «method.generateAsyncDefinitionWithin(_interface.someipProxyClassName, false)» {
-                    «IF timeout != 0»
-                        static CommonAPI::CallInfo info(«timeout»);
-                    «ENDIF»
-                    «method.generateProxyHelperDeployments(_interface, true, _accessor)»
-                    return «method.generateProxyHelperClass(_interface, _accessor)»::callMethodAsync(
+                      «FOR method : _interface.methods»
+                    «val timeout = method.getTimeout(_accessor)»
+                    «val inParams = method.generateInParams(_accessor)»
+                    «val outParams = method.generateOutParams(_accessor, false)»
+                    «FTypeGenerator::generateComments(method, false)»
+                    «method.generateDefinitionWithin(_interface.someipProxyClassName, false)» {
+                        «method.generateProxyHelperDeployments(_interface, false, _accessor)»
+                        «IF method.isFireAndForget»
+                            «method.generateProxyHelperClass(_interface, _accessor)»::callMethod(
+                        «ELSE»
+                            «IF timeout != 0»
+                                static CommonAPI::CallInfo info(«timeout»);
+                            «ENDIF»
+                            «method.generateProxyHelperClass(_interface, _accessor)»::callMethodWithReply(
+                        «ENDIF»
                         *this,
                         «method.getMethodIdentifier(_accessor)»,
                         «method.isReliable(_accessor)»,
-                        (_info ? _info : «IF timeout != 0»&info«ELSE»&CommonAPI::SomeIP::defaultCallInfo«ENDIF»),
-                        «IF inParams != ""»«inParams»,«ENDIF»
-                        «method.generateCallback(_interface, _accessor)»);
+                «IF !method.isFireAndForget»(_info ? _info : «IF timeout != 0»&info«ELSE»&CommonAPI::SomeIP::defaultCallInfo«ENDIF»),«ENDIF»
+                «IF inParams != ""»«inParams»,«ENDIF»
+                _internalCallStatus«IF method.hasError»,
+                deploy_error«ENDIF»«IF outParams != ""»,
+                «outParams»«ENDIF»);
+                «method.generateOutParamsValue(_accessor)»
                 }
-            «ENDIF»
-        «ENDFOR»
-        
-        «FOR managed : _interface.managedInterfaces»
-            CommonAPI::ProxyManager& «_interface.someipProxyClassName»::«managed.proxyManagerGetterName»() {
-                return «managed.proxyManagerMemberName»;
-            }
-        «ENDFOR»
-
-
-        void «_interface.someipProxyClassName»::getOwnVersion(uint16_t& ownVersionMajor, uint16_t& ownVersionMinor) const {
+                «IF !method.isFireAndForget»
+                    «method.generateAsyncDefinitionWithin(_interface.someipProxyClassName, false)» {
+                        «IF timeout != 0»
+                            static CommonAPI::CallInfo info(«timeout»);
+                        «ENDIF»
+                        «method.generateProxyHelperDeployments(_interface, true, _accessor)»
+                        return «method.generateProxyHelperClass(_interface, _accessor)»::callMethodAsync(
+                            *this,
+                            «method.getMethodIdentifier(_accessor)»,
+                            «method.isReliable(_accessor)»,
+                            (_info ? _info : «IF timeout != 0»&info«ELSE»&CommonAPI::SomeIP::defaultCallInfo«ENDIF»),
+                            «IF inParams != ""»«inParams»,«ENDIF»
+                            «method.generateCallback(_interface, _accessor)»);
+                    }
+                «ENDIF»
+            «ENDFOR»
+            
+            «FOR managed : _interface.managedInterfaces»
+                CommonAPI::ProxyManager& «_interface.someipProxyClassName»::«managed.proxyManagerGetterName»() {
+                    return «managed.proxyManagerMemberName»;
+                }
+            «ENDFOR»
+            
+            
+                  void «_interface.someipProxyClassName»::getOwnVersion(uint16_t& ownVersionMajor, uint16_t& ownVersionMinor) const {
             «val FVersion itsVersion = _interface.version»
             «IF itsVersion != null»
                 ownVersionMajor = «_interface.version.major»;
@@ -274,6 +267,11 @@ class FInterfaceSomeIPProxyGenerator {
                 }
             }
         }
+        // If no providers are available, try to get the service id directly
+        var serviceid = _interface.accessor.getSomeIpServiceID(_interface)
+        if(serviceid != null) {
+            return "0x" + Integer.toHexString(serviceid)
+        }
         return "UNDEFINED_SERVICE_ID"
     }
 
@@ -294,10 +292,8 @@ class FInterfaceSomeIPProxyGenerator {
         return classVariableName
     }
     
-    def private generateProxyHelperDeployments(FMethod _method,
-                                               FInterface _interface,
-                                               boolean _isAsync,
-                                               PropertyAccessor _accessor) '''
+    def private generateProxyHelperDeployments(FMethod _method, FInterface _interface, boolean _isAsync,
+        PropertyAccessor _accessor) '''
     «IF _method.hasError»
         CommonAPI::Deployable<«_method.errorType», «_method.getErrorDeploymentType(false)»> deploy_error(«_method.getErrorDeploymentRef(_interface, _accessor)»);
     «ENDIF»
@@ -309,9 +305,7 @@ class FInterfaceSomeIPProxyGenerator {
     «ENDFOR»
     '''
     
-    def private generateProxyHelperClass(FMethod _method, 
-                                         FInterface _interface,
-                                         PropertyAccessor _accessor) '''
+    def private generateProxyHelperClass(FMethod _method, FInterface _interface, PropertyAccessor _accessor) '''
     CommonAPI::SomeIP::ProxyHelper<
         CommonAPI::SomeIP::SerializableArguments<
             «FOR a : _method.inArgs»
