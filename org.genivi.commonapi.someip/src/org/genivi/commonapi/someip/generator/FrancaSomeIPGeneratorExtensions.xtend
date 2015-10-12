@@ -280,7 +280,9 @@ class FrancaSomeIPGeneratorExtensions {
     def dispatch String getDeploymentType(FBasicTypeId _type, FInterface _interface, boolean _useTc) {
         if (_type == FBasicTypeId.STRING)
             return "CommonAPI::SomeIP::StringDeployment"
-       return "CommonAPI::EmptyDeployment"
+        else if (_type == FBasicTypeId.BYTE_BUFFER)
+            return "CommonAPI::SomeIP::ArrayDeployment<CommonAPI::EmptyDeployment>"
+        return "CommonAPI::EmptyDeployment"
     }
     
     def dispatch String getDeploymentType(FEnumerationType _enum, FInterface _interface, boolean _useTc) {
@@ -305,12 +307,6 @@ class FrancaSomeIPGeneratorExtensions {
         deploymentType += _type.name + "Deployment_t"
     }
 
-    def dispatch String getDeploymentType(FAttribute _attribute, FInterface _interface, boolean _useTc) {
-        if(_attribute.array) 
-            return "CommonAPI::SomeIP::ArrayDeployment<" + _attribute.type.getDeploymentType(_interface, _useTc) + ">"
-        
-        return _attribute.type.getDeploymentType(_interface, _useTc)
-    }
     ////////////////////////////////////////
     // Get deployment qualified name for an element //
     ////////////////////////////////////////
@@ -625,9 +621,12 @@ class FrancaSomeIPGeneratorExtensions {
           if(x.type.derived != null) {
              ret.add(someipDeploymentHeaderPath(x.type.derived.eContainer as FTypeCollection))
           }
-			if(x.type.derived instanceof FTypeDef) {
-				addDeploymentHeaderforTypeDef((x.type.derived as FTypeDef), ret)
-			}
+          if(x.type.derived instanceof FTypeDef) {
+			 addDeploymentHeaderforTypeDef((x.type.derived as FTypeDef), ret)
+		  }
+          if(_accessor.hasSpecificDeployment(x)) {
+                ret.add(_interface.someipDeploymentHeaderPath)
+          }
        }
        for(x: _interface.broadcasts) {
            for(y: x.outArgs) {
@@ -674,4 +673,15 @@ class FrancaSomeIPGeneratorExtensions {
 		}
 	}
 	
+	def Set<String> getSelectiveEventGroups(FInterface _interface, PropertyAccessor _accessor) {
+		var Set<String> eventGroups = new HashSet<String>()
+		
+		for (b : _interface.broadcasts) {
+			if (b.selective) {
+				eventGroups.addAll(b.getEventGroups(_accessor))
+			}
+		}
+		
+		return eventGroups
+	}
 }

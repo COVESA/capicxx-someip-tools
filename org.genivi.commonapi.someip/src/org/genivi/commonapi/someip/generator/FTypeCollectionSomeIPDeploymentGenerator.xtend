@@ -26,6 +26,7 @@ import org.franca.core.franca.FTypeRef
 import org.franca.core.franca.FUnionType
 import org.genivi.commonapi.core.generator.FrancaGeneratorExtensions
 import org.genivi.commonapi.someip.deployment.PropertyAccessor
+import org.franca.core.franca.FTypedElement
 
 class FTypeCollectionSomeIPDeploymentGenerator {
     @Inject private extension FrancaGeneratorExtensions
@@ -199,6 +200,8 @@ class FTypeCollectionSomeIPDeploymentGenerator {
         var String deployment = generateIndent(_indent)
         if (_type == FBasicTypeId.STRING)
             deployment = deployment + "CommonAPI::SomeIP::StringDeployment"
+        else if (_type == FBasicTypeId.BYTE_BUFFER)
+            deployment = deployment + "CommonAPI::SomeIP::ArrayDeployment<CommonAPI::EmptyDeployment>"
         else
             deployment = deployment + "CommonAPI::EmptyDeployment"
 
@@ -250,8 +253,8 @@ class FTypeCollectionSomeIPDeploymentGenerator {
     def protected dispatch String generateDeploymentDeclaration(FUnionType _union, FTypeCollection _tc, PropertyAccessor _accessor) {
         if (_accessor.hasDeployment(_union)) {
             var String declaration = ""
-            for (structElement : _union.elements) {
-                declaration += structElement.generateDeploymentDeclaration(_tc, _accessor)
+            for (unionElement : _union.elements) {
+                declaration += unionElement.generateDeploymentDeclaration(_tc, _accessor)
             }
             declaration += "extern " + _union.getDeploymentType(null, false) + " " + _union.name + "Deployment;"
             return declaration + "\n"
@@ -312,7 +315,11 @@ class FTypeCollectionSomeIPDeploymentGenerator {
     
     def protected dispatch String generateDeploymentDefinition(FStructType _struct, FTypeCollection _tc, PropertyAccessor _accessor) {
         if (_accessor.hasDeployment(_struct)) {
-            var String definition = _struct.getDeploymentType(null, false) + " " + _struct.name + "Deployment("
+            var String definition = ""
+            for (structElement : _struct.elements) {
+                definition += structElement.generateDeploymentDefinition(_tc, _accessor)        
+            }
+            definition += _struct.getDeploymentType(null, false) + " " + _struct.name + "Deployment("
             definition += _struct.getDeploymentParameter(_struct, _accessor)
             definition += ");\n"        
             return definition
@@ -322,7 +329,11 @@ class FTypeCollectionSomeIPDeploymentGenerator {
     
     def protected dispatch String generateDeploymentDefinition(FUnionType _union, FTypeCollection _tc, PropertyAccessor _accessor) {
         if (_accessor.hasDeployment(_union)) {
-            var String definition = _union.getDeploymentType(null, false) + " " + _union.name + "Deployment("
+            var String definition = ""
+            for (unionElement : _union.elements) {
+                definition += unionElement.generateDeploymentDefinition(_tc, _accessor)        
+            }
+            definition += _union.getDeploymentType(null, false) + " " + _union.name + "Deployment("
             definition += _union.getDeploymentParameter(_union, _accessor)
             definition += ");\n"
             return definition
@@ -333,7 +344,12 @@ class FTypeCollectionSomeIPDeploymentGenerator {
     def protected dispatch String generateDeploymentDefinition(FField _field, FTypeCollection _tc, PropertyAccessor _accessor) {
         if (_accessor.hasSpecificDeployment(_field)) {
             var String definition = _field.getDeploymentType(null, false) + " " + _field.getRelativeName() + "Deployment("
-            definition += getDeploymentParameter(_field.type, _field, _accessor)
+            if (_field.array) {
+                definition += getArrayElementTypeDeploymentParameter(_field.type, _field, _accessor) + ", "
+                definition += getArrayDeploymentParameter(_field.type, _field, _accessor)
+            } else {
+                definition += getDeploymentParameter(_field.type, _field, _accessor)
+            }        
             definition += ");\n"
             return definition
         }
@@ -347,7 +363,10 @@ class FTypeCollectionSomeIPDeploymentGenerator {
     def protected dispatch String generateDeploymentDefinition(FTypeRef _typeRef, FTypeCollection _tc, PropertyAccessor _accessor) {
         return ""
     }
-    
+
+    ///////////////////////////////////
+    // Get the deployment parameter  //
+    ///////////////////////////////////    
     def protected dispatch String getDeploymentParameter(FArrayType _array, EObject _source, PropertyAccessor _accessor) {
         var String parameter = getArrayElementTypeDeploymentParameter(_array.elementType, _array, _accessor) + ", "
         parameter += getArrayDeploymentParameter(_array, _source, _accessor)
@@ -449,6 +468,9 @@ class FTypeCollectionSomeIPDeploymentGenerator {
             else
                 parameter += "CommonAPI::SomeIP::StringEncoding::UTF8"
         }
+        else if (_typeId == FBasicTypeId.BYTE_BUFFER) {
+            parameter += "static_cast<CommonAPI::EmptyDeployment*>(nullptr), " + getArrayDeploymentParameter(_source, _source, _accessor)   
+        }
         return parameter
     }
     
@@ -470,7 +492,7 @@ class FTypeCollectionSomeIPDeploymentGenerator {
     }
 
     
-    def protected dispatch String getDeploymentParameter(FAttribute _attribute, EObject _object, PropertyAccessor _accessor) {
+    def protected dispatch String getDeploymentParameter(FTypedElement _attribute, EObject _object, PropertyAccessor _accessor) {
         if (_attribute.array) {
             var String parameter = getArrayElementTypeDeploymentParameter(_attribute.type, _object, _accessor) + ", "
             parameter += getArrayDeploymentParameter(_attribute, _attribute, _accessor)

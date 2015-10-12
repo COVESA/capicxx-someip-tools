@@ -145,10 +145,12 @@ class FInterfaceSomeIPStubAdapterGenerator {
         «ENDIF»
 
          private:
+            «FOR eventGroup : _interface.getSelectiveEventGroups(_accessor)»
+                bool selectiveEventSubscribeHandler_«eventGroup»(CommonAPI::SomeIP::client_id_t _client, bool subscribe);
+            «ENDFOR»
             «FOR broadcast: _interface.broadcasts»
                 «IF broadcast.selective»
                     std::mutex «broadcast.className»Mutex_;
-                    bool «broadcast.className»Handler(CommonAPI::SomeIP::client_id_t _client, bool subscribe);
                 «ENDIF»
             «ENDFOR»
             «FOR managed: _interface.managedInterfaces»
@@ -385,10 +387,8 @@ class FInterfaceSomeIPStubAdapterGenerator {
         }
 
         «_interface.someipStubAdapterClassNameInternal»::~«_interface.someipStubAdapterClassNameInternal»() {
-            «FOR broadcast : _interface.broadcasts»
-                «IF broadcast.selective»
-                    connection_->unregisterSubsciptionHandler(getSomeIpAddress(), «broadcast.getEventGroups(_accessor).head»);
-                «ENDIF»
+            «FOR eventGroup : _interface.getSelectiveEventGroups(_accessor)»
+                connection_->unregisterSubsciptionHandler(getSomeIpAddress(), «eventGroup»);
             «ENDFOR»
             deactivateManagedInstances();
             «_interface.someipStubAdapterHelperClassName»::deinit();
@@ -513,18 +513,6 @@ class FInterfaceSomeIPStubAdapterGenerator {
                 std::shared_ptr<CommonAPI::ClientIdList> const «_interface.someipStubAdapterClassNameInternal»::«broadcast.stubAdapterClassSubscribersMethodName»() {
                     return «broadcast.stubAdapterClassSubscriberListPropertyName»;
                 }
-
-                bool «_interface.someipStubAdapterClassNameInternal»::«broadcast.className»Handler(CommonAPI::SomeIP::client_id_t _client, bool subscribe) {
-                    std::shared_ptr<CommonAPI::SomeIP::ClientId> clientId = std::make_shared<CommonAPI::SomeIP::ClientId>(CommonAPI::SomeIP::ClientId(_client));
-                    bool result = true;
-                    if (subscribe) {
-                        «broadcast.subscribeSelectiveMethodName»(clientId, result);
-                    } else {
-                        «broadcast.unsubscribeSelectiveMethodName»(clientId);
-                    }
-                    return result;
-                }
-
             «ELSE»
                 void «_interface.someipStubAdapterClassNameInternal»::«broadcast.stubAdapterClassFireEventMethodName»(«broadcast.outArgs.map['const ' + getTypeName(_interface, true) + '& _' + elementName].join(', ')») {
                   «FOR arg: broadcast.outArgs»
@@ -542,6 +530,29 @@ class FInterfaceSomeIPStubAdapterGenerator {
                     );
                 }
             «ENDIF»
+        «ENDFOR»
+        
+        «FOR eventGroup : _interface.getSelectiveEventGroups(_accessor)»
+            bool «_interface.someipStubAdapterClassNameInternal»::selectiveEventSubscribeHandler_«eventGroup»(CommonAPI::SomeIP::client_id_t _client, bool subscribe) {
+                std::shared_ptr<CommonAPI::SomeIP::ClientId> clientId = std::make_shared<CommonAPI::SomeIP::ClientId>(CommonAPI::SomeIP::ClientId(_client));
+                bool result = true;
+                if (subscribe) {
+                	bool localResult;
+                    «FOR broadcast : _interface.broadcasts»
+                        «IF broadcast.selective && broadcast.getEventGroups(_accessor).contains(eventGroup)»
+                            «broadcast.subscribeSelectiveMethodName»(clientId, localResult);
+                            result = result && localResult;
+                        «ENDIF»
+                    «ENDFOR»
+                } else {
+                    «FOR broadcast : _interface.broadcasts»
+                        «IF broadcast.selective && broadcast.getEventGroups(_accessor).contains(eventGroup)»
+                            «broadcast.unsubscribeSelectiveMethodName»(clientId);
+                        «ENDIF»
+                    «ENDFOR»
+                }
+                return result;
+            }
         «ENDFOR»
 
         «IF _interface.base != null»
@@ -629,13 +640,15 @@ class FInterfaceSomeIPStubAdapterGenerator {
             «ENDIF»
             «FOR broadcast : _interface.broadcasts»
                 «IF broadcast.selective»
-                    «broadcast.getStubAdapterClassSubscriberListPropertyName» = std::make_shared<CommonAPI::ClientIdList>();
-                    CommonAPI::SomeIP::SubsciptionHandler_t «broadcast.className»SubscribeHandler =
-                        std::bind(&«_interface.someipStubAdapterClassNameInternal»::«broadcast.className»Handler,
-                        this, std::placeholders::_1, std::placeholders::_2);
-
-                    connection_->registerSubsciptionHandler(getSomeIpAddress(), «broadcast.getEventGroups(_accessor).head», «broadcast.className»SubscribeHandler);
-                «ENDIF»
+                    «broadcast.stubAdapterClassSubscriberListPropertyName» = std::make_shared<CommonAPI::ClientIdList>();
+                «ENDIF»   
+            «ENDFOR»
+            
+            «FOR eventGroup : _interface.getSelectiveEventGroups(_accessor)»
+            CommonAPI::SomeIP::SubsciptionHandler_t subscribeHandler_«eventGroup» =
+                std::bind(&«_interface.someipStubAdapterClassNameInternal»::selectiveEventSubscribeHandler_«eventGroup»,
+                          this, std::placeholders::_1, std::placeholders::_2);
+            connection_->registerSubsciptionHandler(getSomeIpAddress(), «eventGroup», subscribeHandler_«eventGroup»);
             «ENDFOR»
 
             «IF _interface.base != null»

@@ -548,6 +548,8 @@ public class PropertyAccessor extends org.genivi.commonapi.core.deployment.Prope
 		try {
 			if (type_ == DeploymentType.INTERFACE)
 				return someipInterface_.getSomeIpStructArrayMinLength(obj);
+            if (type_ == DeploymentType.TYPE_COLLECTION)
+                return someipTypeCollection_.getSomeIpStructArrayMinLength(obj);
 		}
 		catch (java.lang.NullPointerException e) {}
 		return null;
