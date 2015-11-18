@@ -6,9 +6,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.genivi.commonapi.someip.generator
 
+import java.util.HashMap
+import java.util.HashSet
 import java.util.List
+import java.util.Map
 import javax.inject.Inject
 import org.eclipse.core.resources.IResource
+import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IGenerator
@@ -18,13 +22,12 @@ import org.franca.deploymodel.core.FDeployedTypeCollection
 import org.franca.deploymodel.dsl.fDeploy.FDInterface
 import org.franca.deploymodel.dsl.fDeploy.FDProvider
 import org.franca.deploymodel.dsl.fDeploy.FDTypes
+import org.genivi.commonapi.core.generator.FDeployManager
 import org.genivi.commonapi.core.generator.FrancaGeneratorExtensions
 import org.genivi.commonapi.someip.deployment.PropertyAccessor
 import org.genivi.commonapi.someip.preferences.FPreferencesSomeIP
 import org.genivi.commonapi.someip.preferences.PreferenceConstantsSomeIP
-import org.genivi.commonapi.core.generator.FDeployManager
 import org.franca.deploymodel.dsl.fDeploy.FDModel
-import org.eclipse.emf.common.util.URI
 
 class FrancaSomeIPGenerator implements IGenerator {
     @Inject private extension FrancaGeneratorExtensions
@@ -47,60 +50,58 @@ class FrancaSomeIPGenerator implements IGenerator {
     }
     
     def private generate(URI input, IFileSystemAccess fileSystemAccess) {
+        var Map<FModel, List<FDInterface> > deployedInterfaces = new HashMap<FModel, List<FDInterface> >;
+        var Map<FModel, List<FDTypes> > deployedTypeCollections = new HashMap<FModel, List<FDTypes> >;
 
-        // parent model
-        var model = fDeployManager.loadModel(input, input);
-        if (model instanceof FDModel) {
-    
+        var rootFdModel = fDeployManager.loadModel(input, input);
+        
+        // fdModels is the map of all deployment models from imported fdepl files
+        var fdModels = fDeployManager.getDeploymentModels
+        // add the root model (the given fdepl file)
+        if(rootFdModel instanceof FDModel) {
+            fdModels.put(input.toString , rootFdModel)
+        }
+        var modelList = new HashSet<FModel>()  
+        for (fModelEntry : fdModels.entrySet) {
+            //System.out.println("Generation code for: " + fModelEntry.key)
+            var model = fModelEntry.value            
             //System.out.println("generating : " + input.lastSegment) 
 
-            var deployedInterfaces = getFDInterfaces(model, SOMEIP_SPECIFICATION_TYPE)
-            var deployedCoreInterfaces = getFDInterfaces(model, CORE_SPECIFICATION_TYPE)
-            var deployedTypeCollections = getFDTypesList(model, SOMEIP_SPECIFICATION_TYPE)
+            var itsDeployedInterfaces = getFDInterfaces(model, SOMEIP_SPECIFICATION_TYPE)
+            var itsDeployedTypeCollections = getFDTypesList(model, SOMEIP_SPECIFICATION_TYPE)
+            var itsDeployedCoreInterfaces = getFDInterfaces(model, CORE_SPECIFICATION_TYPE)
             if(deployedProviders == null) {
                 deployedProviders = getFDProviders(model, SOMEIP_SPECIFICATION_TYPE)
             }
-            var boolean hasInterfaces = (deployedInterfaces.size > 0);
-            var boolean hasTypeCollections = (deployedTypeCollections.size() > 0);
-
             var FModel fModel = null
-            if (hasInterfaces)
-                fModel = deployedInterfaces.get(0).target.model
-            else if (hasTypeCollections)
-                fModel = deployedTypeCollections.get(0).target.model
+            if (itsDeployedInterfaces.size > 0)
+                fModel = itsDeployedInterfaces.get(0).target.model
+            else if (itsDeployedTypeCollections.size() > 0)
+                fModel = itsDeployedTypeCollections.get(0).target.model
 
             if (fModel != null) {
-
+                modelList.add(fModel)
+                deployedInterfaces.put(fModel, itsDeployedInterfaces)
+                deployedTypeCollections.put(fModel, itsDeployedTypeCollections)
+                
                 // We have to merge core deployments into the someip deployment
-                for (source : deployedCoreInterfaces) {
-                    mergeDeployments(source, deployedInterfaces.get(0))
+                for (source : itsDeployedCoreInterfaces) {
+                    mergeDeployments(source, itsDeployedInterfaces.get(0))
                 }
-
-                // actually generate code
-                createAndInsertAccessors(fModel, deployedInterfaces, deployedTypeCollections)
-                doGenerateSomeIPComponents(fModel, deployedInterfaces, deployedProviders,
-                    deployedTypeCollections, fileSystemAccess, null)
-            }
-
-            // included models 
-            for (import_ : model.imports) {
-                val importUri = import_.getImportURI
-                if (!importUri.contains("deployment_spec") && importUri.endsWith(".fdepl")) {
-                    val fdeplUri = URI.createURI(importUri)
-
-                    //System.out.println("loading and generating model from import: " + fdeplUri.lastSegment)
-                    val nextUri = fdeplUri.resolve(input);
-
-                    // recursively call me again
-                    generate(nextUri, fileSystemAccess)
-                }
+                createAndInsertAccessors(fModel, itsDeployedInterfaces, itsDeployedTypeCollections)
             }
         }
+        // actually generate code after all accessors have been set
+        for (model : modelList) {
+            var itsDeployedInterfaces = deployedInterfaces.get(model)
+            var itsDeployedTypeCollections = deployedTypeCollections.get(model)
+            doGenerateSomeIPComponents(model, itsDeployedInterfaces, deployedProviders,
+                itsDeployedTypeCollections, fileSystemAccess, null)
+        }        
     }
     
-    
-    
     def private createAndInsertAccessors(FModel _model, List<FDInterface> _interfaces, List<FDTypes> _typeCollections) {
+        
         val defaultDeploymentAccessor = new PropertyAccessor()
         _model.typeCollections.forEach [
             var PropertyAccessor typeCollectionDeploymentAccessor

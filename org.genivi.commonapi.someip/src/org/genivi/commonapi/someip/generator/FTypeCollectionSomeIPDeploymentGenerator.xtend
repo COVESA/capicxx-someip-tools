@@ -84,7 +84,6 @@ class FTypeCollectionSomeIPDeploymentGenerator {
                                          IResource _modelid) '''
 
 		«generateCommonApiLicenseHeader(_tc, _modelid)»
-		#include "«_tc.someipDeploymentHeaderFile»"
 		«val DeploymentHeaders = _tc.getDeploymentInputIncludes(_accessor)»
 		«DeploymentHeaders.map["#include <" + it + ">"].join("\n")»
 		
@@ -342,7 +341,8 @@ class FTypeCollectionSomeIPDeploymentGenerator {
     }
     
     def protected dispatch String generateDeploymentDefinition(FField _field, FTypeCollection _tc, PropertyAccessor _accessor) {
-        if (_accessor.hasSpecificDeployment(_field)) {
+       if (_accessor.hasSpecificDeployment(_field) ||
+           _field.array && _accessor.hasDeployment(_field)) {
             var String definition = _field.getDeploymentType(null, false) + " " + _field.getRelativeName() + "Deployment("
             if (_field.array) {
                 definition += getArrayElementTypeDeploymentParameter(_field.type, _field, _accessor) + ", "
@@ -395,13 +395,26 @@ class FTypeCollectionSomeIPDeploymentGenerator {
         else
             parameter += "4, "
 
+        parameter += getDerivedDeploymentParameter(_struct, _accessor)
+        // cut off the last comma
+        return parameter.substring(0, parameter.length -2)
+    }
+
+    def protected String getDerivedDeploymentParameter(FStructType _struct, PropertyAccessor _accessor) {
+        var String parameter = ""
+        
+        if(_struct.base != null) { // need to use the accessor for the base struct !
+            var baseAccessor = getAccessor(_struct.base.eContainer as FTypeCollection)
+            parameter += getDerivedDeploymentParameter(_struct.base, baseAccessor)
+           
+        }
         for (s : _struct.elements) {
-            parameter += s.getDeploymentRef(_struct, _accessor)
-            if (s != _struct.elements.last) parameter += ", "    
-        }            
+            parameter += s.getDeploymentRef(_struct, _accessor) + ", "
+        }   
         
         return parameter
     }
+
     
     def protected dispatch String getDeploymentParameter(FUnionType _union, EObject _source, PropertyAccessor _accessor) {
         var String parameter = ""

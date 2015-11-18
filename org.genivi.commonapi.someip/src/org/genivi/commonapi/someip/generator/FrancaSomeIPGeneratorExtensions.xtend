@@ -32,6 +32,8 @@ import org.genivi.commonapi.someip.deployment.PropertyAccessor
 
 import static extension java.lang.Integer.*
 import org.franca.core.franca.FStructType
+import org.franca.core.franca.FArrayType
+import org.franca.core.franca.FUnionType
 
 class FrancaSomeIPGeneratorExtensions {
     @Inject private extension FrancaGeneratorExtensions
@@ -48,7 +50,7 @@ class FrancaSomeIPGeneratorExtensions {
     	var access = accessors__.get(_tc)
     	if(access == null) {
     		// It may be the base interface for which we dont have an accessor,
-    		// if it is define in another fidl file.
+    		// if it is defined in another fidl file.
     		// We should have at least one property accessor, use this one
 			var accessors = accessors__.values()
 		   	if(!accessors.isEmpty()) {
@@ -311,7 +313,8 @@ class FrancaSomeIPGeneratorExtensions {
     // Get deployment qualified name for an element //
     ////////////////////////////////////////
     def String getDeploymentName(FTypedElement _typedElement, FModelElement _element, FInterface _interface, PropertyAccessor _accessor) {
-        if (_accessor.hasSpecificDeployment(_typedElement)) {
+        if (_accessor.hasSpecificDeployment(_typedElement) ||
+            _typedElement.array && _accessor.hasDeployment(_typedElement)) {
             var String deployment = ""
             if (_element != null) {
                 val container = _element.eContainer()
@@ -344,6 +347,10 @@ class FrancaSomeIPGeneratorExtensions {
     }
 
     def dispatch String getDeploymentName(FType _type, FInterface _interface, PropertyAccessor _accessor) {
+        if ( _accessor.hasDeployment(_type) ) {
+            val container = _type.eContainer() as  FTypeCollection
+            return container.getFullName + "_::" + _type.name + "Deployment"
+        }
         return ""
     }
 
@@ -355,7 +362,7 @@ class FrancaSomeIPGeneratorExtensions {
     // Get reference (C++ pointer) to a deployment parameter //
     ///////////////////////////////////////////////////////////
     def String getDeploymentRef(FTypedElement _typedElement, boolean _isArray, FModelElement _element, FInterface _interface, PropertyAccessor _accessor) {
-        val String name = _typedElement.getDeploymentName(_element, _interface, _accessor)
+        var String name = _typedElement.getDeploymentName(_element, _interface, _accessor)
         if (name != "")
             return "&" + name
 
@@ -602,11 +609,21 @@ class FrancaSomeIPGeneratorExtensions {
         var Set<String> ret = new HashSet<String>()
         for (t : _tc.types) {
             if (t instanceof FStructType) {
-                for (e : t.elements) {
-                    if (e.type.derived != null) {
-                        ret.add(someipDeploymentHeaderPath(e.type.derived.eContainer as FTypeCollection))
+                // handle all derived structs 
+                var _struct = t
+                while(_struct != null) {
+                    for (e : _struct.elements) {
+                        var etype = e.type.derived
+                        if (etype != null ) {
+                            ret.add(someipDeploymentHeaderPath(etype.eContainer as FTypeCollection))
+                        }
                     }
+                    _struct = _struct.base
                 }
+            }
+           
+            if (t instanceof FEnumerationType || t instanceof FArrayType || t instanceof FUnionType) {
+                    ret.add(someipDeploymentHeaderPath(t.eContainer as FTypeCollection))
             }
         }
         return ret

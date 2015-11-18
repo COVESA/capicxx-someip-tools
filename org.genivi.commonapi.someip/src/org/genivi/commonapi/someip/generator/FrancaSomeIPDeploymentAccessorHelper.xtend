@@ -19,8 +19,14 @@ import org.franca.core.franca.FTypeRef
 import org.franca.core.franca.FTypedElement
 import org.franca.core.franca.FUnionType
 import org.genivi.commonapi.someip.deployment.PropertyAccessor
+import org.franca.core.franca.FTypeCollection
+import javax.inject.Inject
+import org.franca.core.franca.FInterface
 
 class FrancaSomeIPDeploymentAccessorHelper {
+
+    @Inject private extension FrancaSomeIPGeneratorExtensions
+
 
     static Integer SOMEIP_DEFAULT_MIN_LENGTH = 0
     static Integer SOMEIP_DEFAULT_MAX_LENGTH = 0
@@ -320,72 +326,192 @@ class FrancaSomeIPDeploymentAccessorHelper {
         return null
     }
 
+    def PropertyAccessor getSpecificAccessor(EObject _object) {
+        var container = _object.eContainer
+        while (container != null) {
+            if(container instanceof FInterface) {
+                return getAccessor(container)
+            }
+            if(container instanceof FTypeCollection) {
+                return getAccessor(container)
+            }
+            container = container.eContainer
+        }        
+        return null   
+    }
+
+
     // Helper to check whether the deployment differs from the default deployment
     def boolean hasSomeIpArrayMinLength(PropertyAccessor _accessor, EObject _object) {
-        val Integer minLength = _accessor.getSomeIpArrayMinLengthHelper(_object)
-        return (minLength != null && minLength != SOMEIP_DEFAULT_MIN_LENGTH)
+        var Integer minLength = _accessor.getSomeIpArrayMinLengthHelper(_object)
+        if(minLength != null && minLength != SOMEIP_DEFAULT_MIN_LENGTH) {
+            return true
+        }
+        var newAccessor = getSpecificAccessor(_object)
+        if(newAccessor != null) {
+            minLength = newAccessor.getSomeIpArrayMinLengthHelper(_object)
+            return minLength != null && minLength != SOMEIP_DEFAULT_MIN_LENGTH
+        }
+        return false
     }
     
     def boolean hasSomeIpArrayMaxLength(PropertyAccessor _accessor, EObject _object) {
-        val Integer maxLength = _accessor.getSomeIpArrayMaxLengthHelper(_object)
-        return (maxLength != null && maxLength != SOMEIP_DEFAULT_MAX_LENGTH)
+        var Integer maxLength = _accessor.getSomeIpArrayMaxLengthHelper(_object)
+        if(maxLength != null && maxLength != SOMEIP_DEFAULT_MAX_LENGTH) {
+            return true
+        }
+        var newAccessor = getSpecificAccessor(_object)
+        if(newAccessor != null) {
+            maxLength = newAccessor.getSomeIpArrayMaxLengthHelper(_object)
+            return maxLength != null && maxLength != SOMEIP_DEFAULT_MAX_LENGTH
+        }
+        return false
     }
     
     def boolean hasSomeIpArrayLengthWidth(PropertyAccessor _accessor, EObject _object) {
-        val Integer lengthWidth = _accessor.getSomeIpArrayLengthWidthHelper(_object)
-        return (lengthWidth != null && lengthWidth != SOMEIP_DEFAULT_LENGTH_WIDTH)
+        var Integer lengthWidth = _accessor.getSomeIpArrayLengthWidthHelper(_object)
+        if(lengthWidth != null && lengthWidth != SOMEIP_DEFAULT_LENGTH_WIDTH) {
+            return true
+        }
+        var newAccessor = getSpecificAccessor(_object)
+        if(newAccessor != null) {
+            lengthWidth = newAccessor.getSomeIpArrayLengthWidthHelper(_object)
+            return lengthWidth != null && lengthWidth != SOMEIP_DEFAULT_LENGTH_WIDTH
+        }
+        return false
     }
     
     def boolean hasSomeIpStringLength(PropertyAccessor _accessor, EObject _object) {
-        val Integer length = _accessor.getSomeIpStringLength(_object)
-        return (length != null && length != SOMEIP_DEFAULT_MIN_LENGTH)
+        var Integer length = _accessor.getSomeIpStringLength(_object)
+        if(length != null && length != SOMEIP_DEFAULT_MIN_LENGTH) {
+            return true
+        }
+        var newAccessor = getSpecificAccessor(_object)
+        if(newAccessor != null) {
+            length = newAccessor.getSomeIpStringLength(_object)
+            return length != null && length != SOMEIP_DEFAULT_MIN_LENGTH
+        }
+        return false
     }
 
     def boolean hasSomeIpStringLengthWidth(PropertyAccessor _accessor, EObject _object) {
-        val Integer lengthWidth =_accessor.getSomeIpStringLengthWidth(_object)
-        return (lengthWidth != null && lengthWidth != SOMEIP_DEFAULT_LENGTH_WIDTH)
+        var Integer lengthWidth = _accessor.getSomeIpStringLengthWidth(_object)
+        if(lengthWidth != null && lengthWidth != SOMEIP_DEFAULT_LENGTH_WIDTH) {
+            return true
+        }
+        var newAccessor = getSpecificAccessor(_object)
+        if(newAccessor != null) {
+            lengthWidth = newAccessor.getSomeIpStringLengthWidth(_object)
+            return lengthWidth != null && lengthWidth != SOMEIP_DEFAULT_LENGTH_WIDTH
+        }
+        return false
     }
-    
+
     def boolean hasSomeIpStructLengthWidht(PropertyAccessor _accessor, EObject _object) {
-        val Integer lengthWidth = _accessor.getSomeIpStructLengthWidthHelper(_object)
-        return (lengthWidth != null && lengthWidth != SOMEIP_DEFAULT_LENGTH_WIDTH)
+        var Integer lengthWidth = _accessor.getSomeIpStructLengthWidthHelper(_object)
+        if(lengthWidth != null && lengthWidth != SOMEIP_DEFAULT_LENGTH_WIDTH) {
+            return true
+        }
+        var newAccessor = getSpecificAccessor(_object)
+        if(newAccessor != null) {
+            lengthWidth = newAccessor.getSomeIpStructLengthWidthHelper(_object)
+            return lengthWidth != null && lengthWidth != SOMEIP_DEFAULT_LENGTH_WIDTH
+        }
+        return false
     }
     
     def boolean hasSomeIpStringEncoding(PropertyAccessor _accessor, EObject _object) {
-        val PropertyAccessor.SomeIpStringEncoding encoding
-            = _accessor.getSomeIpStringEncoding(_object)
-        return (encoding != null && encoding != SOMEIP_DEFAULT_STRING_ENCODING)
-    }
-    
+        var PropertyAccessor.SomeIpStringEncoding encoding = _accessor.getSomeIpStringEncoding(_object)
+        if(encoding != null && encoding != SOMEIP_DEFAULT_STRING_ENCODING) {
+            return true
+        }
+        var newAccessor = getSpecificAccessor(_object)
+        if(newAccessor != null) {
+            encoding = newAccessor.getSomeIpStringEncoding(_object)
+            return encoding != null && encoding != SOMEIP_DEFAULT_STRING_ENCODING
+        }
+        return false
+    } 
+
     def boolean hasSomeIpUnionLengthWidth(PropertyAccessor _accessor, EObject _object) {
-        val Integer lengthWidth = _accessor.getSomeIpUnionLengthWidthHelper(_object)
-        return (lengthWidth != null && lengthWidth != SOMEIP_DEFAULT_LENGTH_WIDTH)
-    }
-    
+        var Integer lengthWidth = _accessor.getSomeIpUnionLengthWidthHelper(_object)
+        if(lengthWidth != null && lengthWidth != SOMEIP_DEFAULT_LENGTH_WIDTH) {
+            return true
+        }
+        var newAccessor = getSpecificAccessor(_object)
+        if(newAccessor != null) {
+            lengthWidth = newAccessor.getSomeIpUnionLengthWidthHelper(_object)
+            return lengthWidth != null && lengthWidth != SOMEIP_DEFAULT_LENGTH_WIDTH
+        }
+        return false
+    } 
+
     def boolean hasSomeIpUnionTypeWidth(PropertyAccessor _accessor, EObject _object) {
-        val Integer typeWidth = _accessor.getSomeIpUnionTypeWidthHelper(_object)
-        return (typeWidth != null && typeWidth != SOMEIP_DEFAULT_UNION_TYPE_WIDTH)
-    }
+        var Integer typeWidth = _accessor.getSomeIpUnionTypeWidthHelper(_object)
+        if(typeWidth != null && typeWidth != SOMEIP_DEFAULT_UNION_TYPE_WIDTH) {
+            return true
+        }
+        var newAccessor = getSpecificAccessor(_object)
+        if(newAccessor != null) {
+            typeWidth = newAccessor.getSomeIpUnionTypeWidthHelper(_object)
+            return typeWidth != null && typeWidth != SOMEIP_DEFAULT_UNION_TYPE_WIDTH
+        }
+        return false
+    } 
 
     def boolean hasSomeIpUnionDefaultOrder(PropertyAccessor _accessor, EObject _object) {
-        val Boolean defaultOrder = _accessor.getSomeIpUnionDefaultOrderHelper(_object)
-        return (defaultOrder != null && defaultOrder != SOMEIP_DEFAULT_UNION_DEFAULT_ORDER)
-    }
+        var Boolean defaultOrder = _accessor.getSomeIpUnionDefaultOrderHelper(_object)
+        if(defaultOrder != null && defaultOrder != SOMEIP_DEFAULT_UNION_DEFAULT_ORDER) {
+            return true
+        }
+        var newAccessor = getSpecificAccessor(_object)
+        if(newAccessor != null) {
+            defaultOrder = newAccessor.getSomeIpUnionDefaultOrderHelper(_object)
+            return defaultOrder != null && defaultOrder != SOMEIP_DEFAULT_UNION_DEFAULT_ORDER
+        }
+        return false
+    } 
 
     def boolean hasSomeIpUnionMaxLength(PropertyAccessor _accessor, EObject _object) {
-        val Integer maxLength = _accessor.getSomeIpUnionMaxLengthHelper(_object)
-        return (maxLength != null && maxLength != SOMEIP_DEFAULT_MAX_LENGTH)
-    }
-    
+        var Integer maxLength = _accessor.getSomeIpUnionMaxLengthHelper(_object)
+        if(maxLength != null && maxLength != SOMEIP_DEFAULT_MAX_LENGTH) {
+            return true
+        }
+        var newAccessor = getSpecificAccessor(_object)
+        if(newAccessor != null) {
+            maxLength = newAccessor.getSomeIpUnionMaxLengthHelper(_object)
+            return maxLength != null && maxLength != SOMEIP_DEFAULT_MAX_LENGTH
+        }
+        return false
+    } 
+
     def boolean hasSomeIpStructLengthWidth(PropertyAccessor _accessor, EObject _object) {
-        val Integer lengthWidth = _accessor.getSomeIpStructLengthWidthHelper(_object)
-        return (lengthWidth != null && lengthWidth != SOMEIP_DEFAULT_LENGTH_WIDTH)
-    }
-    
+        var Integer lengthWidth = _accessor.getSomeIpStructLengthWidthHelper(_object)
+        if(lengthWidth != null && lengthWidth != SOMEIP_DEFAULT_LENGTH_WIDTH) {
+            return true
+        }
+        var newAccessor = getSpecificAccessor(_object)
+        if(newAccessor != null) {
+            lengthWidth = newAccessor.getSomeIpStructLengthWidthHelper(_object)
+            return lengthWidth != null && lengthWidth != SOMEIP_DEFAULT_LENGTH_WIDTH
+        }
+        return false
+    }     
+
     def boolean hasSomeIpEnumWidth(PropertyAccessor _accessor, EObject _object) {
-        val Integer baseType = _accessor.getSomeIpEnumWidthHelper(_object)
-        return (baseType != null && baseType != SOMEIP_DEFAULT_ENUM_BASE_TYPE)
-    }    
+        var Integer lengthWidth = _accessor.getSomeIpEnumWidthHelper(_object)
+        if(lengthWidth != null && lengthWidth != SOMEIP_DEFAULT_ENUM_BASE_TYPE) {
+            return true
+        }
+        var newAccessor = getSpecificAccessor(_object)
+        if(newAccessor != null) {
+            lengthWidth = newAccessor.getSomeIpEnumWidthHelper(_object)
+            return lengthWidth != null && lengthWidth != SOMEIP_DEFAULT_ENUM_BASE_TYPE
+        } 
+        return false
+    }  
+
+
     
     def dispatch boolean hasDeployment(PropertyAccessor _accessor, FTypedElement _element) {
     	if (_accessor == null)
@@ -400,7 +526,8 @@ class FrancaSomeIPDeploymentAccessorHelper {
             _accessor.hasSomeIpUnionLengthWidth(_element) ||
             _accessor.hasSomeIpUnionTypeWidth(_element) ||
             _accessor.hasSomeIpUnionDefaultOrder(_element) ||
-            _accessor.hasSomeIpUnionMaxLength(_element)) {
+            _accessor.hasSomeIpUnionMaxLength(_element) ||
+            _accessor.hasSomeIpEnumWidth(_element)) {
             return true
         }
         return _accessor.hasDeployment(_element.type)
@@ -430,10 +557,17 @@ class FrancaSomeIPDeploymentAccessorHelper {
             
         for (element : _struct.elements) {
             if (_accessor.hasDeployment(element)) {
+//                if(_struct.name.equals("CurrentStation")) {
+//                    System.out.println(_struct.name + " has deployment")    
+//                    System.out.println(_struct)    
+//                }
                 return true
             }
         }
-
+//        if(_struct.name.equals("CurrentStation")) {
+//            System.out.println(_struct.name + " has no deployment")    
+//            System.out.println(_struct)    
+//       }
         return false
     }
     
@@ -478,84 +612,112 @@ class FrancaSomeIPDeploymentAccessorHelper {
     
     def boolean hasSpecificDeployment(PropertyAccessor _accessor, 
                                       FTypedElement _attribute) {
-        try {
-            val Integer minLength = _accessor.getSomeIpArrayMinLengthHelper(_attribute)
-            if (minLength != null && minLength != SOMEIP_DEFAULT_MIN_LENGTH ) {
-                return true
-            }                                     
-        } catch (NullPointerException e) {}
+                                          
+                                        
+//        try {
+//            val Integer minLength = _accessor.getSomeIpArrayMinLengthHelper(_attribute)
+//            if (minLength != null && minLength != SOMEIP_DEFAULT_MIN_LENGTH ) {
+//                return true
+//            }                                     
+//        } catch (NullPointerException e) {}
         
-        try {
-            val Integer maxLength = _accessor.getSomeIpArrayMaxLengthHelper(_attribute)
-            if (maxLength != null && maxLength != SOMEIP_DEFAULT_MAX_LENGTH ) {
-                return true
-            }
-        } catch (NullPointerException e) {}
+        if(hasSomeIpArrayMinLength(_accessor, _attribute)) {
+            return true
+        }
+        
+//        try {
+//            val Integer maxLength = _accessor.getSomeIpArrayMaxLengthHelper(_attribute)
+//            if (maxLength != null && maxLength != SOMEIP_DEFAULT_MAX_LENGTH ) {
+//                return true
+//            }
+//        } catch (NullPointerException e) {}
 
-        try {
-            val Integer lengthWidth = _accessor.getSomeIpArrayLengthWidthHelper(_attribute)
-            if (lengthWidth != null && lengthWidth != SOMEIP_DEFAULT_LENGTH_WIDTH ) {
-                return true
-            }  
-        } catch (NullPointerException e) {}
-        
-        try {
-            val Integer length = _accessor.getSomeIpStringLength(_attribute)
-            if (length != null && length != SOMEIP_DEFAULT_MIN_LENGTH ) {
-                return true
-            }  
-        } catch (NullPointerException e) {}
-        
-        try {
-            val Integer lengthWidth = _accessor.getSomeIpStringLengthWidth(_attribute)
-            if (lengthWidth != null && lengthWidth != SOMEIP_DEFAULT_LENGTH_WIDTH ) {
-                return true
-            }  
-        } catch (NullPointerException e) {}    
-        
-        try {
-            val PropertyAccessor.SomeIpStringEncoding encoding
-                = _accessor.getSomeIpStringEncoding(_attribute)
-            if (encoding != null && encoding != SOMEIP_DEFAULT_STRING_ENCODING ) {
-                return true
-            }
-        } catch (NullPointerException e) {}    
+        if(hasSomeIpArrayMaxLength (_accessor, _attribute)) {
+            return true
+        }
 
-        try {
-            val Integer lengthWidth = _accessor.getSomeIpStructLengthWidthHelper(_attribute)
-            if (lengthWidth != null && lengthWidth != SOMEIP_DEFAULT_LENGTH_WIDTH ) {
-                return true
-            }  
-        } catch (NullPointerException e) {}    
-        
-        try {
-            val Integer lengthWidth = _accessor.getSomeIpUnionLengthWidthHelper(_attribute)
-            if (lengthWidth != null && lengthWidth != SOMEIP_DEFAULT_LENGTH_WIDTH ) {
-                return true
-            }  
-        } catch (NullPointerException e) {}
-        
-        try {
-            val Integer typeWidth = _accessor.getSomeIpUnionTypeWidthHelper(_attribute)
-            if (typeWidth != null && typeWidth != SOMEIP_DEFAULT_UNION_TYPE_WIDTH ) {
-                return true
-            }  
-        } catch (NullPointerException e) {}
-        
-        try {
-            var Boolean defaultOrder = _accessor.getSomeIpUnionDefaultOrderHelper(_attribute)
-            if (defaultOrder != null && defaultOrder != SOMEIP_DEFAULT_UNION_DEFAULT_ORDER ) {
-                return true
-            }
-        } catch (NullPointerException e) {}
-        
-        try {
-            val Integer maxLength = _accessor.getSomeIpUnionMaxLengthHelper(_attribute)
-            if (maxLength != null && maxLength != SOMEIP_DEFAULT_MAX_LENGTH ) {
-                return true
-            }
-        } catch (NullPointerException e) {}    
-
+//        try {
+//            val Integer lengthWidth = _accessor.getSomeIpArrayLengthWidthHelper(_attribute)
+//            if (lengthWidth != null && lengthWidth != SOMEIP_DEFAULT_LENGTH_WIDTH ) {
+//                return true
+//            }  
+//        } catch (NullPointerException e) {}
+        if(hasSomeIpArrayLengthWidth (_accessor, _attribute)) {
+            return true
+        }        
+//        try {
+//            val Integer length = _accessor.getSomeIpStringLength(_attribute)
+//            if (length != null && length != SOMEIP_DEFAULT_MIN_LENGTH ) {
+//                return true
+//            }  
+//        } catch (NullPointerException e) {}
+        if(hasSomeIpStringLength (_accessor, _attribute)) {
+            return true
+        }        
+//        try {
+//            val Integer lengthWidth = _accessor.getSomeIpStringLengthWidth(_attribute)
+//            if (lengthWidth != null && lengthWidth != SOMEIP_DEFAULT_LENGTH_WIDTH ) {
+//                return true
+//            }  
+//        } catch (NullPointerException e) {}    
+        if(hasSomeIpStringLengthWidth (_accessor, _attribute)) {
+            return true
+        }        
+//        try {
+//            val PropertyAccessor.SomeIpStringEncoding encoding
+//                = _accessor.getSomeIpStringEncoding(_attribute)
+//            if (encoding != null && encoding != SOMEIP_DEFAULT_STRING_ENCODING ) {
+//                return true
+//            }
+//        } catch (NullPointerException e) {}    
+        if(hasSomeIpStringEncoding (_accessor, _attribute)) {
+            return true
+        }
+//        try {
+//            val Integer lengthWidth = _accessor.getSomeIpStructLengthWidthHelper(_attribute)
+//            if (lengthWidth != null && lengthWidth != SOMEIP_DEFAULT_LENGTH_WIDTH ) {
+//                return true
+//            }  
+//        } catch (NullPointerException e) {}    
+        if(hasSomeIpStructLengthWidth (_accessor, _attribute)) {
+            return true
+        }        
+//        try {
+//            val Integer lengthWidth = _accessor.getSomeIpUnionLengthWidthHelper(_attribute)
+//            if (lengthWidth != null && lengthWidth != SOMEIP_DEFAULT_LENGTH_WIDTH ) {
+//                return true
+//            }  
+//        } catch (NullPointerException e) {}
+        if(hasSomeIpUnionLengthWidth (_accessor, _attribute)) {
+            return true
+        }        
+//        try {
+//            val Integer typeWidth = _accessor.getSomeIpUnionTypeWidthHelper(_attribute)
+//            if (typeWidth != null && typeWidth != SOMEIP_DEFAULT_UNION_TYPE_WIDTH ) {
+//                return true
+//            }  
+//        } catch (NullPointerException e) {}
+        if(hasSomeIpUnionTypeWidth (_accessor, _attribute)) {
+            return true
+        }        
+//        try {
+//            var Boolean defaultOrder = _accessor.getSomeIpUnionDefaultOrderHelper(_attribute)
+//            if (defaultOrder != null && defaultOrder != SOMEIP_DEFAULT_UNION_DEFAULT_ORDER ) {
+//                return true
+//            }
+//        } catch (NullPointerException e) {}
+        if(hasSomeIpUnionDefaultOrder (_accessor, _attribute)) {
+            return true
+        }        
+//        try {
+//            val Integer maxLength = _accessor.getSomeIpUnionMaxLengthHelper(_attribute)
+//            if (maxLength != null && maxLength != SOMEIP_DEFAULT_MAX_LENGTH ) {
+//                return true
+//            }
+//        } catch (NullPointerException e) {}    
+        if(hasSomeIpUnionMaxLength (_accessor, _attribute)) {
+            return true
+        }
         return false
     }
 }

@@ -460,7 +460,7 @@ class FInterfaceSomeIPStubAdapterGenerator {
                     std::shared_ptr<CommonAPI::SomeIP::ClientId> client = std::dynamic_pointer_cast<CommonAPI::SomeIP::ClientId, CommonAPI::ClientId>(_client);
                 «FOR arg: broadcast.outArgs»
                      «val String deploymentType = arg.getDeploymentType(_interface, true)»
-                     «val String deployment = arg.getDeploymentRef(arg.array, null, _interface, _accessor)»
+                     «val String deployment = arg.getDeploymentRef(arg.array, broadcast, _interface, _accessor)»
                      «IF deploymentType != "CommonAPI::EmptyDeployment" && deploymentType != ""»
                         CommonAPI::Deployable<«arg.getTypeName(arg, true)», «deploymentType»> deployed_«arg.name»(_«arg.name», «IF deployment != ""»«deployment»«ELSE»nullptr«ENDIF»);
                      «ENDIF»
