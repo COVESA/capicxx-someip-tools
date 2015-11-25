@@ -8,13 +8,13 @@
 * http://mozilla.org/MPL/2.0/.
 */
 
-#include <v1_42/commonapi/someip/attrnamedtcStub.hpp>
-#include <v1_42/commonapi/someip/attrnamedtcStubDefault.hpp>
+#include <v1/commonapi/someip/attrnamedtcStub.hpp>
+#include <v1/commonapi/someip/attrnamedtcStubDefault.hpp>
 
-class attrnamedtcStubImpl : public v1_42::commonapi::someip::attrnamedtcStubDefault {
+class attrnamedtcStubImpl : public v1::commonapi::someip::attrnamedtcStubDefault {
 
 public:
-	attrnamedtcStubImpl();
+    attrnamedtcStubImpl();
     virtual ~attrnamedtcStubImpl();
     virtual void incAttribute();
 };

@@ -5,15 +5,15 @@
 
 #include <CommonAPI/CommonAPI.hpp>
 
-#include <v1_42/commonapi/serialization/SampleProxy.hpp>
+#include <v1/commonapi/serialization/SampleProxy.hpp>
 
-using namespace v1_42::commonapi::serialization;
+using namespace v1::commonapi::serialization;
 
 int main(int argc, char **argv) {
     std::shared_ptr< CommonAPI::Runtime > runtime = CommonAPI::Runtime::get();
 
     std::shared_ptr<SampleProxyDefault> itsProxy
-    	= runtime->buildProxy<SampleProxy>("local", "BMW.ATM");
+        = runtime->buildProxy<SampleProxy>("local", "BMW.ATM");
 
     while (!itsProxy->isAvailable())
     {

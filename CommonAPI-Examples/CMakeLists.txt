@@ -55,8 +55,8 @@ endif()
 message("CommonAPI_CONSIDERED_CONFIGS: ${CommonAPI_CONSIDERED_CONFIGS}")
 message("COMMONAPI_INCLUDE_DIRS: ${COMMONAPI_INCLUDE_DIRS}")
 
-find_package (CommonAPI-SomeIP 2.1.6 REQUIRED)
-find_package (vSomeIP 0.0.1 REQUIRED)
+find_package (CommonAPI-SomeIP 3.1.4 REQUIRED)
+find_package (vsomeip 2.0.0 REQUIRED)
 
 include_directories (
     ${COMMONAPI_INCLUDE_DIRS}
@@ -72,72 +72,74 @@ link_directories (
 
 # CommonAPI-SomeIP
 add_library (someip-example-someip SHARED
-    src-gen/v1_42/commonapi/someip/heartbeatSomeIPProxy.cpp
-    src-gen/v1_42/commonapi/someip/heartbeatSomeIPStubAdapter.cpp
-    src-gen/v1_42/commonapi/someip/mathSomeIPProxy.cpp
-    src-gen/v1_42/commonapi/someip/mathSomeIPStubAdapter.cpp
+    src-gen/v1/commonapi/someip/heartbeatSomeIPProxy.cpp
+    src-gen/v1/commonapi/someip/heartbeatSomeIPStubAdapter.cpp
+    src-gen/v1/commonapi/someip/mathSomeIPProxy.cpp
+    src-gen/v1/commonapi/someip/mathSomeIPStubAdapter.cpp
 )
 target_link_libraries(someip-example-someip
-	CommonAPI-SomeIP
+    CommonAPI-SomeIP
 )
 
 add_library (someip-attribute-example-someip SHARED
-    src-gen/v1_42/commonapi/someip/attrSomeIPProxy.cpp
-    src-gen/v1_42/commonapi/someip/attrSomeIPStubAdapter.cpp
-    src-gen/v1_42/commonapi/someip/attrSomeIPDeployment.cpp
+    src-gen/v1/commonapi/someip/attrSomeIPProxy.cpp
+    src-gen/v1/commonapi/someip/attrSomeIPStubAdapter.cpp
+    src-gen/v1/commonapi/someip/attrSomeIPDeployment.cpp
 )
 target_link_libraries(someip-attribute-example-someip
-	CommonAPI-SomeIP
+    CommonAPI-SomeIP
 )
 
 add_library (someip-attributeanonymtc-example-someip SHARED
-	src-gen/v1_42/commonapi/someip/attranonymtcSomeIPProxy.cpp
-	src-gen/v1_42/commonapi/someip/attranonymtcSomeIPStubAdapter.cpp
-	src-gen/v1_42/commonapi/someip/attranonymtcSomeIPDeployment.cpp
+    src-gen/v1/commonapi/someip/attranonymtcSomeIPProxy.cpp
+    src-gen/v1/commonapi/someip/attranonymtcSomeIPStubAdapter.cpp
+    src-gen/v1/commonapi/someip/attranonymtcSomeIPDeployment.cpp
+    src-gen/v2/commonapi/someip/__Anonymous__SomeIPDeployment.cpp
 )
 target_link_libraries(someip-attributeanonymtc-example-someip
-	CommonAPI-SomeIP
+    CommonAPI-SomeIP
 )
 
 add_library (someip-attributenamedtc-example-someip SHARED
-	src-gen/v1_42/commonapi/someip/attrnamedtcSomeIPProxy.cpp
-	src-gen/v1_42/commonapi/someip/attrnamedtcSomeIPStubAdapter.cpp
-	src-gen/v1_42/commonapi/someip/attrnamedtcSomeIPDeployment.cpp
+    src-gen/v1/commonapi/someip/attrnamedtcSomeIPProxy.cpp
+    src-gen/v1/commonapi/someip/attrnamedtcSomeIPStubAdapter.cpp
+    src-gen/v1/commonapi/someip/attrnamedtcSomeIPDeployment.cpp
+    src-gen/v2/commonapi/someip/myTypeCollectionSomeIPDeployment.cpp
 )
 target_link_libraries(someip-attributenamedtc-example-someip
-	CommonAPI-SomeIP
+    CommonAPI-SomeIP
 )
 
 add_library (someip-math-example-someip SHARED
-    src-gen/v1_42/commonapi/someip/mathSomeIPProxy.cpp
-    src-gen/v1_42/commonapi/someip/mathSomeIPStubAdapter.cpp
+    src-gen/v1/commonapi/someip/mathSomeIPProxy.cpp
+    src-gen/v1/commonapi/someip/mathSomeIPStubAdapter.cpp
 )
 target_link_libraries(someip-math-example-someip
         CommonAPI-SomeIP
 )
 
 add_library (someip-serialization-example-someip SHARED
-    src-gen/v1_42/commonapi/serialization/SampleSomeIPProxy.cpp
-    src-gen/v1_42/commonapi/serialization/SampleSomeIPStubAdapter.cpp
-    src-gen/v1_42/commonapi/serialization/SampleSomeIPDeployment.cpp
+    src-gen/v1/commonapi/serialization/SampleSomeIPProxy.cpp
+    src-gen/v1/commonapi/serialization/SampleSomeIPStubAdapter.cpp
+    src-gen/v1/commonapi/serialization/SampleSomeIPDeployment.cpp
 )
 target_link_libraries(someip-serialization-example-someip
         CommonAPI-SomeIP
 )
 
 add_library (someip-map-example-someip SHARED
-    src-gen/v1_0/commonapi/someip/MapSomeIPProxy.cpp
-    src-gen/v1_0/commonapi/someip/MapSomeIPStubAdapter.cpp
-    src-gen/v1_0/commonapi/someip/MapSomeIPDeployment.cpp
+    src-gen/v1/commonapi/someip/MapSomeIPProxy.cpp
+    src-gen/v1/commonapi/someip/MapSomeIPStubAdapter.cpp
+    src-gen/v1/commonapi/someip/MapSomeIPDeployment.cpp
 )
 target_link_libraries(someip-map-example-someip
         CommonAPI-SomeIP
 )
 
 add_library (someip-methodSample-example-someip SHARED
-    src-gen/v1_0/commonapi/someip/methodSampleSomeIPProxy.cpp
-    src-gen/v1_0/commonapi/someip/methodSampleSomeIPStubAdapter.cpp
-    src-gen/v1_0/commonapi/someip/methodSampleSomeIPDeployment.cpp
+    src-gen/v1/commonapi/someip/methodSampleSomeIPProxy.cpp
+    src-gen/v1/commonapi/someip/methodSampleSomeIPStubAdapter.cpp
+    src-gen/v1/commonapi/someip/methodSampleSomeIPDeployment.cpp
 )
 target_link_libraries(someip-methodSample-example-someip
         CommonAPI-SomeIP
@@ -150,35 +152,35 @@ add_executable (someip-example-client
 target_link_libraries (
     someip-example-client
     CommonAPI
-	${DL_LIBRARY}
+    ${DL_LIBRARY}
 )
 
 add_executable (someip-attribute-example-client
     src/attrClient.cpp
-    src-gen/v1_42/commonapi/someip/attr.cpp
+    src-gen/v1/commonapi/someip/attr.cpp
 )
 target_link_libraries (
     someip-attribute-example-client
     CommonAPI
-	${DL_LIBRARY}
+    ${DL_LIBRARY}
 )
 
 add_executable (someip-attributeanonymtc-example-client
-	src/attranonymtcClient.cpp
+    src/attranonymtcClient.cpp
 )
 target_link_libraries (
-	someip-attributeanonymtc-example-client
-	CommonAPI
-	${DL_LIBRARY}
+    someip-attributeanonymtc-example-client
+    CommonAPI
+    ${DL_LIBRARY}
 )
 
 add_executable (someip-attributenamedtc-example-client
-	src/attrnamedtcClient.cpp
+    src/attrnamedtcClient.cpp
 )
 target_link_libraries (
-	someip-attributenamedtc-example-client
-	CommonAPI
-	${DL_LIBRARY}
+    someip-attributenamedtc-example-client
+    CommonAPI
+    ${DL_LIBRARY}
 )
 
 add_executable (someip-math-example-client-1
@@ -187,7 +189,7 @@ add_executable (someip-math-example-client-1
 target_link_libraries (
     someip-math-example-client-1
     CommonAPI
-	${DL_LIBRARY}
+    ${DL_LIBRARY}
 )
 
 add_executable (someip-math-example-client-2
@@ -196,17 +198,17 @@ add_executable (someip-math-example-client-2
 target_link_libraries (
     someip-math-example-client-2
     CommonAPI
-	${DL_LIBRARY}
+    ${DL_LIBRARY}
 )
 
 add_executable (someip-serialization-example-client
     src/serializationClient.cpp
-    src-gen/v1_42/commonapi/serialization/Sample.cpp
+    src-gen/v1/commonapi/serialization/Sample.cpp
 )
 target_link_libraries (
     someip-serialization-example-client
     CommonAPI
-	${DL_LIBRARY}
+    ${DL_LIBRARY}
 )
 
 add_executable (someip-map-example-client
@@ -215,7 +217,7 @@ add_executable (someip-map-example-client
 target_link_libraries (
     someip-map-example-client
     CommonAPI
-	${DL_LIBRARY}
+    ${DL_LIBRARY}
 )
 
 add_executable (someip-methodSample-example-client
@@ -224,99 +226,99 @@ add_executable (someip-methodSample-example-client
 target_link_libraries (
     someip-methodSample-example-client
     CommonAPI
-	${DL_LIBRARY}
+    ${DL_LIBRARY}
 )
 
 add_executable (someip-example-service
     src/service.cpp
     src/heartbeatStubImpl.cpp
     src/mathStubImpl.cpp
-    src-gen/v1_42/commonapi/someip/heartbeatStubDefault.cpp
-    src-gen/v1_42/commonapi/someip/mathStubDefault.cpp
+    src-gen/v1/commonapi/someip/heartbeatStubDefault.cpp
+    src-gen/v1/commonapi/someip/mathStubDefault.cpp
 )
 target_link_libraries (
     someip-example-service
     CommonAPI
-	${DL_LIBRARY}
+    ${DL_LIBRARY}
 )
  
 add_executable (someip-attribute-example-service
     src/attrService.cpp
     src/attrStubImpl.cpp
-    src-gen/v1_42/commonapi/someip/attr.cpp    
-    src-gen/v1_42/commonapi/someip/attrStubDefault.cpp
+    src-gen/v1/commonapi/someip/attr.cpp    
+    src-gen/v1/commonapi/someip/attrStubDefault.cpp
 )
 target_link_libraries (
     someip-attribute-example-service
     CommonAPI
-	${DL_LIBRARY}
+    ${DL_LIBRARY}
 )
 
 add_executable (someip-attributeanonymtc-example-service
-	src/attranonymtcService.cpp
-	src/attranonymtcStubImpl.cpp
-	src-gen/v2_3/commonapi/someip/__Anonymous__.cpp
-	src-gen/v1_42/commonapi/someip/attranonymtcStubDefault.cpp
+    src/attranonymtcService.cpp
+    src/attranonymtcStubImpl.cpp
+    src-gen/v2/commonapi/someip/__Anonymous__.cpp
+    src-gen/v1/commonapi/someip/attranonymtcStubDefault.cpp
 )
 target_link_libraries (
-	someip-attributeanonymtc-example-service
-	CommonAPI
-	${DL_LIBRARY}
+    someip-attributeanonymtc-example-service
+    CommonAPI
+    ${DL_LIBRARY}
 )
 
 add_executable (someip-attributenamedtc-example-service
-	src/attrnamedtcService.cpp
-	src/attrnamedtcStubImpl.cpp
-	src-gen/v2_3/commonapi/someip/myTypeCollection.cpp
-	src-gen/v1_42/commonapi/someip/attrnamedtcStubDefault.cpp
+    src/attrnamedtcService.cpp
+    src/attrnamedtcStubImpl.cpp
+    src-gen/v2/commonapi/someip/myTypeCollection.cpp
+    src-gen/v1/commonapi/someip/attrnamedtcStubDefault.cpp
 )
 target_link_libraries (
-	someip-attributenamedtc-example-service
-	CommonAPI
-	${DL_LIBRARY}
+    someip-attributenamedtc-example-service
+    CommonAPI
+    ${DL_LIBRARY}
 )
 
 add_executable (someip-math-example-service
     src/mathService.cpp
     src/mathStubImpl.cpp
-    src-gen/v1_42/commonapi/someip/mathStubDefault.cpp
+    src-gen/v1/commonapi/someip/mathStubDefault.cpp
 )
 target_link_libraries (
     someip-math-example-service
     CommonAPI
-	${DL_LIBRARY}
+    ${DL_LIBRARY}
 )
 
 add_executable (someip-serialization-example-service
     src/serializationService.cpp
     src/serializationStubImpl.cpp
-    src-gen/v1_42/commonapi/serialization/Sample.cpp
-    src-gen/v1_42/commonapi/serialization/SampleStubDefault.cpp
+    src-gen/v1/commonapi/serialization/Sample.cpp
+    src-gen/v1/commonapi/serialization/SampleStubDefault.cpp
 )
 target_link_libraries (
     someip-serialization-example-service
     CommonAPI
-	${DL_LIBRARY}
+    ${DL_LIBRARY}
 )
 
 add_executable (someip-map-example-service
     src/mapService.cpp
     src/mapStubImpl.cpp
-    src-gen/v1_0/commonapi/someip/MapStubDefault.cpp
+    src-gen/v1/commonapi/someip/MapStubDefault.cpp
 )
 target_link_libraries (
     someip-map-example-service
     CommonAPI
-	${DL_LIBRARY}
+    ${DL_LIBRARY}
 )
 
 add_executable (someip-methodSample-example-service
     src/methodSampleService.cpp
     src/methodSampleStubImpl.cpp
-    src-gen/v1_0/commonapi/someip/methodSampleStubDefault.cpp
+    src-gen/v1/commonapi/someip/methodSampleStubDefault.cpp
 )
 target_link_libraries (
     someip-methodSample-example-service
     CommonAPI
-	${DL_LIBRARY}
+    ${DL_LIBRARY}
 )

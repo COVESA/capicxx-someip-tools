@@ -26,8 +26,7 @@ import org.franca.core.franca.FInterface
 class FrancaSomeIPDeploymentAccessorHelper {
 
     @Inject private extension FrancaSomeIPGeneratorExtensions
-
-
+    
     static Integer SOMEIP_DEFAULT_MIN_LENGTH = 0
     static Integer SOMEIP_DEFAULT_MAX_LENGTH = 0
     static Integer SOMEIP_DEFAULT_LENGTH_WIDTH = 4
@@ -510,8 +509,6 @@ class FrancaSomeIPDeploymentAccessorHelper {
         } 
         return false
     }  
-
-
     
     def dispatch boolean hasDeployment(PropertyAccessor _accessor, FTypedElement _element) {
     	if (_accessor == null)
@@ -528,7 +525,7 @@ class FrancaSomeIPDeploymentAccessorHelper {
             _accessor.hasSomeIpUnionDefaultOrder(_element) ||
             _accessor.hasSomeIpUnionMaxLength(_element) ||
             _accessor.hasSomeIpEnumWidth(_element)) {
-            return true
+                return true
         }
         return _accessor.hasDeployment(_element.type)
     }
@@ -557,17 +554,10 @@ class FrancaSomeIPDeploymentAccessorHelper {
             
         for (element : _struct.elements) {
             if (_accessor.hasDeployment(element)) {
-//                if(_struct.name.equals("CurrentStation")) {
-//                    System.out.println(_struct.name + " has deployment")    
-//                    System.out.println(_struct)    
-//                }
                 return true
             }
         }
-//        if(_struct.name.equals("CurrentStation")) {
-//            System.out.println(_struct.name + " has no deployment")    
-//            System.out.println(_struct)    
-//       }
+
         return false
     }
     
@@ -614,107 +604,36 @@ class FrancaSomeIPDeploymentAccessorHelper {
                                       FTypedElement _attribute) {
                                           
                                         
-//        try {
-//            val Integer minLength = _accessor.getSomeIpArrayMinLengthHelper(_attribute)
-//            if (minLength != null && minLength != SOMEIP_DEFAULT_MIN_LENGTH ) {
-//                return true
-//            }                                     
-//        } catch (NullPointerException e) {}
-        
         if(hasSomeIpArrayMinLength(_accessor, _attribute)) {
             return true
         }
-        
-//        try {
-//            val Integer maxLength = _accessor.getSomeIpArrayMaxLengthHelper(_attribute)
-//            if (maxLength != null && maxLength != SOMEIP_DEFAULT_MAX_LENGTH ) {
-//                return true
-//            }
-//        } catch (NullPointerException e) {}
-
         if(hasSomeIpArrayMaxLength (_accessor, _attribute)) {
             return true
         }
-
-//        try {
-//            val Integer lengthWidth = _accessor.getSomeIpArrayLengthWidthHelper(_attribute)
-//            if (lengthWidth != null && lengthWidth != SOMEIP_DEFAULT_LENGTH_WIDTH ) {
-//                return true
-//            }  
-//        } catch (NullPointerException e) {}
         if(hasSomeIpArrayLengthWidth (_accessor, _attribute)) {
             return true
         }        
-//        try {
-//            val Integer length = _accessor.getSomeIpStringLength(_attribute)
-//            if (length != null && length != SOMEIP_DEFAULT_MIN_LENGTH ) {
-//                return true
-//            }  
-//        } catch (NullPointerException e) {}
         if(hasSomeIpStringLength (_accessor, _attribute)) {
             return true
         }        
-//        try {
-//            val Integer lengthWidth = _accessor.getSomeIpStringLengthWidth(_attribute)
-//            if (lengthWidth != null && lengthWidth != SOMEIP_DEFAULT_LENGTH_WIDTH ) {
-//                return true
-//            }  
-//        } catch (NullPointerException e) {}    
         if(hasSomeIpStringLengthWidth (_accessor, _attribute)) {
             return true
         }        
-//        try {
-//            val PropertyAccessor.SomeIpStringEncoding encoding
-//                = _accessor.getSomeIpStringEncoding(_attribute)
-//            if (encoding != null && encoding != SOMEIP_DEFAULT_STRING_ENCODING ) {
-//                return true
-//            }
-//        } catch (NullPointerException e) {}    
         if(hasSomeIpStringEncoding (_accessor, _attribute)) {
             return true
         }
-//        try {
-//            val Integer lengthWidth = _accessor.getSomeIpStructLengthWidthHelper(_attribute)
-//            if (lengthWidth != null && lengthWidth != SOMEIP_DEFAULT_LENGTH_WIDTH ) {
-//                return true
-//            }  
-//        } catch (NullPointerException e) {}    
         if(hasSomeIpStructLengthWidth (_accessor, _attribute)) {
             return true
         }        
-//        try {
-//            val Integer lengthWidth = _accessor.getSomeIpUnionLengthWidthHelper(_attribute)
-//            if (lengthWidth != null && lengthWidth != SOMEIP_DEFAULT_LENGTH_WIDTH ) {
-//                return true
-//            }  
-//        } catch (NullPointerException e) {}
         if(hasSomeIpUnionLengthWidth (_accessor, _attribute)) {
             return true
         }        
-//        try {
-//            val Integer typeWidth = _accessor.getSomeIpUnionTypeWidthHelper(_attribute)
-//            if (typeWidth != null && typeWidth != SOMEIP_DEFAULT_UNION_TYPE_WIDTH ) {
-//                return true
-//            }  
-//        } catch (NullPointerException e) {}
         if(hasSomeIpUnionTypeWidth (_accessor, _attribute)) {
             return true
         }        
-//        try {
-//            var Boolean defaultOrder = _accessor.getSomeIpUnionDefaultOrderHelper(_attribute)
-//            if (defaultOrder != null && defaultOrder != SOMEIP_DEFAULT_UNION_DEFAULT_ORDER ) {
-//                return true
-//            }
-//        } catch (NullPointerException e) {}
         if(hasSomeIpUnionDefaultOrder (_accessor, _attribute)) {
             return true
         }        
-//        try {
-//            val Integer maxLength = _accessor.getSomeIpUnionMaxLengthHelper(_attribute)
-//            if (maxLength != null && maxLength != SOMEIP_DEFAULT_MAX_LENGTH ) {
-//                return true
-//            }
-//        } catch (NullPointerException e) {}    
         if(hasSomeIpUnionMaxLength (_accessor, _attribute)) {
             return true
         }

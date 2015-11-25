@@ -8,10 +8,10 @@
 * http://mozilla.org/MPL/2.0/.
 */
 
-#include <v1_42/commonapi/someip/attrStub.hpp>
-#include <v1_42/commonapi/someip/attrStubDefault.hpp>
+#include <v1/commonapi/someip/attrStub.hpp>
+#include <v1/commonapi/someip/attrStubDefault.hpp>
 
-class attrStubImpl : public v1_42::commonapi::someip::attrStubDefault {
+class attrStubImpl : public v1::commonapi::someip::attrStubDefault {
 
 public:
     attrStubImpl();

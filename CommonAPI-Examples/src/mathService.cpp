@@ -10,8 +10,8 @@
 #include "mathStubImpl.hpp"
 
 int main(int argc, char **argv) {
-	std::shared_ptr<CommonAPI::Runtime> runtime = CommonAPI::Runtime::get();
-    std::shared_ptr<mathStubImpl> myService	= std::make_shared<mathStubImpl>();
+    std::shared_ptr<CommonAPI::Runtime> runtime = CommonAPI::Runtime::get();
+    std::shared_ptr<mathStubImpl> myService    = std::make_shared<mathStubImpl>();
     if (runtime->registerService("local", "BMW.ATM", myService))
     {
         std::cout << "Service registered." << std::endl;

@@ -9,9 +9,9 @@
 */
 
 #include <sstream>
-#include <v1_42/commonapi/someip/mathStubDefault.hpp>
+#include <v1/commonapi/someip/mathStubDefault.hpp>
 
-class mathStubImpl : public v1_42::commonapi::someip::mathStubDefault {
+class mathStubImpl : public v1::commonapi::someip::mathStubDefault {
 public:
     mathStubImpl();
     virtual ~mathStubImpl();

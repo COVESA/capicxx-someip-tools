@@ -8,10 +8,10 @@
 * http://mozilla.org/MPL/2.0/.
 */
 
-#include <v1_0/commonapi/someip/MapStub.hpp>
-#include <v1_0/commonapi/someip/MapStubDefault.hpp>
+#include <v1/commonapi/someip/MapStub.hpp>
+#include <v1/commonapi/someip/MapStubDefault.hpp>
 
-class MapStubImpl : public v1_0::commonapi::someip::MapStubDefault {
+class MapStubImpl : public v1::commonapi::someip::MapStubDefault {
 
 public:
     MapStubImpl();

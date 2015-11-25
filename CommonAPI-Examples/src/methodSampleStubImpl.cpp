@@ -18,18 +18,18 @@ methodSampleStubImpl::~methodSampleStubImpl() {
 }
 
 void methodSampleStubImpl::setName(
-		const std::shared_ptr<CommonAPI::ClientId> clientId,
-		std::string familyName,
-		v1_0::commonapi::someip::methodSampleStub::setNameReply_t _reply) {
+        const std::shared_ptr<CommonAPI::ClientId> clientId,
+        std::string familyName,
+        v1_0::commonapi::someip::methodSampleStub::setNameReply_t _reply) {
 
-	std::vector<std::string> result;
-	if (familyName == "Duck") {
-		result.push_back("Donald");
-		result.push_back("Dagobert");
-		result.push_back("Daisy");
-		result.push_back("Tick");
-		result.push_back("Trick");
-		result.push_back("Track");
-	}
-	_reply(result);
+    std::vector<std::string> result;
+    if (familyName == "Duck") {
+        result.push_back("Donald");
+        result.push_back("Dagobert");
+        result.push_back("Daisy");
+        result.push_back("Tick");
+        result.push_back("Trick");
+        result.push_back("Track");
+    }
+    _reply(result);
 }

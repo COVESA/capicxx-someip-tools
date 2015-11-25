@@ -20,13 +20,5 @@
 <unit id="org.eclipse.xtend.sdk.feature.group" version="2.7.2.v201409160908"/>
 <repository location="http://download.eclipse.org/releases/luna"/>
 </location>
-<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.genivi.commonapi.core.feature.feature.group" version="0.0.0"/>
-<repository location="file:../../ascgit017.CommonAPI-Tools/org.genivi.commonapi.core.updatesite/target/repository/"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.genivi.commonapi.console.feature.feature.group" version="0.0.0"/>
-<repository location="file:../../ascgit017.CommonAPI-Tools/org.genivi.commonapi.core.cli.product/target/repository/"/>
-</location>
 </locations>
 </target>

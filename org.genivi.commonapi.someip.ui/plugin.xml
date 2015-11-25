@@ -46,20 +46,20 @@
       <page
             class="org.genivi.commonapi.someip.ui.preferences.CommonAPISomeIPPreferencePage"
             id="org.genivi.commonapi.someip.ui.preferences.property.CommonAPISomeIPPreferencePage"
-            name="CommonAPI-Some/IP"
-            objectClass="org.eclipse.core.resources.IProject">
-      </page>
-      <page
-            class="org.genivi.commonapi.someip.ui.preferences.CommonAPISomeIPPreferencePage"
-            id="org.genivi.commonapi.someip.ui.preferences.property.CommonAPISomeIPPreferencePage"
-            name="CommonAPI-Some/IP"
-            objectClass="org.eclipse.core.resources.IFolder">
-      </page>
-      <page
-            class="org.genivi.commonapi.someip.ui.preferences.CommonAPISomeIPPreferencePage"
-            id="org.genivi.commonapi.someip.ui.preferences.property.CommonAPISomeIPPreferencePage"
-            name="CommonAPI-Some/IP"
-            objectClass="org.eclipse.core.resources.IFile">
+            name="CommonAPI-Some/IP">
+              <enabledWhen>
+                 <or>
+                    <instanceof
+                          value="org.eclipse.core.resources.IProject">
+                    </instanceof>
+                    <instanceof
+                          value="org.eclipse.core.resources.IFolder">
+                    </instanceof>
+                    <instanceof
+                          value="org.eclipse.core.resources.IFile">
+                    </instanceof>
+                 </or>
+              </enabledWhen>
       </page>
    </extension>
    <extension
@@ -70,5 +70,5 @@
                  schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
                  sequence="Ctrl+Alt+S">
           </key>
-   </extension>   
+   </extension>
 </plugin>

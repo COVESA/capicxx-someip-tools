@@ -8,14 +8,15 @@
 
 package org.genivi.commonapi.someip.ui.preferences;
 
-import org.eclipse.cdt.ui.newui.MultiLineTextFieldEditor;
 import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.genivi.commonapi.core.ui.preferences.FieldEditorOverlayPage;
+import org.genivi.commonapi.core.ui.preferences.MultiLineStringFieldEditor;
 import org.genivi.commonapi.someip.preferences.PreferenceConstantsSomeIP;
 import org.genivi.commonapi.someip.ui.CommonApiSomeIPUiPlugin;
 
@@ -23,8 +24,8 @@ import org.genivi.commonapi.someip.ui.CommonApiSomeIPUiPlugin;
  * This class represents a preference page that is contributed to the
  * Preferences dialog. By subclassing <samp>FieldEditorOverlayPage</samp>.
  * <p>
- * This page is used to modify preferences. They are stored in the preference store that 
- * belongs to the main plug-in class. 
+ * This page is used to modify preferences. They are stored in the preference store that
+ * belongs to the main plug-in class.
  */
 
 public class CommonAPISomeIPPreferencePage extends FieldEditorOverlayPage implements IWorkbenchPreferencePage
@@ -33,7 +34,8 @@ public class CommonAPISomeIPPreferencePage extends FieldEditorOverlayPage implem
     private FieldEditor         proxyOutput = null;
     private FieldEditor         stubOutput  = null;
     private FieldEditor         commonOutput  = null;
-    
+    private BooleanFieldEditor  deploymentValidation;
+
 
     public CommonAPISomeIPPreferencePage()
     {
@@ -45,9 +47,13 @@ public class CommonAPISomeIPPreferencePage extends FieldEditorOverlayPage implem
      * GUI blocks needed to manipulate various types of preferences. Each field
      * editor knows how to save and restore itself.
      */
+    @Override
     public void createFieldEditors()
     {
-        license = new MultiLineTextFieldEditor(PreferenceConstantsSomeIP.P_LICENSE_SOMEIP, "The header to insert for all generated files", 60,
+        deploymentValidation = new BooleanFieldEditor(PreferenceConstantsSomeIP.P_ENABLE_SOMEIP_DEPLOYMENT_VALIDATOR, "Validate deployment", getFieldEditorParent());
+        addField(deploymentValidation);
+
+        license = new MultiLineStringFieldEditor(PreferenceConstantsSomeIP.P_LICENSE_SOMEIP, "The header to insert for all generated files", 60,
                 getFieldEditorParent());
         license.setLabelText(""); // need to set this parameter (seems to be a bug)
         addField(license);
@@ -60,9 +66,8 @@ public class CommonAPISomeIPPreferencePage extends FieldEditorOverlayPage implem
         stubOutput = new StringFieldEditor(PreferenceConstantsSomeIP.P_OUTPUT_STUBS_SOMEIP, "Output directory for stubs inside project",
                 30, getFieldEditorParent());
         addField(stubOutput);
-
     }
-    
+
     @Override
     protected void performDefaults()
     {
@@ -72,10 +77,11 @@ public class CommonAPISomeIPPreferencePage extends FieldEditorOverlayPage implem
                 PreferenceConstantsSomeIP.DEFAULT_OUTPUT_SOMEIP);
         DefaultScope.INSTANCE.getNode(PreferenceConstantsSomeIP.SCOPE).put(PreferenceConstantsSomeIP.P_OUTPUT_STUBS_SOMEIP,
                 PreferenceConstantsSomeIP.DEFAULT_OUTPUT_SOMEIP);
-        
+
         super.performDefaults();
     }
 
+    @Override
     public void init(IWorkbench workbench)
     {
         if (!isPropertyPage())

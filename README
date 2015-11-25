@@ -25,7 +25,7 @@ interface is provided.
 To build, change into the `org.genivi.commonapi.someip.releng` directory and
 run:
 ----
-mvn clean verify -Dtarget.id=org.genivi.commonapi.someip.target
+mvn clean verify -DCOREPATH=< path to your CommonAPI-Tools dir> -Dtarget.id=org.genivi.commonapi.someip.target 
 ----
 
 If no configuration files are changed, Maven should report successful
@@ -70,15 +70,22 @@ usage: commonapi-someip-generator-linux-x86_64 [-a | -p]  -v
  -v,--version   print code generator version
 
 Command: CommonAPI Some/IP Code Generation
-usage: commonapi-someip-generator-linux-x86_64 -d <arg> [-dc <arg>] [-dp <arg>]
-       [-ds <arg>] [-l <arg>] [-ll <arg>] [-np] [-ns]
- -d,--dest <arg>           The default output directory
- -dc,--dest-common <arg>   The directory for the common code
- -dp,--dest-proxy <arg>    The directory for proxy code
- -ds,--dest-stub <arg>     The directory for stub code
- -l,--license <arg>        The file path to the license text that will be added
-                           to each generated file
- -ll,--loglevel <arg>      The log level (quiet or verbose)
- -np,--no-proxy            Switch off generation of proxy code
- -ns,--no-stub             Switch off generation of stub code
+usage: commonapi-someip-generator-linux-x86_64 [-d <arg>] [-dc <arg>] [-dp
+       <arg>] [-ds <arg>] [-l <arg>] [-ll <arg>] [-ng] [-np] [-ns] [-nsc] [-nv]
+       [-pf] [-sp <arg>] [-wod]
+ -d,--dest <arg>               The default output directory
+ -dc,--dest-common <arg>       The directory for the common code
+ -dp,--dest-proxy <arg>        The directory for proxy code
+ -ds,--dest-stub <arg>         The directory for stub code
+ -l,--license <arg>            The file path to the license text that will be
+                               added to each generated file
+ -ll,--loglevel <arg>          The log level (quiet or verbose)
+ -ng,--no-gen                  Switch off code generation
+ -np,--no-proxy                Switch off generation of proxy code
+ -ns,--no-stub                 Switch off generation of stub code
+ -nsc,--no-sync-calls          Switch off code generation of synchronous methods
+ -nv,--no-val                  Switch off validation of the fdepl file
+ -pf,--printfiles              Print out generated files
+ -sp,--searchpath <arg>        The search path to contain fidl/fdepl files
+ -wod,--without-dependencies   Switch off code generation of dependencies
 ----

@@ -11,7 +11,7 @@
 #include <iostream>
 
 attranonymtcStubImpl::attranonymtcStubImpl() {
-	setXAttribute(0);
+    setXAttribute(0);
 }
 
 attranonymtcStubImpl::~attranonymtcStubImpl() {

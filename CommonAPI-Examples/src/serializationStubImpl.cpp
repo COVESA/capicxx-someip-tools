@@ -17,6 +17,6 @@ SampleStubImpl::~SampleStubImpl() {
 
 }
 
-void SampleStubImpl::setNameAttribute(v1_42::commonapi::serialization::Sample::Name value) {
-	v1_42::commonapi::serialization::SampleStubDefault::setNameAttribute(value);
+void SampleStubImpl::setNameAttribute(v1::commonapi::serialization::Sample::Name value) {
+    v1::commonapi::serialization::SampleStubDefault::setNameAttribute(value);
 }

@@ -13,7 +13,6 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.generator.IFileSystemAccess
 import org.franca.core.franca.FArgument
 import org.franca.core.franca.FArrayType
-import org.franca.core.franca.FAttribute
 import org.franca.core.franca.FBasicTypeId
 import org.franca.core.franca.FEnumerationType
 import org.franca.core.franca.FField
@@ -26,6 +25,8 @@ import org.franca.core.franca.FTypeRef
 import org.franca.core.franca.FUnionType
 import org.genivi.commonapi.core.generator.FrancaGeneratorExtensions
 import org.genivi.commonapi.someip.deployment.PropertyAccessor
+import org.genivi.commonapi.someip.preferences.FPreferencesSomeIP
+import org.genivi.commonapi.someip.preferences.PreferenceConstantsSomeIP
 import org.franca.core.franca.FTypedElement
 
 class FTypeCollectionSomeIPDeploymentGenerator {
@@ -36,16 +37,24 @@ class FTypeCollectionSomeIPDeploymentGenerator {
     def generateTypeCollectionDeployment(FTypeCollection tc, IFileSystemAccess fileSystemAccess,
         PropertyAccessor deploymentAccessor, IResource modelid) {
         
-        fileSystemAccess.generateFile(tc.someipDeploymentHeaderPath, IFileSystemAccess.DEFAULT_OUTPUT,
-            tc.generateDeploymentHeader(deploymentAccessor, modelid))
-        fileSystemAccess.generateFile(tc.someipDeploymentSourcePath, IFileSystemAccess.DEFAULT_OUTPUT,
-            tc.generateDeploymentSource(deploymentAccessor, modelid))
+        if(FPreferencesSomeIP::getInstance.getPreference(PreferenceConstantsSomeIP::P_GENERATE_CODE_SOMEIP, "true").equals("true")) {
+            fileSystemAccess.generateFile(tc.someipDeploymentHeaderPath, IFileSystemAccess.DEFAULT_OUTPUT,
+                tc.generateDeploymentHeader(deploymentAccessor, modelid))
+            fileSystemAccess.generateFile(tc.someipDeploymentSourcePath, IFileSystemAccess.DEFAULT_OUTPUT,
+                tc.generateDeploymentSource(deploymentAccessor, modelid))
+        } 
+        else {
+            fileSystemAccess.generateFile(tc.someipDeploymentHeaderPath, IFileSystemAccess.DEFAULT_OUTPUT,
+                PreferenceConstantsSomeIP::NO_CODE)
+            fileSystemAccess.generateFile(tc.someipDeploymentSourcePath, IFileSystemAccess.DEFAULT_OUTPUT,
+                PreferenceConstantsSomeIP::NO_CODE)
+        }           
     }
 
     def private generateDeploymentHeader(FTypeCollection _tc, 
                                          PropertyAccessor _accessor,
                                          IResource _modelid) '''
-        «generateCommonApiLicenseHeader(_tc, _modelid)»
+        «generateCommonApiSomeIPLicenseHeader()»
         
         #ifndef «_tc.defineName.toUpperCase»_SOMEIP_DEPLOYMENT_HPP_
         #define «_tc.defineName.toUpperCase»_SOMEIP_DEPLOYMENT_HPP_
@@ -83,7 +92,7 @@ class FTypeCollectionSomeIPDeploymentGenerator {
                                          PropertyAccessor _accessor,
                                          IResource _modelid) '''
 
-		«generateCommonApiLicenseHeader(_tc, _modelid)»
+        «generateCommonApiSomeIPLicenseHeader()»
 		«val DeploymentHeaders = _tc.getDeploymentInputIncludes(_accessor)»
 		«DeploymentHeaders.map["#include <" + it + ">"].join("\n")»
 		
@@ -217,7 +226,7 @@ class FTypeCollectionSomeIPDeploymentGenerator {
     def protected dispatch String generateDeploymentDeclaration(FArrayType _array, FTypeCollection _tc, PropertyAccessor _accessor) {
         if (_accessor.hasDeployment(_array)) {
             return _array.elementType.generateDeploymentDeclaration(_tc, _accessor) + 
-                   "extern " + _array.getDeploymentType(null, false) + " " + _array.name + "Deployment;"
+                   "extern " + _array.getDeploymentType(_tc, true) + " " + _array.name + "Deployment;"
         }
         return ""
     }
@@ -233,7 +242,7 @@ class FTypeCollectionSomeIPDeploymentGenerator {
         if (_accessor.hasDeployment(_map)) {
             return _map.keyType.generateDeploymentDeclaration(_tc, _accessor) +
                    _map.valueType.generateDeploymentDeclaration(_tc, _accessor) +
-                   "extern " + _map.getDeploymentType(null, false) + " " + _map.name + "Deployment;"
+                   "extern " + _map.getDeploymentType(_tc, true) + " " + _map.name + "Deployment;"
         }
     }
     
@@ -243,7 +252,7 @@ class FTypeCollectionSomeIPDeploymentGenerator {
             for (structElement : _struct.elements) {
                 declaration += structElement.generateDeploymentDeclaration(_tc, _accessor)
             }
-            declaration += "extern " + _struct.getDeploymentType(null, false) + " " + _struct.name + "Deployment;"
+            declaration += "extern " + _struct.getDeploymentType(_tc, true) + " " + _struct.name + "Deployment;"
             return declaration + "\n"
         }
         return ""
@@ -252,10 +261,10 @@ class FTypeCollectionSomeIPDeploymentGenerator {
     def protected dispatch String generateDeploymentDeclaration(FUnionType _union, FTypeCollection _tc, PropertyAccessor _accessor) {
         if (_accessor.hasDeployment(_union)) {
             var String declaration = ""
-            for (unionElement : _union.elements) {
-                declaration += unionElement.generateDeploymentDeclaration(_tc, _accessor)
+            for (structElement : _union.elements) {
+                declaration += structElement.generateDeploymentDeclaration(_tc, _accessor)
             }
-            declaration += "extern " + _union.getDeploymentType(null, false) + " " + _union.name + "Deployment;"
+            declaration += "extern " + _union.getDeploymentType(_tc, true) + " " + _union.name + "Deployment;"
             return declaration + "\n"
         }
         return ""
@@ -263,7 +272,7 @@ class FTypeCollectionSomeIPDeploymentGenerator {
     
     def protected dispatch String generateDeploymentDeclaration(FField _field, FTypeCollection _tc, PropertyAccessor _accessor) {
         if (_accessor.hasSpecificDeployment(_field)) {
-            return "extern " + _field.getDeploymentType(null, false) + " " + _field.getRelativeName() + "Deployment;\n" 
+            return "extern " + _field.getDeploymentType(_tc, true) + " " + _field.getRelativeName() + "Deployment;\n" 
         }
         return ""
     }
@@ -282,7 +291,7 @@ class FTypeCollectionSomeIPDeploymentGenerator {
     def protected dispatch String generateDeploymentDefinition(FArrayType _array, FTypeCollection _tc, PropertyAccessor _accessor) {
         if (_accessor.hasDeployment(_array)) {
             var String definition = _array.elementType.generateDeploymentDefinition(_tc, _accessor)
-            definition += _array.getDeploymentType(null, false) + " " + _array.name + "Deployment("
+            definition += _array.getDeploymentType(_tc, true) + " " + _array.name + "Deployment("
             definition += _array.getDeploymentParameter(_array, _accessor)
             definition += ");"
             return definition
@@ -304,7 +313,7 @@ class FTypeCollectionSomeIPDeploymentGenerator {
         if (_accessor.hasDeployment(_map)) {
             var String definition = _map.keyType.generateDeploymentDefinition(_tc, _accessor) +
                                     _map.valueType.generateDeploymentDefinition(_tc, _accessor)
-            definition += _map.getDeploymentType(null, false) + " " + _map.name + "Deployment("
+            definition += _map.getDeploymentType(_tc, true) + " " + _map.name + "Deployment("
             definition += _map.getDeploymentParameter(_map, _accessor)
             definition += ");"
             return definition
@@ -313,12 +322,16 @@ class FTypeCollectionSomeIPDeploymentGenerator {
     }
     
     def protected dispatch String generateDeploymentDefinition(FStructType _struct, FTypeCollection _tc, PropertyAccessor _accessor) {
+        var String definition = ""
         if (_accessor.hasDeployment(_struct)) {
-            var String definition = ""
             for (structElement : _struct.elements) {
-                definition += structElement.generateDeploymentDefinition(_tc, _accessor)        
+                if (_accessor.hasDeployment(structElement)) {
+                    definition += structElement.getDeploymentType(_tc, true) + " " + structElement.relativeName + "Deployment("
+                    definition += structElement.getDeploymentParameter(structElement, _accessor)
+                    definition += ");\n"
+                }
             }
-            definition += _struct.getDeploymentType(null, false) + " " + _struct.name + "Deployment("
+            definition += _struct.getDeploymentType(_tc, true) + " " + _struct.name + "Deployment("
             definition += _struct.getDeploymentParameter(_struct, _accessor)
             definition += ");\n"        
             return definition
@@ -327,12 +340,16 @@ class FTypeCollectionSomeIPDeploymentGenerator {
     }
     
     def protected dispatch String generateDeploymentDefinition(FUnionType _union, FTypeCollection _tc, PropertyAccessor _accessor) {
+        var String definition = ""
         if (_accessor.hasDeployment(_union)) {
-            var String definition = ""
             for (unionElement : _union.elements) {
-                definition += unionElement.generateDeploymentDefinition(_tc, _accessor)        
+                if (_accessor.hasDeployment(unionElement)) {
+                    definition += unionElement.getDeploymentType(_tc, true) + " " + unionElement.relativeName + "Deployment("
+                    definition += unionElement.getDeploymentParameter(unionElement, _accessor)
+                    definition += ");\n"
+                }
             }
-            definition += _union.getDeploymentType(null, false) + " " + _union.name + "Deployment("
+            definition += _union.getDeploymentType(_tc, true) + " " + _union.name + "Deployment("
             definition += _union.getDeploymentParameter(_union, _accessor)
             definition += ");\n"
             return definition
@@ -343,13 +360,14 @@ class FTypeCollectionSomeIPDeploymentGenerator {
     def protected dispatch String generateDeploymentDefinition(FField _field, FTypeCollection _tc, PropertyAccessor _accessor) {
        if (_accessor.hasSpecificDeployment(_field) ||
            _field.array && _accessor.hasDeployment(_field)) {
-            var String definition = _field.getDeploymentType(null, false) + " " + _field.getRelativeName() + "Deployment("
+            var String definition = _field.getDeploymentType(_tc, true) + " " + _field.getRelativeName() + "Deployment("
+            definition += getDeploymentParameter(_field.type, _field, _accessor)
             if (_field.array) {
                 definition += getArrayElementTypeDeploymentParameter(_field.type, _field, _accessor) + ", "
                 definition += getArrayDeploymentParameter(_field.type, _field, _accessor)
             } else {
                 definition += getDeploymentParameter(_field.type, _field, _accessor)
-            }        
+            }                
             definition += ");\n"
             return definition
         }
@@ -414,7 +432,6 @@ class FTypeCollectionSomeIPDeploymentGenerator {
         
         return parameter
     }
-
     
     def protected dispatch String getDeploymentParameter(FUnionType _union, EObject _source, PropertyAccessor _accessor) {
         var String parameter = ""

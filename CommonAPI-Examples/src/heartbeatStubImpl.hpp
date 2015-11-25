@@ -9,9 +9,9 @@
 */
 
 #include <sstream>
-#include <v1_42/commonapi/someip/heartbeatStubDefault.hpp>
+#include <v1/commonapi/someip/heartbeatStubDefault.hpp>
 
-class heartbeatStubImpl : public v1_42::commonapi::someip::heartbeatStubDefault {
+class heartbeatStubImpl : public v1::commonapi::someip::heartbeatStubDefault {
 public:
     heartbeatStubImpl();
     virtual ~heartbeatStubImpl();

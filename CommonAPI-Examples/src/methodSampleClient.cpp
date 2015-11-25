@@ -4,15 +4,15 @@
 
 #include <CommonAPI/CommonAPI.hpp>
 
-#include <v1_0/commonapi/someip/methodSampleProxy.hpp>
+#include <v1/commonapi/someip/methodSampleProxy.hpp>
 
-using namespace v1_0::commonapi::someip;
+using namespace v1::commonapi::someip;
 
 int main(int argc, char **argv) {
     std::shared_ptr< CommonAPI::Runtime > runtime = CommonAPI::Runtime::get();
 
     std::shared_ptr<methodSampleProxyDefault> myProxy
-    	= runtime->buildProxy<methodSampleProxy>("local", "BMW.ATM");
+        = runtime->buildProxy<methodSampleProxy>("local", "BMW.ATM");
 
     if(myProxy != NULL) {
         myProxy->isAvailableBlocking();

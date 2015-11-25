@@ -2,16 +2,28 @@ import "platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-SOMEIP
 import "math_example.fidl"
 
 define org.genivi.commonapi.someip.deployment for interface commonapi.someip.math {
-	SomeIpServiceID	= 4661
-	
-	method calc {
-		SomeIpMethodID = 1029
-		SomeIpReliable = true
-	}
+    SomeIpServiceID    = 4661
+    
+    method calc {
+        SomeIpMethodID = 1029
+        SomeIpReliable = true
+    }
 
-	broadcast results {
-		SomeIpEventID = 41913
-		SomeIpReliable = true
-		SomeIpEventGroups = { 17749 }
-	}
+    broadcast results {
+        SomeIpEventID = 41913
+        SomeIpReliable = true
+        SomeIpEventGroups = { 17749 }
+    }
+}
+
+define org.genivi.commonapi.someip.deployment for provider Service {
+    instance commonapi.someip.math {
+        InstanceId = "BMW.ATM"
+        
+        SomeIpInstanceID = 22136
+    
+        SomeIpUnicastAddress = "192.168.0.2"
+        SomeIpReliableUnicastPort = 30499
+        SomeIpUnreliableUnicastPort = 30499
+    }
 }

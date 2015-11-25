@@ -21,10 +21,11 @@ public class PreferenceInitializerSomeIP extends AbstractPreferenceInitializer
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#
      * initializeDefaultPreferences()
      */
+    @Override
     public void initializeDefaultPreferences()
     {
         IPreferenceStore store = CommonApiSomeIPUiPlugin.getDefault().getPreferenceStore();
@@ -34,6 +35,11 @@ public class PreferenceInitializerSomeIP extends AbstractPreferenceInitializer
         store.setDefault(PreferenceConstantsSomeIP.P_OUTPUT_COMMON_SOMEIP, PreferenceConstantsSomeIP.DEFAULT_OUTPUT_SOMEIP);
         store.setDefault(PreferenceConstantsSomeIP.P_GENERATEPROXY_SOMEIP, true);
         store.setDefault(PreferenceConstantsSomeIP.P_GENERATESTUB_SOMEIP, true);
-        store.setDefault(PreferenceConstantsSomeIP.P_USEPROJECTSETTINGS_SOMEIP, false);        
+        store.setDefault(PreferenceConstantsSomeIP.P_USEPROJECTSETTINGS_SOMEIP, false);
+        store.setDefault(PreferenceConstantsSomeIP.P_GENERATE_CODE_SOMEIP, true);
+        store.setDefault(PreferenceConstantsSomeIP.P_GENERATE_DEPENDENCIES_SOMEIP, true);
+        store.setDefault(PreferenceConstantsSomeIP.P_ENABLE_SOMEIP_VALIDATOR, true);
+        store.setDefault(PreferenceConstantsSomeIP.P_ENABLE_SOMEIP_DEPLOYMENT_VALIDATOR, true);
+        store.setDefault(PreferenceConstantsSomeIP.P_GENERATE_SYNC_CALLS_SOMEIP, true);
     }
 }

@@ -50,7 +50,7 @@ $ make install
 
 You can change the installation directory by the CMake variable +CMAKE_INSTALL_PREFIX+ or you can let it uninstalled (skip the +make install+ command). If you want to use the uninstalled version of CommonAPI set the CMake variable USE_INSTALLED_COMMONAPI to OFF.
 
-This is the standard procedure and will hopefully create the shared CommonAPI D-Bus runtime library libCommonAPI-DBus.so in the build directory. Note that CMake checks if doxygen and asciidoc are installed. These tools are only necessary if you want to generate the documentation of your own. The unit tests of CommonAPI D-Bus are implemented by using the Google C++ Testing Framework. If you want to build and run the unit tests the environment variable +GTEST_ROOT+ must point to the correct directory (see the contributor's guide below). 
+This is the standard procedure and will hopefully create the shared CommonAPI SomeIP runtime library libCommonAPI-SomeIP.so in the build directory. Note that CMake checks if doxygen and asciidoc are installed. These tools are only necessary if you want to generate the documentation of your own.
 
 There are several options for calling CMake and make targets.
 
@@ -102,58 +102,53 @@ Follow the instructions in the CommonAPI User Guide.
 Like the CommonAPI core code generators you can build the SOME/IP generator by calling maven from the command-line. Open a console and change in the directory org.genivi.commonapi.someip.releng of your CommonAPI-Tools directory. Then call:
 
 ----
-mvn -Dtarget.id=org.genivi.commonapi.someip.target clean verify
+mvn clean verify -DCOREPATH=< path to your CommonAPI-Tools dir> -Dtarget.id=org.genivi.commonapi.someip.target
 ----
 
-After the successful build you will find the commond-line generators archived in org.genivi.commonapi.someip.cli.product/target/products/commonapi-generator.zip and the update-sites in org.genivi.commonapi.someip.updatesite/target.
+After the successful build you will find the commond-line generators archived in org.genivi.commonapi.someip.cli.product/target/products/commonapi_someip_generator.zip and the update-sites in org.genivi.commonapi.someip.updatesite/target.
 
-=== Build Glue Code
+=== Build SomeIP Glue Code
 
 The glue code library contains the binding specific, generated code. It depends on your specific project how exactly this library is built (with or without skeleton code, divided up into several libraries, e.g. for services and clients, and so on). The glue code for the verification tests can be built by means of the binding specific verification project (for SOME/IP it is _org.genivi.commonapi.someip.verification_ in CommonAPI-SomeIP-Tools):
 
-. Generate CommonAPI code for all requested fidl files using the code generator. The fidl files for the verification tests can be found in _org.genivi.commonapi.core.verification/fidl_.
+. Generate CommonAPI code for all requested fidl files using the CommonAPI code generator and generate CommonAPI-SomeIP Code from fdepl files using the CommonAPI-SomeIP generator. The fidl files for the verification tests can be found in _org.genivi.commonapi.core.verification/fidl_. The fdepl files are created and used for generating code when using the example cmake call shown below. 
 . Create a build directory for an out of source build.
 . Call cmake as described below with additional parameters (in eclipse create a make target).
 
 CMake parameters:
 
-[width="90%",cols="5,10"]
+[width="90%",cols="10,10"]
 |=========================================================
 
 |+USE_INSTALLED_COMMONAPI+ |
 ON or OFF
 
-|+BINDING_NAME+ |
-DBus or SomeIP
-
-|+CMAKE_BINDING_NAME+ |
-e.g. CommonAPI-SomeIP
-
-|+CMAKE_BINDING_PATH+ |
-Path to the build directory of your CommonAPI binding (e.g. CommonAPI-SomeIP/build) 
-
-|+CMAKE_GLUECODE_NAME+ |
-Name of the glue code library, e.g. SomeIpGlue
-
-|+CMAKE_GLUECODE_PATH+ |
-Path to the glue code library
-
-|+BINDING_EXTRA+ |
-Additional library which is necessary for the build process, e.g. libvsomeip-1.so
-
 |+COMMONAPI_CMAKE_INSTALL_PATH+ |
 Path to the build directory of CommonAPI (e.g. CommonAPI/build)
 
 |+COMMONAPI_SOMEIP_TOOL_GENERATOR+ |
-Code generator executable with path
+SomeIP Code generator executable with path
+
+|+COMMONAPI_TOOL_GENERATOR+ |
+Core Code generator executable with path
 
 |=========================================================
-
  
-Example:
+Example to build SomeIP glue code for the verification tests:
 
 ----
-cmake -DUSE_INSTALLED_COMMONAPI=OFF -DBINDING_NAME=someip -DCMAKE_BINDING_NAME=CommonAPI-SomeIP -DCMAKE_BINDING_PATH=myworkpath/CommonAPI-SomeIP/build -DCMAKE_GLUECODE_NAME=SomeIPGlue -DCMAKE_GLUECODE_PATH=myworkpath/CommonAPI-SomeIP-Tools/org.genivi.commonapi.someip.verification/build -DBINDING_EXTRA=/usr/local/lib/libvsomeip.so -DCOMMONAPI_CMAKE_INSTALL_PATH=myworkpath/CommonAPI/build -DCOMMONAPI_SOMEIP_TOOL_GENERATOR=myworkpath/CommonAPI-SomeIP-Tools/org.genivi.commonapi.someip.cli.product/target/products/org.genivi.commonapi.someip.cli.product/linux/gtk/x86/commonapi_someip_generator ..
+cd CommonAPI-SomeIP-Tools/org.genivi.commonapi.someip.verification/
+mkdir build
+cd build
+cmake \
+-DCOMMONAPI_SOMEIP_TOOL_GENERATOR=myworkpath/CommonAPI-SomeIP-Tools/org.genivi.commonapi.someip.cli.product/target/products/org.genivi.commonapi.someip.cli.product/target/products/org.genivi.commonapi.someip.cli.product/linux/gtk/MYARCH/commonapi--someip-generator-linux-MYARCH \
+-DCOMMONAPI_TOOL_GENERATOR=myworkpath/CommonAPI-Tools/org.genivi.commonapi.core.cli.product/target/products/org.genivi.commonapi.core.cli.product/linux/gtk/MYARCH/commonapi-generator-linux-MYARCH \
+-DCommonAPI_DIR=myworkpath/CommonAPI/build \
+-DCommonAPI-SomeIP_DIR=myworkpath/CommonAPI-SomeIP/build \
+-Dvsomeip_DIR=myworkpath/vSomeIP/build \
+-DCOMMONAPI_TEST_FIDL_PATH=myworkpath/CommonAPI-Tools/org.genivi.commonapi.core.verification/fidl ..
+
+make -j4
 ----
 
 === Project Setup
@@ -163,7 +158,7 @@ cmake -DUSE_INSTALLED_COMMONAPI=OFF -DBINDING_NAME=someip -DCMAKE_BINDING_NAME=C
 CommonAPI-SomeIP can be configured as CommonAPI itself by an ini-file. The default name of this configuration file is +commonapi-someip.ini+. There are three places where CommonAPI-SomeIP Runtime tries to find this file (in the following order):
 
 1. in the directory of the current executable. If there is a +commonapi-someip.ini+ file, it has the highest priority.
-2. in the directory which is specified by the environment variable +COMMONAPI_SOMEIP_DEFAULT_CONFIG+.
+2. in the directory which is specified by the environment variable +COMMONAPI_SOMEIP_CONFIG+.
 3. in the global default directory +/etc+.
 
 The configuration file has 2 possible kinds of sections; all sections are optional.
@@ -252,4 +247,4 @@ Execute within the CommonAPI-SomeIP source directory:
 - cd build
 - cmake ..
 
-to create a Visual Studio 2013 solution. Finally, open the solution and build CommonAPI.
+to create a Visual Studio 2013 solution. Finally, open the solution and build CommonAPI-SomeIP.

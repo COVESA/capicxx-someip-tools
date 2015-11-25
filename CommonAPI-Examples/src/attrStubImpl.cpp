@@ -11,7 +11,7 @@
 #include <iostream>
 
 attrStubImpl::attrStubImpl() {
-	setXAttribute(0);
+    setXAttribute(0);
 }
 
 attrStubImpl::~attrStubImpl() {

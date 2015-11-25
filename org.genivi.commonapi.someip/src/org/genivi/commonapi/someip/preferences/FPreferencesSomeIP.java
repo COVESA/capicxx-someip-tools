@@ -69,6 +69,15 @@ public class FPreferencesSomeIP
         if (!preferences.containsKey(PreferenceConstantsSomeIP.P_GENERATESTUB_SOMEIP)) {
             preferences.put(PreferenceConstantsSomeIP.P_GENERATESTUB_SOMEIP, "true");
         }
+        if (!preferences.containsKey(PreferenceConstantsSomeIP.P_GENERATE_CODE_SOMEIP)) {
+            preferences.put(PreferenceConstantsSomeIP.P_GENERATE_CODE_SOMEIP, "true");    
+        }
+        if (!preferences.containsKey(PreferenceConstantsSomeIP.P_GENERATE_DEPENDENCIES_SOMEIP)) {
+            preferences.put(PreferenceConstantsSomeIP.P_GENERATE_DEPENDENCIES_SOMEIP, "true");    
+        }
+        if (!preferences.containsKey(PreferenceConstantsSomeIP.P_GENERATE_SYNC_CALLS_SOMEIP)) {
+            preferences.put(PreferenceConstantsSomeIP.P_GENERATE_SYNC_CALLS_SOMEIP, "true");    
+        }
     }
 
     public String getPreference(String preferencename, String defaultValue) {

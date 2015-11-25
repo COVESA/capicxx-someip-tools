@@ -11,7 +11,7 @@
 #include <iostream>
 
 attrnamedtcStubImpl::attrnamedtcStubImpl() {
-	setXAttribute(0);
+    setXAttribute(0);
 }
 
 attrnamedtcStubImpl::~attrnamedtcStubImpl() {

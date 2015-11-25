@@ -4,10 +4,10 @@
 
 #include <CommonAPI/CommonAPI.hpp>
 
-#include <v1_42/commonapi/someip/heartbeatProxy.hpp>
-#include <v1_42/commonapi/someip/mathProxy.hpp>
+#include <v1/commonapi/someip/heartbeatProxy.hpp>
+#include <v1/commonapi/someip/mathProxy.hpp>
 
-using namespace v1_42::commonapi::someip;
+using namespace v1::commonapi::someip;
 
 void callback(const CommonAPI::CallStatus& callStatus, const int8_t& out) {
     if (callStatus != CommonAPI::CallStatus::SUCCESS) {
@@ -22,10 +22,10 @@ int main(int argc, char **argv) {
     std::shared_ptr< CommonAPI::Runtime > runtime = CommonAPI::Runtime::get();
 
     std::shared_ptr<heartbeatProxyDefault> myProxy
-    	= runtime->buildProxy<heartbeatProxy>("local", "BMW.ATM");
+        = runtime->buildProxy<heartbeatProxy>("local", "BMW.ATM");
 
     std::shared_ptr<mathProxyDefault> myProxy2
-    	= runtime->buildProxy<mathProxy>("local", "BMW.ATM");
+        = runtime->buildProxy<mathProxy>("local", "BMW.ATM");
 
     if (myProxy != NULL && myProxy2 != NULL) {
         myProxy->isAvailableBlocking();

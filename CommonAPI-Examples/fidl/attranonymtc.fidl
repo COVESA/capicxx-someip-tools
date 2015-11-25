@@ -23,7 +23,7 @@ interface attranonymtc {
 }
 
 typeCollection {
-	version {
+    version {
         major 2
         minor 3
     }

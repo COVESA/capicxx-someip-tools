@@ -9,9 +9,9 @@
 */
 
 #include <sstream>
-#include <v1_0/commonapi/someip/methodSampleStubDefault.hpp>
+#include <v1/commonapi/someip/methodSampleStubDefault.hpp>
 
-class methodSampleStubImpl : public v1_0::commonapi::someip::methodSampleStubDefault {
+class methodSampleStubImpl : public v1::commonapi::someip::methodSampleStubDefault {
 public:
     methodSampleStubImpl();
     virtual ~methodSampleStubImpl();

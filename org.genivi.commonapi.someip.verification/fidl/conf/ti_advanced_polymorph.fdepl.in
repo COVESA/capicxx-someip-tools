@@ -1,0 +1,35 @@
+import "platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-SOMEIP_deployment_spec.fdepl"
+import "@COMMONAPI_TEST_FIDL_PATH@/ti_advanced_polymorph.fidl"
+
+define org.genivi.commonapi.someip.deployment for interface commonapi.advanced.polymorph.TestInterface {
+    SomeIpServiceID = 4679
+
+    attribute a1 {
+            SomeIpGetterID = 3000 
+            SomeIpSetterID = 3001
+            SomeIpNotifierID = 33005
+            SomeIpEventGroups = { 33007 }
+    }
+
+
+    method testMethod {
+        SomeIpMethodID = 515
+        SomeIpReliable = true        
+    }
+
+    broadcast bTest {
+        SomeIpEventID = 33006
+        SomeIpEventGroups = { 33007 }
+    }
+}
+
+define org.genivi.commonapi.someip.deployment for provider Service {
+    instance commonapi.advanced.polymorph.TestInterface {
+        InstanceId = "commonapi.advanced.polymorph.TestInterface"
+
+        SomeIpInstanceID = 22155
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31001
+    }
+}
+

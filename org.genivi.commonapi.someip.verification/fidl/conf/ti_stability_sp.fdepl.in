@@ -1,0 +1,330 @@
+import "platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-SOMEIP_deployment_spec.fdepl"
+import "@COMMONAPI_TEST_FIDL_PATH@/ti_stability_sp.fidl"
+
+define org.genivi.commonapi.someip.deployment for interface commonapi.stability.sp.TestInterface {
+    SomeIpServiceID    = 4675
+
+    attribute testAttribute {
+        SomeIpGetterID = 3000
+        SomeIpSetterID = 3001
+        SomeIpNotifierID = 33000
+        SomeIpEventGroups = { 17749 }
+    }
+    
+    method testMethod {
+        SomeIpMethodID = 1029
+    }
+
+    broadcast testBroadcast {
+        SomeIpEventID = 41913
+        SomeIpEventGroups = { 17749 }
+    }
+}
+
+define org.genivi.commonapi.someip.deployment for provider Service {
+    instance commonapi.stability.sp.TestInterface {
+        InstanceId = "commonapi.stability.sp.TestInterface"
+
+        // 0x5687 -> 22151
+        SomeIpInstanceID = 22151
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31000
+    }
+    instance commonapi.stability.sp.TestInterface {
+        InstanceId = "commonapi.stability.sp.TestInterface0"
+
+        // 5690 -> 22160
+        SomeIpInstanceID = 22160
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31001
+    }
+    instance commonapi.stability.sp.TestInterface {
+        InstanceId = "commonapi.stability.sp.TestInterface1"
+
+        // 5691 -> 22161
+        SomeIpInstanceID = 22161
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31002
+    }
+    instance commonapi.stability.sp.TestInterface {
+        InstanceId = "commonapi.stability.sp.TestInterface2"
+
+        // 5692 -> 22162
+        SomeIpInstanceID = 22162
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31003
+    }
+    instance commonapi.stability.sp.TestInterface {
+        InstanceId = "commonapi.stability.sp.TestInterface3"
+
+        // 5693 -> 22163
+        SomeIpInstanceID = 22163
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31004
+    }
+    instance commonapi.stability.sp.TestInterface {
+        InstanceId = "commonapi.stability.sp.TestInterface4"
+
+        // 5694 -> 22164
+        SomeIpInstanceID = 22164
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31005
+    }
+    instance commonapi.stability.sp.TestInterface {
+        InstanceId = "commonapi.stability.sp.TestInterface5"
+
+        // 5695 -> 22165
+        SomeIpInstanceID = 22165
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31006
+    }
+    instance commonapi.stability.sp.TestInterface {
+        InstanceId = "commonapi.stability.sp.TestInterface6"
+
+        // 5696 -> 22166
+        SomeIpInstanceID = 22166
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31007
+    }
+    instance commonapi.stability.sp.TestInterface {
+        InstanceId = "commonapi.stability.sp.TestInterface7"
+
+        // 5697 -> 22167
+        SomeIpInstanceID = 22167
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31008
+
+    }
+    instance commonapi.stability.sp.TestInterface {
+        InstanceId = "commonapi.stability.sp.TestInterface8"
+
+        // 5698 -> 22168
+        SomeIpInstanceID = 22168
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31009
+    }
+    instance commonapi.stability.sp.TestInterface {
+        InstanceId = "commonapi.stability.sp.TestInterface9"
+
+        // 5699 -> 22169
+        SomeIpInstanceID = 22169
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31010
+    }
+    instance commonapi.stability.sp.TestInterface {
+        InstanceId = "commonapi.stability.sp.TestInterface10"
+
+        // 5700 -> 22272
+        SomeIpInstanceID = 22272
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31011
+    }
+    instance commonapi.stability.sp.TestInterface {
+        InstanceId = "commonapi.stability.sp.TestInterface11"
+
+        // 5701 -> 22273
+        SomeIpInstanceID = 22273
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31012
+    }
+    instance commonapi.stability.sp.TestInterface {
+        InstanceId = "commonapi.stability.sp.TestInterface12"
+
+        // 5702 -> 22274
+        SomeIpInstanceID = 22274
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31013
+    }
+    instance commonapi.stability.sp.TestInterface {
+        InstanceId = "commonapi.stability.sp.TestInterface13"
+
+        // 5703 -> 22275
+        SomeIpInstanceID = 22275
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31014
+    }
+    instance commonapi.stability.sp.TestInterface {
+        InstanceId = "commonapi.stability.sp.TestInterface14"
+
+        // 5704 -> 22276
+        SomeIpInstanceID = 22276
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31015
+    }
+    instance commonapi.stability.sp.TestInterface {
+        InstanceId = "commonapi.stability.sp.TestInterface15"
+
+        // 5705 -> 22277
+        SomeIpInstanceID = 22277
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31016
+    }
+    instance commonapi.stability.sp.TestInterface {
+        InstanceId = "commonapi.stability.sp.TestInterface16"
+        // 5706 -> 22278
+        SomeIpInstanceID = 22278
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31017
+    }
+    instance commonapi.stability.sp.TestInterface {
+        InstanceId = "commonapi.stability.sp.TestInterface17"
+        // 5707 -> 22279
+        SomeIpInstanceID = 22279
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31018
+    }
+    instance commonapi.stability.sp.TestInterface {
+        InstanceId = "commonapi.stability.sp.TestInterface18"
+        // 5708 -> 22280
+        SomeIpInstanceID = 22280
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31019
+    }
+    instance commonapi.stability.sp.TestInterface {
+        InstanceId = "commonapi.stability.sp.TestInterface19"
+        // 5709 -> 22281
+        SomeIpInstanceID = 22281
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31020
+    }
+    instance commonapi.stability.sp.TestInterface {
+        InstanceId = "commonapi.stability.sp.TestInterface20"
+        // 5710 -> 22288
+        SomeIpInstanceID = 22288
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31021
+    }
+    instance commonapi.stability.sp.TestInterface {
+        InstanceId = "commonapi.stability.sp.TestInterface21"
+        // 5711 -> 22289
+        SomeIpInstanceID = 22289
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31022
+    }
+    instance commonapi.stability.sp.TestInterface {
+        InstanceId = "commonapi.stability.sp.TestInterface22"
+        // 5712 -> 22290
+        SomeIpInstanceID = 22290
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31023
+    }
+    instance commonapi.stability.sp.TestInterface {
+        InstanceId = "commonapi.stability.sp.TestInterface23"
+        // 5713 -> 22291
+        SomeIpInstanceID = 22291
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31024
+    }
+    instance commonapi.stability.sp.TestInterface {
+        InstanceId = "commonapi.stability.sp.TestInterface24"
+        // 5714 -> 22292
+        SomeIpInstanceID = 22292
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31025
+    }
+    instance commonapi.stability.sp.TestInterface {
+        InstanceId = "commonapi.stability.sp.TestInterface25"
+        // 5715 -> 22293
+        SomeIpInstanceID = 22293
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31026
+    }
+    instance commonapi.stability.sp.TestInterface {
+        InstanceId = "commonapi.stability.sp.TestInterface26"
+        // 5716 -> 22294
+        SomeIpInstanceID = 22294
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31027
+    }
+    instance commonapi.stability.sp.TestInterface {
+        InstanceId = "commonapi.stability.sp.TestInterface27"
+        // 5717 -> 22295
+        SomeIpInstanceID = 22295
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31028
+    }
+    instance commonapi.stability.sp.TestInterface {
+        InstanceId = "commonapi.stability.sp.TestInterface28"
+        // 5718 -> 22296
+        SomeIpInstanceID = 22296
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31029
+    }
+    instance commonapi.stability.sp.TestInterface {
+        InstanceId = "commonapi.stability.sp.TestInterface29"
+        // 5719 -> 22297
+        SomeIpInstanceID = 22297
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31030
+    }
+    instance commonapi.stability.sp.TestInterface {
+        InstanceId = "commonapi.stability.sp.TestInterface30"
+        // 5720 -> 22304
+        SomeIpInstanceID = 22304
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31031
+    }
+    instance commonapi.stability.sp.TestInterface {
+        InstanceId = "commonapi.stability.sp.TestInterface31"
+        // 5721 -> 22305
+        SomeIpInstanceID = 22305
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31032
+    }
+    instance commonapi.stability.sp.TestInterface {
+        InstanceId = "commonapi.stability.sp.TestInterface32"
+        // 5722 -> 22306
+        SomeIpInstanceID = 22306
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31033
+    }
+    instance commonapi.stability.sp.TestInterface {
+        InstanceId = "commonapi.stability.sp.TestInterface33"
+        // 5723 -> 22307
+        SomeIpInstanceID = 22307
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31034
+    }
+    instance commonapi.stability.sp.TestInterface {
+        InstanceId = "commonapi.stability.sp.TestInterface34"
+        // 5724 -> 22308
+        SomeIpInstanceID = 22308
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31035
+    }
+    instance commonapi.stability.sp.TestInterface {
+        InstanceId = "commonapi.stability.sp.TestInterface35"
+        // 5725 -> 22309
+        SomeIpInstanceID = 22309
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31036
+    }
+    instance commonapi.stability.sp.TestInterface {
+        InstanceId = "commonapi.stability.sp.TestInterface36"
+        // 5726 -> 22310
+        SomeIpInstanceID = 22310
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31037
+    }
+    instance commonapi.stability.sp.TestInterface {
+        InstanceId = "commonapi.stability.sp.TestInterface37"
+        // 5727 -> 22311
+        SomeIpInstanceID = 22311
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31038
+    }
+    instance commonapi.stability.sp.TestInterface {
+        InstanceId = "commonapi.stability.sp.TestInterface38"
+        // 5728 -> 22312
+        SomeIpInstanceID = 22312
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31039
+    }
+    instance commonapi.stability.sp.TestInterface {
+        InstanceId = "commonapi.stability.sp.TestInterface39"
+        // 5729 -> 22313
+        SomeIpInstanceID = 22313
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31040
+    }
+}

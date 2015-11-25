@@ -4,7 +4,7 @@ PROJECT(libsomeipglue)
 
 SET( ${PROJECT_NAME}_MAJOR_VERSION 3 )
 SET( ${PROJECT_NAME}_MINOR_VERSION 1 )
-SET( ${PROJECT_NAME}_PATCH_LEVEL 3 )
+SET( ${PROJECT_NAME}_PATCH_LEVEL 4 )
 
 message("Project name: ${PROJECT_NAME}")
 
@@ -76,7 +76,7 @@ message("COMMONAPI_SOMEIP_INCLUDE_DIRS: ${COMMONAPI_SOMEIP_INCLUDE_DIRS}")
 # generate code from fidl and fdepl
 
 # TODO check if generators are executable as otherwise they fail silently
-
+  
 file(GLOB FIDL_FILES "${COMMONAPI_TEST_FIDL_PATH}/*.fidl")
 message("FIDL_FILES: ${FIDL_FILES}")
 execute_process(
@@ -84,6 +84,42 @@ execute_process(
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
+if (MSVC)
+    # Change possible backslashes to normal slashes
+    string(REPLACE "\\" "/" COMMONAPI_TEST_FIDL_PATH ${COMMONAPI_TEST_FIDL_PATH})
+    
+    # GLIPCI-644, remove Drive when under windows
+    string(SUBSTRING ${COMMONAPI_TEST_FIDL_PATH} 2 -1 COMMONAPI_TEST_FIDL_PATH)
+endif()
+
+# Create the fdepls files
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/fidl/conf/ti_communication.fdepl.in
+    "${CMAKE_CURRENT_SOURCE_DIR}/fidl/ti_communication.fdepl" @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/fidl/conf/ti_advanced_bselective.fdepl.in
+    "${CMAKE_CURRENT_SOURCE_DIR}/fidl/ti_advanced_bselective.fdepl" @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/fidl/conf/ti_advanced_managed.fdepl.in
+    "${CMAKE_CURRENT_SOURCE_DIR}/fidl/ti_advanced_managed.fdepl" @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/fidl/conf/ti_advanced_polymorph.fdepl.in
+    "${CMAKE_CURRENT_SOURCE_DIR}/fidl/ti_advanced_polymorph.fdepl" @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/fidl/conf/ti_datatypes_advanced.fdepl.in
+    "${CMAKE_CURRENT_SOURCE_DIR}/fidl/ti_datatypes_advanced.fdepl" @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/fidl/conf/ti_datatypes_combined.fdepl.in
+    "${CMAKE_CURRENT_SOURCE_DIR}/fidl/ti_datatypes_combined.fdepl" @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/fidl/conf/ti_datatypes_derived.fdepl.in
+    "${CMAKE_CURRENT_SOURCE_DIR}/fidl/ti_datatypes_derived.fdepl" @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/fidl/conf/ti_datatypes_primitive.fdepl.in
+    "${CMAKE_CURRENT_SOURCE_DIR}/fidl/ti_datatypes_primitive.fdepl" @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/fidl/conf/ti_performance_complex.fdepl.in
+    "${CMAKE_CURRENT_SOURCE_DIR}/fidl/ti_performance_complex.fdepl" @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/fidl/conf/ti_performance_primitive.fdepl.in
+    "${CMAKE_CURRENT_SOURCE_DIR}/fidl/ti_performance_primitive.fdepl" @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/fidl/conf/ti_runtime.fdepl.in
+    "${CMAKE_CURRENT_SOURCE_DIR}/fidl/ti_runtime.fdepl" @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/fidl/conf/ti_stability_sp.fdepl.in
+    "${CMAKE_CURRENT_SOURCE_DIR}/fidl/ti_stability_sp.fdepl" @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/fidl/conf/ti_threading.fdepl.in
+    "${CMAKE_CURRENT_SOURCE_DIR}/fidl/ti_threading.fdepl" @ONLY)
+    
 file(GLOB FDEPL_FILES "fidl/*.fdepl")
 message("FDEPL_FILES: ${FDEPL_FILES}")
 execute_process(
@@ -110,7 +146,7 @@ if (MSVC)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DBOOST_LOG_DYN_LINK -DUSE_VSOMEIP_STATISTICS -D_CRT_SECURE_NO_WARNINGS /EHsc -DCOMMONAPI_INTERNAL_COMPILATION")
 set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -DBOOST_LOG_DYN_LINK -DUSE_VSOMEIP_STATISTICS -D_CRT_SECURE_NO_WARNINGS -DCOMMONAPI_INTERNAL_COMPILATION")
 else()
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D${OS} -DUSE_VSOMEIP_STATISTICS -DBOOST_LOG_DYN_LINK -D_GLIBCXX_USE_NANOSLEEP -pthread -g -std=c++0x -O0 -Wno-deprecated-register")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D${OS} -DUSE_VSOMEIP_STATISTICS -DBOOST_LOG_DYN_LINK -pthread -g -std=c++0x -Wall -Wextra -Wformat -Wformat-security -Wconversion -fexceptions -fstrict-aliasing -fstack-protector -fasynchronous-unwind-tables -fno-omit-frame-pointer -D_GLIBCXX_USE_NANOSLEEP")
 endif()
 
 message("Compiler options: ${CMAKE_CXX_FLAGS}")
@@ -124,24 +160,28 @@ include_directories(
 )
 
 if (MSVC)
-set (DERIVED_TYPE_SRC "src-gen/v1_0/commonapi/datatypes/derived/TestInterface.cpp")
-set (TARGET_LIBRARIES "libboost_system-vc120-mt-gd-1_56")
+set (DERIVED_TYPE_SRC "src-gen/v1/commonapi/datatypes/derived/TestInterface.cpp")
+set (POLYMORPHIC_TYPE_SRC "src-gen/v1/commonapi/advanced/polymorph/TestInterface.cpp")
 endif ()
 
 # source files
 file(GLOB GLUE_SRCS
-    "src-gen/v1_0/commonapi/communication/*SomeIP*.cpp"
-    "src-gen/v1_0/commonapi/datatypes/primitive/*SomeIP*.cpp"
-    "src-gen/v1_0/commonapi/datatypes/advanced/*SomeIP*.cpp"
-    "src-gen/v1_0/commonapi/datatypes/combined/*SomeIP*.cpp"
-    "src-gen/v1_0/commonapi/datatypes/derived/*SomeIP*.cpp"
-    "src-gen/v1_0/commonapi/performance/primitive/*SomeIP*.cpp"
-    "src-gen/v1_0/commonapi/performance/complex/*SomeIP*.cpp"
-    "src-gen/v1_0/commonapi/runtime/*SomeIP*.cpp"
-    "src-gen/v1_0/commonapi/threading/*SomeIP*.cpp"
-    "src-gen/v1_0/commonapi/stability/sp/*SomeIP*.cpp"
-    "src-gen/v1_0/commonapi/stability/mp/*SomeIP*.cpp"
-	${DERIVED_TYPE_SRC}
+    "src-gen/v1/commonapi/communication/*SomeIP*.cpp"
+    "src-gen/v1/commonapi/advanced/bselective/*SomeIP*.cpp"
+    "src-gen/v1/commonapi/advanced/managed/*SomeIP*.cpp"
+    "src-gen/v1/commonapi/advanced/polymorph/*SomeIP*.cpp"
+    "src-gen/v1/commonapi/datatypes/primitive/*SomeIP*.cpp"
+    "src-gen/v1/commonapi/datatypes/advanced/*SomeIP*.cpp"
+    "src-gen/v1/commonapi/datatypes/combined/*SomeIP*.cpp"
+    "src-gen/v1/commonapi/datatypes/derived/*SomeIP*.cpp"
+    "src-gen/v1/commonapi/performance/primitive/*SomeIP*.cpp"
+    "src-gen/v1/commonapi/performance/complex/*SomeIP*.cpp"
+    "src-gen/v1/commonapi/runtime/*SomeIP*.cpp"
+    "src-gen/v1/commonapi/threading/*SomeIP*.cpp"
+    "src-gen/v1/commonapi/stability/sp/*SomeIP*.cpp"
+    "src-gen/v1/commonapi/stability/mp/*SomeIP*.cpp"
+    ${DERIVED_TYPE_SRC}
+    ${POLYMORPHIC_TYPE_SRC}
 )
 
 # Boost
@@ -149,7 +189,7 @@ find_package( Boost 1.54 COMPONENTS system thread log REQUIRED )
 include_directories( ${Boost_INCLUDE_DIR} )
 
 link_directories(
-	${Boost_LIBRARY_DIR}
+    ${Boost_LIBRARY_DIR}
 )
 
 # CommonAPI-SomeIP library

@@ -1,5 +1,5 @@
 import "platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-SOMEIP_deployment_spec.fdepl"
-import "../../../ascgit017.CommonAPI-Tools/org.genivi.commonapi.core.verification/fidl/ti_threading.fidl"
+import "@COMMONAPI_TEST_FIDL_PATH@/ti_threading.fidl"
 
 define org.genivi.commonapi.someip.deployment for interface commonapi.threading.TestInterface {
     SomeIpServiceID = 4660
@@ -17,26 +17,26 @@ define org.genivi.commonapi.someip.deployment for interface commonapi.threading.
 define org.genivi.commonapi.someip.deployment for provider Service {
     instance commonapi.threading.TestInterface {
         InstanceId = "my.test.commonapi.address"
-	
-	// 5706 -> 22278
+    
+        // 5706 -> 22278
         SomeIpInstanceID = 22278
     }
     instance commonapi.threading.TestInterface {
         InstanceId = "my.test.commonapi.address.six"
 
-	// 5707 -> 22279
+        // 5707 -> 22279
         SomeIpInstanceID = 22279
     }
     instance commonapi.threading.TestInterface {
         InstanceId = "my.test.commonapi.address.seven"
 
-	// 5708 -> 22280
+        // 5708 -> 22280
         SomeIpInstanceID = 22280
     }
     instance commonapi.threading.TestInterface {
         InstanceId = "my.test.commonapi.address.eight"
 
-	// 5709 -> 22281
+        // 5709 -> 22281
         SomeIpInstanceID = 22281
     }
 }

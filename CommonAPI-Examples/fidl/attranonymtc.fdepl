@@ -2,77 +2,80 @@ import "platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-SOMEIP
 import "attranonymtc.fidl"
 
 define org.genivi.commonapi.someip.deployment for interface commonapi.someip.attranonymtc {
-	SomeIpServiceID = 4660
-	
-	attribute myArraySpecific {
-		SomeIpGetterID = 3000
-		SomeIpSetterID = 3001
-		SomeIpNotifierID = 33000
-		SomeIpEventGroups = { 33000 }
-		SomeIpAttrArrayLengthWidth = 1
-	}
+    SomeIpServiceID = 4660
+    
+    attribute myArraySpecific {
+        SomeIpGetterID = 3000
+        SomeIpSetterID = 3001
+        SomeIpNotifierID = 33000
+        SomeIpEventGroups = { 33000 }
+        SomeIpAttrArrayLengthWidth = 1
+    }
 
-	attribute myArrayDefault {
-		SomeIpGetterID = 3010
-		SomeIpSetterID = 3011
-		SomeIpNotifierID = 33010
-		SomeIpEventGroups = { 33010 }
-	}
-	
-	attribute myEnum {
-		SomeIpGetterID = 3002
-		SomeIpSetterID = 3003
-		SomeIpNotifierID = 33001
-		SomeIpEventGroups = { 33001 }
-	}
-	
-	attribute myMap {
-		SomeIpGetterID = 3004
-		SomeIpSetterID = 3005
-		SomeIpNotifierID = 33002		
-		SomeIpEventGroups = { 33002 }
-	}
-	
-	attribute myStruct {
-		SomeIpGetterID = 3006
-		SomeIpSetterID = 3007
-		SomeIpNotifierID = 33003		
-		SomeIpEventGroups = { 33003 }
-	}
-	
-	attribute myTypedef {
-		SomeIpGetterID = 3008
-		SomeIpSetterID = 3009
-		SomeIpNotifierID = 33004
-		SomeIpEventGroups = { 33004 }
-	}
-	
-	attribute myUnion {
-		SomeIpGetterID = 3010
-		SomeIpSetterID = 3011
-		SomeIpNotifierID = 33005
-		SomeIpEventGroups = { 33005 }
-	}
-	
-	attribute x {
-		SomeIpGetterID = 3012
-		SomeIpSetterID = 3013
-		SomeIpNotifierID = 33006		
-		SomeIpEventGroups = { 33006 }
-	}
+    attribute myArrayDefault {
+        SomeIpGetterID = 3010
+        SomeIpSetterID = 3011
+        SomeIpNotifierID = 33010
+        SomeIpEventGroups = { 33010 }
+    }
+    
+    attribute myEnum {
+        SomeIpGetterID = 3002
+        SomeIpSetterID = 3003
+        SomeIpNotifierID = 33001
+        SomeIpEventGroups = { 33001 }
+    }
+    
+    attribute myMap {
+        SomeIpGetterID = 3004
+        SomeIpSetterID = 3005
+        SomeIpNotifierID = 33002        
+        SomeIpEventGroups = { 33002 }
+    }
+    
+    attribute myStruct {
+        SomeIpGetterID = 3006
+        SomeIpSetterID = 3007
+        SomeIpNotifierID = 33003        
+        SomeIpEventGroups = { 33003 }
+    }
+    
+    attribute myTypedef {
+        SomeIpGetterID = 3008
+        SomeIpSetterID = 3009
+        SomeIpNotifierID = 33004
+        SomeIpEventGroups = { 33004 }
+    }
+    
+    attribute myUnion {
+        SomeIpGetterID = 3010
+        SomeIpSetterID = 3011
+        SomeIpNotifierID = 33005
+        SomeIpEventGroups = { 33005 }
+    }
+    
+    attribute x {
+        SomeIpGetterID = 3012
+        SomeIpSetterID = 3013
+        SomeIpNotifierID = 33006        
+        SomeIpEventGroups = { 33006 }
+    }
 }
 
 define org.genivi.commonapi.someip.deployment for typeCollection commonapi.someip {
-	array myArray {
-		SomeIpArrayLengthWidth = 2
-	}
+    array myArray {
+        SomeIpArrayLengthWidth = 2
+    }
 }
 
-define org.genivi.commonapi.someip.deployment for provider myAppl {
-	instance commonapi.someip.attranonymtc {
-		InstanceId = "commonapi.someip.one"
-		SomeIpInstanceID = 33547
-		SomeIpUnicastAddress = "127.0.0.1"
-		SomeIpUnicastPort = 37234
-	}
+define org.genivi.commonapi.someip.deployment for provider Service {
+    instance commonapi.someip.attranonymtc {
+        InstanceId = "BMW.ATM"
+        
+        SomeIpInstanceID = 22136
+    
+        SomeIpUnicastAddress = "192.168.0.2"
+        SomeIpReliableUnicastPort = 30499
+        SomeIpUnreliableUnicastPort = 30499
+    }
 }

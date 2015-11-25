@@ -16,6 +16,8 @@ import org.franca.core.franca.FMethod
 import org.genivi.commonapi.core.generator.FrancaGeneratorExtensions
 import org.genivi.commonapi.someip.deployment.PropertyAccessor
 import org.franca.core.franca.FAttribute
+import org.genivi.commonapi.someip.preferences.FPreferencesSomeIP
+import org.genivi.commonapi.someip.preferences.PreferenceConstantsSomeIP
 import org.franca.core.franca.FBroadcast
 
 class FInterfaceSomeIPDeploymentGenerator extends FTypeCollectionSomeIPDeploymentGenerator {
@@ -25,16 +27,24 @@ class FInterfaceSomeIPDeploymentGenerator extends FTypeCollectionSomeIPDeploymen
 
     def generateDeployment(FInterface fInterface, IFileSystemAccess fileSystemAccess,
         PropertyAccessor deploymentAccessor, IResource modelid) {
-        fileSystemAccess.generateFile(fInterface.someipDeploymentHeaderPath,  IFileSystemAccess.DEFAULT_OUTPUT,
-            fInterface.generateDeploymentHeader(deploymentAccessor, modelid))
-        fileSystemAccess.generateFile(fInterface.someipDeploymentSourcePath, IFileSystemAccess.DEFAULT_OUTPUT,
-            fInterface.generateDeploymentSource(deploymentAccessor, modelid))
+            
+        if(FPreferencesSomeIP::getInstance.getPreference(PreferenceConstantsSomeIP::P_GENERATE_CODE_SOMEIP, "true").equals("true")) {
+            fileSystemAccess.generateFile(fInterface.someipDeploymentHeaderPath,  IFileSystemAccess.DEFAULT_OUTPUT,
+                fInterface.generateDeploymentHeader(deploymentAccessor, modelid))
+            fileSystemAccess.generateFile(fInterface.someipDeploymentSourcePath, IFileSystemAccess.DEFAULT_OUTPUT,
+                fInterface.generateDeploymentSource(deploymentAccessor, modelid))
+        } 
+        else {
+            // feature: suppress code generation
+            fileSystemAccess.generateFile(fInterface.someipDeploymentHeaderPath,  IFileSystemAccess.DEFAULT_OUTPUT, PreferenceConstantsSomeIP::NO_CODE)
+            fileSystemAccess.generateFile(fInterface.someipDeploymentSourcePath, IFileSystemAccess.DEFAULT_OUTPUT, PreferenceConstantsSomeIP::NO_CODE)
+        }     
     }
 
     def private generateDeploymentHeader(FInterface _interface, 
                                          PropertyAccessor _accessor,
                                          IResource _modelid) '''
-        «generateCommonApiLicenseHeader(_interface, _modelid)»
+        «generateCommonApiSomeIPLicenseHeader()»
         
         #ifndef COMMONAPI_SOMEIP_«_interface.name.toUpperCase»_DEPLOYMENT_HPP_
         #define COMMONAPI_SOMEIP_«_interface.name.toUpperCase»_DEPLOYMENT_HPP_
@@ -91,7 +101,7 @@ class FInterfaceSomeIPDeploymentGenerator extends FTypeCollectionSomeIPDeploymen
                 «a.generateDeploymentDeclaration(broadcast, _interface, _accessor)»
             «ENDFOR»
         «ENDFOR»
-                
+        
         «_interface.generateDeploymentNamespaceEnd»
         «_interface.model.generateNamespaceEndDeclaration»
         «_interface.generateVersionNamespaceEnd»
@@ -102,7 +112,7 @@ class FInterfaceSomeIPDeploymentGenerator extends FTypeCollectionSomeIPDeploymen
     def private generateDeploymentSource(FInterface _interface, 
                                          PropertyAccessor _accessor,
                                          IResource _modelid) '''
-        «generateCommonApiLicenseHeader(_interface, _modelid)»
+        «generateCommonApiSomeIPLicenseHeader()»
         #include <«_interface.someipDeploymentHeaderPath»>
 
         «_interface.generateVersionNamespaceBegin»
@@ -134,8 +144,8 @@ class FInterfaceSomeIPDeploymentGenerator extends FTypeCollectionSomeIPDeploymen
             «FOR a : broadcast.outArgs»
                 «a.generateDeploymentDefinition(broadcast, _interface, _accessor)»
             «ENDFOR»
-        «ENDFOR»        
-        
+        «ENDFOR»
+                
         «_interface.generateDeploymentNamespaceEnd»
         «_interface.model.generateNamespaceEndDeclaration»
         «_interface.generateVersionNamespaceEnd»

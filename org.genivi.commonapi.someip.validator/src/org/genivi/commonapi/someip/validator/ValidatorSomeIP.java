@@ -28,6 +28,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.xtext.validation.ValidationMessageAcceptor;
 import org.franca.core.dsl.validation.IFrancaExternalValidator;
 import org.franca.core.franca.FArgument;
@@ -46,6 +47,8 @@ import org.franca.core.franca.Import;
 import org.genivi.commonapi.core.generator.FTypeCycleDetector;
 import org.genivi.commonapi.core.generator.FrancaGeneratorExtensions;
 import org.genivi.commonapi.core.ui.CommonApiUiPlugin;
+import org.genivi.commonapi.someip.preferences.PreferenceConstantsSomeIP;
+import org.genivi.commonapi.someip.ui.CommonApiSomeIPUiPlugin;
 import org.genivi.commonapi.someip.validator.preference.ValidatorSomeIPPreferencesPage;
 import org.osgi.framework.BundleReference;
 import org.osgi.framework.Version;
@@ -258,6 +261,9 @@ public class ValidatorSomeIP implements IFrancaExternalValidator
     private void validateTypeCollectionName(FModel model, ValidationMessageAcceptor messageAcceptor, IPath filePath,
             List<String> interfaceTypecollectionNames, FTypeCollection fTypeCollection)
     {
+        if (fTypeCollection.getName() == null)
+            return;
+
         if (fTypeCollection.getName().contains("."))
         {
             acceptError("Name may not contain '.'", fTypeCollection, FrancaPackage.Literals.FMODEL_ELEMENT__NAME, -1, messageAcceptor);
@@ -523,9 +529,8 @@ public class ValidatorSomeIP implements IFrancaExternalValidator
 
     public boolean isValidatorEnabled()
     {
-        boolean enabled = CommonApiUiPlugin.getDefault().getPreferenceStore()
-                .getBoolean(ValidatorSomeIPPreferencesPage.ENABLED_SOMEIP_VALIDATOR);
-        return enabled;
+        IPreferenceStore prefs = CommonApiSomeIPUiPlugin.getValidatorPreferences();
+        return prefs != null && prefs.getBoolean(PreferenceConstantsSomeIP.P_ENABLE_SOMEIP_VALIDATOR);
     }
 
     private void acceptError(String message, EObject object, EStructuralFeature feature, int index,

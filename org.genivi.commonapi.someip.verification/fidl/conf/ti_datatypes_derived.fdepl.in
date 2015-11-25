@@ -1,0 +1,51 @@
+import "platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-SOMEIP_deployment_spec.fdepl"
+import "@COMMONAPI_TEST_FIDL_PATH@/ti_datatypes_derived.fidl"
+
+define org.genivi.commonapi.someip.deployment for interface commonapi.datatypes.derived.TestInterface {
+    SomeIpServiceID= 4665
+
+    attribute aStructExt {
+        SomeIpGetterID = 3000
+        SomeIpSetterID = 3001
+        SomeIpNotifierID = 33000
+        SomeIpEventGroups = { 17749 }
+    }
+    attribute aEnumExt {
+        SomeIpGetterID = 3002
+        SomeIpSetterID = 3003
+        SomeIpNotifierID = 33001
+        SomeIpEventGroups = { 17749 }
+    }
+    attribute aUnionExt {
+        SomeIpGetterID = 3004
+        SomeIpSetterID = 3005
+        SomeIpNotifierID = 33002
+        SomeIpEventGroups = { 17749 }
+    }
+    attribute aBaseStruct {
+        SomeIpGetterID = 3006
+        SomeIpSetterID = 3007
+        SomeIpNotifierID = 33003
+        SomeIpEventGroups = { 17749 }
+    }
+
+    method fTest {
+        SomeIpMethodID = 1029
+    }
+
+    broadcast bTest {
+        SomeIpEventID = 41913
+        SomeIpEventGroups = { 17749 }
+    }
+}
+
+define org.genivi.commonapi.someip.deployment for provider Service {
+instance commonapi.datatypes.derived.TestInterface {
+        InstanceId = "commonapi.datatypes.derived.TestInterface"
+
+        // 0x5683 -> 22147
+        SomeIpInstanceID = 22147
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31000
+    }
+}

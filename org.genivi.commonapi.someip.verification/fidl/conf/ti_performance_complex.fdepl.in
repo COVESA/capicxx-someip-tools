@@ -1,0 +1,22 @@
+import "platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-SOMEIP_deployment_spec.fdepl"
+import "@COMMONAPI_TEST_FIDL_PATH@/ti_performance_complex.fidl"
+
+define org.genivi.commonapi.someip.deployment for interface commonapi.performance.complex.TestInterface {
+    SomeIpServiceID = 4674
+    
+    method testMethod {
+        SomeIpMethodID = 1029
+        SomeIpReliable = true
+    }
+}
+
+define org.genivi.commonapi.someip.deployment for provider Service {
+    instance commonapi.performance.complex.TestInterface {
+        InstanceId = "commonapi.performance.complex.TestInterface"
+
+        // 0x5686 -> 22150
+        SomeIpInstanceID = 22150
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31000
+    }
+}

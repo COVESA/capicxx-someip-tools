@@ -1,0 +1,27 @@
+import "platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-SOMEIP_deployment_spec.fdepl"
+import "@COMMONAPI_TEST_FIDL_PATH@/ti_advanced_bselective.fidl"
+
+define org.genivi.commonapi.someip.deployment for interface commonapi.advanced.bselective.TestInterface {
+    SomeIpServiceID = 4678
+
+    method testMethod {
+        SomeIpMethodID = 515
+        SomeIpReliable = true
+    }
+    
+    broadcast bTestSelective {
+        SomeIpEventID = 33002
+        SomeIpEventGroups = { 33004 }
+    }
+}
+
+define org.genivi.commonapi.someip.deployment for provider Service {
+    instance commonapi.advanced.bselective.TestInterface {
+        InstanceId = "commonapi.advanced.bselective.TestInterface"
+
+        SomeIpInstanceID = 22154
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31001
+    }
+}
+

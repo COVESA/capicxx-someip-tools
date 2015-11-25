@@ -6,6 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.genivi.commonapi.someip.ui;
 
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -41,5 +42,9 @@ public class CommonApiSomeIPUiPlugin extends AbstractUIPlugin
     public static CommonApiSomeIPUiPlugin getDefault()
     {
         return INSTANCE;
+    }
+
+    public static IPreferenceStore getValidatorPreferences() {
+        return INSTANCE.getPreferenceStore();
     }
 }
