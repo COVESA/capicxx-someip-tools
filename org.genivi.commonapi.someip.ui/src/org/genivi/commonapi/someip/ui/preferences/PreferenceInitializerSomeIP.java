@@ -29,10 +29,11 @@ public class PreferenceInitializerSomeIP extends AbstractPreferenceInitializer
     public void initializeDefaultPreferences()
     {
         IPreferenceStore store = CommonApiSomeIPUiPlugin.getDefault().getPreferenceStore();
-        store.setDefault(PreferenceConstantsSomeIP.P_LICENSE_SOMEIP, PreferenceConstantsSomeIP.DEFAULT_LICENSE_SOMEIP);
+        store.setDefault(PreferenceConstantsSomeIP.P_LICENSE_SOMEIP, PreferenceConstantsSomeIP.DEFAULT_LICENSE);
         store.setDefault(PreferenceConstantsSomeIP.P_OUTPUT_PROXIES_SOMEIP, PreferenceConstantsSomeIP.DEFAULT_OUTPUT_SOMEIP);
         store.setDefault(PreferenceConstantsSomeIP.P_OUTPUT_STUBS_SOMEIP, PreferenceConstantsSomeIP.DEFAULT_OUTPUT_SOMEIP);
         store.setDefault(PreferenceConstantsSomeIP.P_OUTPUT_COMMON_SOMEIP, PreferenceConstantsSomeIP.DEFAULT_OUTPUT_SOMEIP);
+        store.setDefault(PreferenceConstantsSomeIP.P_GENERATE_COMMON_SOMEIP, true);
         store.setDefault(PreferenceConstantsSomeIP.P_GENERATEPROXY_SOMEIP, true);
         store.setDefault(PreferenceConstantsSomeIP.P_GENERATESTUB_SOMEIP, true);
         store.setDefault(PreferenceConstantsSomeIP.P_USEPROJECTSETTINGS_SOMEIP, false);

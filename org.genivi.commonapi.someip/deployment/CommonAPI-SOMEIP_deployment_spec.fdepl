@@ -126,7 +126,7 @@ specification org.genivi.commonapi.someip.deployment extends org.genivi.commonap
          * The SomeIpStructLengthWidth determines the size of the length field;
          * allowed values are 0, 1, 2, 4. 0 means that there is no length field.
          */
-        SomeIpStructLengthWidth:     Integer                         (default: 4);
+        SomeIpStructLengthWidth:     Integer                         (default: 0);
     }
 
     for enumerations {
@@ -147,6 +147,11 @@ specification org.genivi.commonapi.someip.deployment extends org.genivi.commonap
         SomeIpStringEncoding:        {utf8, utf16le, utf16be}        (default: utf8);
     }
 
+    for byte_buffers {
+        SomeIpByteBufferMaxLength:    Integer                        (default: 0);    // 0 means unlimited length
+        SomeIpByteBufferMinLength:    Integer                        (default: 0);
+    }
+
     /*
      * From here workaround for missing Franca deployment features.
      */
@@ -158,7 +163,7 @@ specification org.genivi.commonapi.someip.deployment extends org.genivi.commonap
         SomeIpAttrUnionTypeWidth:    Integer                         (default: 4);
         SomeIpAttrUnionDefaultOrder: Boolean                         (default: true);
         SomeIpAttrUnionMaxLength:    Integer                         (default: 0);
-        SomeIpAttrStructLengthWidth: Integer                         (default: 4);
+        SomeIpAttrStructLengthWidth: Integer                         (default: 0);
         SomeIpAttrEnumWidth:         Integer                         (default: 4);
     }
 
@@ -170,7 +175,7 @@ specification org.genivi.commonapi.someip.deployment extends org.genivi.commonap
         SomeIpArgUnionTypeWidth:     Integer                         (default: 4);
         SomeIpArgUnionDefaultOrder:  Boolean                         (default: true);
         SomeIpArgUnionMaxLength:     Integer                         (default: 0);
-        SomeIpArgStructLengthWidth:  Integer                         (default: 4);
+        SomeIpArgStructLengthWidth:  Integer                         (default: 0);
         SomeIpArgEnumWidth:          Integer                         (default: 4);
     }
 
@@ -182,7 +187,7 @@ specification org.genivi.commonapi.someip.deployment extends org.genivi.commonap
         SomeIpStructUnionTypeWidth:    Integer                       (default: 4);
         SomeIpStructUnionDefaultOrder: Boolean                       (default: true);
         SomeIpStructUnionMaxLength:    Integer                       (default: 0);
-        SomeIpStructStructLengthWidth: Integer                       (default: 4);
+        SomeIpStructStructLengthWidth: Integer                       (default: 0);
         SomeIpStructEnumWidth:         Integer                       (default: 4);
     }
 
@@ -194,7 +199,7 @@ specification org.genivi.commonapi.someip.deployment extends org.genivi.commonap
         SomeIpUnionUnionTypeWidth:    Integer                        (default: 4);
         SomeIpUnionUnionDefaultOrder: Boolean                        (default: true);
         SomeIpUnionUnionMaxLength:    Integer                        (default: 0);
-        SomeIpUnionStructLengthWidth: Integer                        (default: 4);
+        SomeIpUnionStructLengthWidth: Integer                        (default: 0);
         SomeIpUnionEnumWidth:         Integer                        (default: 4);
     }
 }

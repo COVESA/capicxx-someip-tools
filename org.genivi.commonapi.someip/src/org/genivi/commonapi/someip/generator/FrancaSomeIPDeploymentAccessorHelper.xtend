@@ -30,6 +30,8 @@ class FrancaSomeIPDeploymentAccessorHelper {
     static Integer SOMEIP_DEFAULT_MIN_LENGTH = 0
     static Integer SOMEIP_DEFAULT_MAX_LENGTH = 0
     static Integer SOMEIP_DEFAULT_LENGTH_WIDTH = 4
+
+    static Integer SOMEIP_DEFAULT_STRUCT_LENGTH_WIDTH = 0
     
     static Integer SOMEIP_DEFAULT_UNION_TYPE_WIDTH = 4
     static boolean SOMEIP_DEFAULT_UNION_DEFAULT_ORDER = true
@@ -281,7 +283,7 @@ class FrancaSomeIPDeploymentAccessorHelper {
             if (_obj.actualType.derived != null) {
                 return _accessor.getSomeIpStructLengthWidth(_obj.actualType.derived)
             } else {
-                return SOMEIP_DEFAULT_LENGTH_WIDTH
+                return SOMEIP_DEFAULT_STRUCT_LENGTH_WIDTH
             }
         }
                 
@@ -380,6 +382,32 @@ class FrancaSomeIPDeploymentAccessorHelper {
         return false
     }
     
+    def boolean hasSomeIpByteBufferMinLength(PropertyAccessor _accessor, EObject _object) {
+        var Integer length = _accessor.getSomeIpByteBufferMinLength(_object)
+        if(length != null && length != SOMEIP_DEFAULT_MIN_LENGTH) {
+            return true
+        }
+        var newAccessor = getSpecificAccessor(_object)
+        if(newAccessor != null) {
+            length = newAccessor.getSomeIpByteBufferMinLength(_object)
+            return length != null && length != SOMEIP_DEFAULT_MIN_LENGTH
+        }
+        return false
+    }
+
+    def boolean hasSomeIpByteBufferMaxLength(PropertyAccessor _accessor, EObject _object) {
+        var Integer length = _accessor.getSomeIpByteBufferMaxLength(_object)
+        if(length != null && length != SOMEIP_DEFAULT_MAX_LENGTH) {
+            return true
+        }
+        var newAccessor = getSpecificAccessor(_object)
+        if(newAccessor != null) {
+            length = newAccessor.getSomeIpByteBufferMaxLength(_object)
+            return length != null && length != SOMEIP_DEFAULT_MAX_LENGTH
+        }
+        return false
+    }
+
     def boolean hasSomeIpStringLength(PropertyAccessor _accessor, EObject _object) {
         var Integer length = _accessor.getSomeIpStringLength(_object)
         if(length != null && length != SOMEIP_DEFAULT_MIN_LENGTH) {
@@ -408,13 +436,13 @@ class FrancaSomeIPDeploymentAccessorHelper {
 
     def boolean hasSomeIpStructLengthWidht(PropertyAccessor _accessor, EObject _object) {
         var Integer lengthWidth = _accessor.getSomeIpStructLengthWidthHelper(_object)
-        if(lengthWidth != null && lengthWidth != SOMEIP_DEFAULT_LENGTH_WIDTH) {
+        if(lengthWidth != null && lengthWidth != SOMEIP_DEFAULT_STRUCT_LENGTH_WIDTH) {
             return true
         }
         var newAccessor = getSpecificAccessor(_object)
         if(newAccessor != null) {
             lengthWidth = newAccessor.getSomeIpStructLengthWidthHelper(_object)
-            return lengthWidth != null && lengthWidth != SOMEIP_DEFAULT_LENGTH_WIDTH
+            return lengthWidth != null && lengthWidth != SOMEIP_DEFAULT_STRUCT_LENGTH_WIDTH
         }
         return false
     }
@@ -486,13 +514,13 @@ class FrancaSomeIPDeploymentAccessorHelper {
 
     def boolean hasSomeIpStructLengthWidth(PropertyAccessor _accessor, EObject _object) {
         var Integer lengthWidth = _accessor.getSomeIpStructLengthWidthHelper(_object)
-        if(lengthWidth != null && lengthWidth != SOMEIP_DEFAULT_LENGTH_WIDTH) {
+        if(lengthWidth != null && lengthWidth != SOMEIP_DEFAULT_STRUCT_LENGTH_WIDTH) {
             return true
         }
         var newAccessor = getSpecificAccessor(_object)
         if(newAccessor != null) {
             lengthWidth = newAccessor.getSomeIpStructLengthWidthHelper(_object)
-            return lengthWidth != null && lengthWidth != SOMEIP_DEFAULT_LENGTH_WIDTH
+            return lengthWidth != null && lengthWidth != SOMEIP_DEFAULT_STRUCT_LENGTH_WIDTH
         }
         return false
     }     
@@ -516,6 +544,8 @@ class FrancaSomeIPDeploymentAccessorHelper {
         if (_accessor.hasSomeIpArrayMinLength(_element) ||
             _accessor.hasSomeIpArrayMaxLength(_element) ||
             _accessor.hasSomeIpArrayLengthWidth(_element) ||
+            _accessor.hasSomeIpByteBufferMinLength(_element) ||
+            _accessor.hasSomeIpByteBufferMaxLength(_element) ||
             _accessor.hasSomeIpStringLength(_element) ||
             _accessor.hasSomeIpStringLengthWidth(_element) ||
             _accessor.hasSomeIpStringEncoding(_element) ||
@@ -612,6 +642,12 @@ class FrancaSomeIPDeploymentAccessorHelper {
         }
         if(hasSomeIpArrayLengthWidth (_accessor, _attribute)) {
             return true
+        }
+        if(hasSomeIpByteBufferMinLength(_accessor, _attribute)) {
+            return true
+        }
+        if(hasSomeIpByteBufferMaxLength(_accessor, _attribute)) {
+            return true
         }        
         if(hasSomeIpStringLength (_accessor, _attribute)) {
             return true
@@ -636,6 +672,10 @@ class FrancaSomeIPDeploymentAccessorHelper {
         }        
         if(hasSomeIpUnionMaxLength (_accessor, _attribute)) {
             return true
+        }
+        if (_attribute.type.derived != null) {
+            if (hasDeployment(_accessor, _attribute.type.derived))
+                return true
         }
         return false
     }

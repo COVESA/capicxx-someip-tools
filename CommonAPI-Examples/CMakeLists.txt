@@ -55,8 +55,8 @@ endif()
 message("CommonAPI_CONSIDERED_CONFIGS: ${CommonAPI_CONSIDERED_CONFIGS}")
 message("COMMONAPI_INCLUDE_DIRS: ${COMMONAPI_INCLUDE_DIRS}")
 
-find_package (CommonAPI-SomeIP 3.1.4 REQUIRED)
-find_package (vsomeip 2.0.0 REQUIRED)
+find_package (CommonAPI-SomeIP 3.1.5 REQUIRED)
+find_package (vsomeip 2.0.1 REQUIRED)
 
 include_directories (
     ${COMMONAPI_INCLUDE_DIRS}
@@ -157,7 +157,6 @@ target_link_libraries (
 
 add_executable (someip-attribute-example-client
     src/attrClient.cpp
-    src-gen/v1/commonapi/someip/attr.cpp
 )
 target_link_libraries (
     someip-attribute-example-client
@@ -203,7 +202,6 @@ target_link_libraries (
 
 add_executable (someip-serialization-example-client
     src/serializationClient.cpp
-    src-gen/v1/commonapi/serialization/Sample.cpp
 )
 target_link_libraries (
     someip-serialization-example-client
@@ -245,7 +243,6 @@ target_link_libraries (
 add_executable (someip-attribute-example-service
     src/attrService.cpp
     src/attrStubImpl.cpp
-    src-gen/v1/commonapi/someip/attr.cpp    
     src-gen/v1/commonapi/someip/attrStubDefault.cpp
 )
 target_link_libraries (
@@ -257,7 +254,6 @@ target_link_libraries (
 add_executable (someip-attributeanonymtc-example-service
     src/attranonymtcService.cpp
     src/attranonymtcStubImpl.cpp
-    src-gen/v2/commonapi/someip/__Anonymous__.cpp
     src-gen/v1/commonapi/someip/attranonymtcStubDefault.cpp
 )
 target_link_libraries (
@@ -269,7 +265,6 @@ target_link_libraries (
 add_executable (someip-attributenamedtc-example-service
     src/attrnamedtcService.cpp
     src/attrnamedtcStubImpl.cpp
-    src-gen/v2/commonapi/someip/myTypeCollection.cpp
     src-gen/v1/commonapi/someip/attrnamedtcStubDefault.cpp
 )
 target_link_libraries (
@@ -292,7 +287,6 @@ target_link_libraries (
 add_executable (someip-serialization-example-service
     src/serializationService.cpp
     src/serializationStubImpl.cpp
-    src-gen/v1/commonapi/serialization/Sample.cpp
     src-gen/v1/commonapi/serialization/SampleStubDefault.cpp
 )
 target_link_libraries (

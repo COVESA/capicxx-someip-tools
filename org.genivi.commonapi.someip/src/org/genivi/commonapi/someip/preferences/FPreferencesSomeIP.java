@@ -61,7 +61,7 @@ public class FPreferencesSomeIP
             preferences.put(PreferenceConstantsSomeIP.P_OUTPUT_STUBS_SOMEIP, PreferenceConstantsSomeIP.DEFAULT_OUTPUT_SOMEIP);
         }
         if (!preferences.containsKey(PreferenceConstantsSomeIP.P_LICENSE_SOMEIP)) {
-            preferences.put(PreferenceConstantsSomeIP.P_LICENSE_SOMEIP, PreferenceConstantsSomeIP.DEFAULT_LICENSE_SOMEIP);
+            preferences.put(PreferenceConstantsSomeIP.P_LICENSE_SOMEIP, PreferenceConstantsSomeIP.DEFAULT_LICENSE);
         }
         if (!preferences.containsKey(PreferenceConstantsSomeIP.P_GENERATEPROXY_SOMEIP)) {
             preferences.put(PreferenceConstantsSomeIP.P_GENERATEPROXY_SOMEIP, "true");
@@ -69,6 +69,9 @@ public class FPreferencesSomeIP
         if (!preferences.containsKey(PreferenceConstantsSomeIP.P_GENERATESTUB_SOMEIP)) {
             preferences.put(PreferenceConstantsSomeIP.P_GENERATESTUB_SOMEIP, "true");
         }
+        if (!preferences.containsKey(PreferenceConstantsSomeIP.P_GENERATE_COMMON_SOMEIP)) {
+            preferences.put(PreferenceConstantsSomeIP.P_GENERATE_COMMON_SOMEIP, "true");
+        }        
         if (!preferences.containsKey(PreferenceConstantsSomeIP.P_GENERATE_CODE_SOMEIP)) {
             preferences.put(PreferenceConstantsSomeIP.P_GENERATE_CODE_SOMEIP, "true");    
         }

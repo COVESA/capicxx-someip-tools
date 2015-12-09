@@ -59,6 +59,13 @@ class FTypeCollectionSomeIPDeploymentGenerator {
         #ifndef «_tc.defineName.toUpperCase»_SOMEIP_DEPLOYMENT_HPP_
         #define «_tc.defineName.toUpperCase»_SOMEIP_DEPLOYMENT_HPP_
         
+        «val DeploymentHeaders = _tc.getDeploymentInputIncludes(_accessor)»
+        «FOR deploymentHeader : DeploymentHeaders.sort»
+            «IF !deploymentHeader.equals(someipDeploymentHeaderPath(_tc))»
+                #include <«deploymentHeader»>
+            «ENDIF»
+        «ENDFOR»
+        
         #if !defined (COMMONAPI_INTERNAL_COMPILATION)
         #define COMMONAPI_INTERNAL_COMPILATION
         #endif
@@ -209,7 +216,7 @@ class FTypeCollectionSomeIPDeploymentGenerator {
         if (_type == FBasicTypeId.STRING)
             deployment = deployment + "CommonAPI::SomeIP::StringDeployment"
         else if (_type == FBasicTypeId.BYTE_BUFFER)
-            deployment = deployment + "CommonAPI::SomeIP::ArrayDeployment<CommonAPI::EmptyDeployment>"
+            deployment = deployment + "CommonAPI::SomeIP::ByteBufferDeployment"
         else
             deployment = deployment + "CommonAPI::EmptyDeployment"
 
@@ -247,6 +254,9 @@ class FTypeCollectionSomeIPDeploymentGenerator {
     }
     
     def protected dispatch String generateDeploymentDeclaration(FStructType _struct, FTypeCollection _tc, PropertyAccessor _accessor) {
+        if(_struct.isStructEmpty ) {
+            return "static_assert(false, \"struct " + _struct.name + " must not be empty !\");";
+        }
         if (_accessor.hasDeployment(_struct)) {
             var String declaration = ""
             for (structElement : _struct.elements) {
@@ -411,7 +421,7 @@ class FTypeCollectionSomeIPDeploymentGenerator {
         if (lengthWidth != null)
             parameter += lengthWidth.toString + ", "
         else
-            parameter += "4, "
+            parameter += "0, "
 
         parameter += getDerivedDeploymentParameter(_struct, _accessor)
         // cut off the last comma
@@ -499,7 +509,7 @@ class FTypeCollectionSomeIPDeploymentGenerator {
                 parameter += "CommonAPI::SomeIP::StringEncoding::UTF8"
         }
         else if (_typeId == FBasicTypeId.BYTE_BUFFER) {
-            parameter += "static_cast<CommonAPI::EmptyDeployment*>(nullptr), " + getArrayDeploymentParameter(_source, _source, _accessor)   
+            parameter += getByteBufferDeploymentParamter(_source, _source, _accessor)
         }
         return parameter
     }
@@ -543,6 +553,23 @@ class FTypeCollectionSomeIPDeploymentGenerator {
     // Arrays may be either defined types or inline
     def protected String getArrayElementTypeDeploymentParameter(FTypeRef _elementType, EObject _source, PropertyAccessor _accessor) {
         return _elementType.getDeploymentRef(_accessor)
+    }
+
+    def protected String getByteBufferDeploymentParamter(EObject _buffer, EObject _source, PropertyAccessor _accessor) {
+        var String parameter = ""
+        var Integer minLength = _accessor.getSomeIpByteBufferMinLength(_source)
+        if (minLength == null && _buffer != _source)
+            minLength = _accessor.getSomeIpByteBufferMinLength(_buffer)
+        if (minLength != null)
+            parameter += minLength.toString + ", "
+
+        var Integer maxLength = _accessor.getSomeIpByteBufferMaxLength(_source)
+        if (maxLength == null && _buffer != _source)
+            maxLength = _accessor.getSomeIpByteBufferMaxLength(_buffer)
+        if (maxLength != null)
+            parameter += maxLength.toString
+
+		return parameter
     } 
 
     def protected String getArrayDeploymentParameter(EObject _array, EObject _source, PropertyAccessor _accessor) { 

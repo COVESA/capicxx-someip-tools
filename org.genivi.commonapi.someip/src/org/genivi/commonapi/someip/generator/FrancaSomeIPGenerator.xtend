@@ -231,7 +231,10 @@ class FrancaSomeIPGenerator implements IGenerator {
                 equals("true")) {
                 it.generateStubAdapter(fileSystemAccess, interfaceAccessor, _providers, res)
             }
-            it.generateDeployment(fileSystemAccess, interfaceAccessor, res)
+            if (FPreferencesSomeIP::instance.getPreference(PreferenceConstantsSomeIP::P_GENERATE_COMMON_SOMEIP, "true").
+                equals("true")) {
+                it.generateDeployment(fileSystemAccess, interfaceAccessor, res)
+            }
             it.managedInterfaces.forEach [
                 val currentManagedInterface = it
                 var PropertyAccessor managedDeploymentAccessor

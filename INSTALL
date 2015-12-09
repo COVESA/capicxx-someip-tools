@@ -27,7 +27,7 @@ Source code and latest news can be found at http://projects.genivi.org/commonapi
 
 You can build all code generators by calling maven from the command-line. Open a console and change in the directory org.genivi.commonapi.someip.releng of your CommonAPI-Tools directory. Then call:
 ----
-mvn –DCOREPATH=<path to your CommonAPI-Tools dir> -Dtarget.id=org.genivi.commonapi.someip.target clean verify
+mvn -DCOREPATH=<path to your CommonAPI-Tools dir> -Dtarget.id=org.genivi.commonapi.someip.target clean verify
 ----
 COREPATH is the directory, that contains the target definition folder: org.genivi.commonapi.core.target.
 

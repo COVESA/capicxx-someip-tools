@@ -22,6 +22,15 @@
          <options>
             <option
                   argCount="0"
+                  description="Switch off generation of common code"
+                  hasOptionalArg="false"
+                  id="org.genivi.commonapi.dbus.cli.option.nocommon"
+                  longName="no-common"
+                  required="false"
+                  shortName="nc">
+            </option>
+            <option
+                  argCount="0"
                   description="Switch off generation of proxy code"
                   hasOptionalArg="false"
                   id="org.genivi.commonapi.someip.cli.option.noproxy"

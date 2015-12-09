@@ -88,8 +88,31 @@ define org.genivi.commonapi.someip.deployment for interface commonapi.datatypes.
         SomeIpEventGroups = { 17749 }
     }
 
+    attribute aByteBuffer {
+        SomeIpGetterID = 3024
+        SomeIpSetterID = 3025
+        SomeIpNotifierID = 33012
+        SomeIpEventGroups = { 17749 }
+
+        SomeIpByteBufferMaxLength = 10
+        SomeIpByteBufferMinLength = 2
+    }
+
     method fTest {
         SomeIpMethodID = 515
+        in {
+            byteBufferIn {
+                SomeIpByteBufferMaxLength = 10
+                SomeIpByteBufferMinLength = 2
+            }
+        }
+
+        out {
+            byteBufferOut {
+                SomeIpByteBufferMaxLength = 10
+                SomeIpByteBufferMinLength = 2
+            }
+        }
     }
 
     method fTestEmptyBroadcast {
@@ -99,6 +122,12 @@ define org.genivi.commonapi.someip.deployment for interface commonapi.datatypes.
     broadcast bTest {
         SomeIpEventID = 41913
         SomeIpEventGroups = { 17749 }
+        out {
+            byteBufferOut {
+                SomeIpByteBufferMaxLength = 10
+                SomeIpByteBufferMinLength = 2
+            }
+        }
     }
 
     broadcast bTestEmpty {

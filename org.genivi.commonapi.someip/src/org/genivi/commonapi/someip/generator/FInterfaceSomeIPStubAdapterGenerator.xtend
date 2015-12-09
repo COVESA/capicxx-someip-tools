@@ -601,11 +601,23 @@ class FInterfaceSomeIPStubAdapterGenerator {
             
             // Provided events/fields
             «FOR broadcast : _interface.broadcasts»
-                registerEvent(«broadcast.getEventIdentifier(_accessor)», «broadcast.getEventGroups(_accessor).get(0)», false);
+                {
+                    std::set<CommonAPI::SomeIP::eventgroup_id_t> itsEventGroups;
+                    «FOR eventgroup : broadcast.getEventGroups(_accessor)»
+                    itsEventGroups.insert(CommonAPI::SomeIP::eventgroup_id_t(«eventgroup»));
+                    «ENDFOR»
+                    registerEvent(«broadcast.getEventIdentifier(_accessor)», itsEventGroups, false);
+                }
             «ENDFOR»
             «FOR attribute : _interface.attributes»
                 «IF attribute.observable»
-                registerEvent(«attribute.getNotifierIdentifier(_accessor)», «attribute.getNotifierEventGroups(_accessor).get(0)», true);
+                {
+                    std::set<CommonAPI::SomeIP::eventgroup_id_t> itsEventGroups;
+                    «FOR eventgroup : attribute.getNotifierEventGroups(_accessor)»
+                    itsEventGroups.insert(CommonAPI::SomeIP::eventgroup_id_t(«eventgroup»));
+                    «ENDFOR»
+                    registerEvent(«attribute.getNotifierIdentifier(_accessor)», itsEventGroups, true);
+                }
                 «ENDIF»
             «ENDFOR»
 

@@ -361,6 +361,28 @@ public class PropertyAccessor extends org.genivi.commonapi.core.deployment.Prope
 		return null;
 	}
 	
+	public Integer getSomeIpByteBufferMaxLength (EObject obj) {
+		try {
+			if (type_ == DeploymentType.INTERFACE)
+				return someipInterface_.getSomeIpByteBufferMaxLength(obj);
+			if (type_ == DeploymentType.TYPE_COLLECTION)
+				return someipTypeCollection_.getSomeIpByteBufferMaxLength(obj);
+		}
+		catch (java.lang.NullPointerException e) {}
+		return null;
+	}
+
+	public Integer getSomeIpByteBufferMinLength (EObject obj) {
+		try {
+			if (type_ == DeploymentType.INTERFACE)
+				return someipInterface_.getSomeIpByteBufferMinLength(obj);
+			if (type_ == DeploymentType.TYPE_COLLECTION)
+				return someipTypeCollection_.getSomeIpByteBufferMinLength(obj);
+		}
+		catch (java.lang.NullPointerException e) {}
+		return null;
+	}
+
 	public Integer getSomeIpStringLengthWidth (EObject obj) {
 		try {
 			if (type_ == DeploymentType.INTERFACE)

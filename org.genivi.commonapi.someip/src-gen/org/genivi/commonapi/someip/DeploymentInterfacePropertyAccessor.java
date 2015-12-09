@@ -190,6 +190,14 @@ public class DeploymentInterfacePropertyAccessor
 		return null;
 	}
 	
+	public Integer getSomeIpByteBufferMaxLength (EObject obj) {
+		return target.getInteger(obj, "SomeIpByteBufferMaxLength");
+	}
+	
+	public Integer getSomeIpByteBufferMinLength (EObject obj) {
+		return target.getInteger(obj, "SomeIpByteBufferMinLength");
+	}
+	
 	public Integer getSomeIpAttrArrayMinLength (FAttribute obj) {
 		return target.getInteger(obj, "SomeIpAttrArrayMinLength");
 	}

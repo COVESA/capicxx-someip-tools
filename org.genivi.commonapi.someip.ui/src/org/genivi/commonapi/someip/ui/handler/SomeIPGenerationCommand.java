@@ -45,13 +45,16 @@ public class SomeIPGenerationCommand extends GenerationCommand {
 
 		final EclipseResourceFileSystemAccess2 fsa = fileAccessProvider.get();
 
-		fsa.setOutputConfigurations(FPreferencesSomeIP.getInstance().getOutputpathConfiguration());
-
 		fsa.setMonitor(new NullProgressMonitor());
 
 		return fsa;
 	}
 
+	@Override
+	protected void setupOutputDirectories(EclipseResourceFileSystemAccess2 fileSystemAccess) {
+		fileSystemAccess.setOutputConfigurations(FPreferencesSomeIP.getInstance().getOutputpathConfiguration());
+	}		
+	
 	/**
 	 * Set the properties for the code generation from the resource properties (set with the property page, via the context menu).
 	 * Take default values from the eclipse preference page.
@@ -66,6 +69,7 @@ public class SomeIPGenerationCommand extends GenerationCommand {
 		String outputFolderProxies = null;
 		String outputFolderStubs = null;
 		String licenseHeader = null;
+		String generateCommon = null;
 		String generateProxy = null;
 		String generateStub = null;
 		String generateDependencies = null;
@@ -76,8 +80,8 @@ public class SomeIPGenerationCommand extends GenerationCommand {
 
 		try {
 			// Should project or file specific properties be used ?
-			String useProject1 = project.getPersistentProperty(new QualifiedName(PreferenceConstants.PROJECT_PAGEID, PreferenceConstants.P_USEPROJECTSETTINGS));
-			String useProject2 = file.getPersistentProperty(new QualifiedName(PreferenceConstants.PROJECT_PAGEID, PreferenceConstants.P_USEPROJECTSETTINGS));
+			String useProject1 = project.getPersistentProperty(new QualifiedName(PreferenceConstantsSomeIP.PROJECT_PAGEID, PreferenceConstantsSomeIP.P_USEPROJECTSETTINGS));
+			String useProject2 = file.getPersistentProperty(new QualifiedName(PreferenceConstantsSomeIP.PROJECT_PAGEID, PreferenceConstantsSomeIP.P_USEPROJECTSETTINGS));
 			if("true".equals(useProject1) || "true".equals(useProject2)) {
 				resource = project;
 			}
@@ -85,10 +89,10 @@ public class SomeIPGenerationCommand extends GenerationCommand {
 			outputFolderProxies = resource.getPersistentProperty(new QualifiedName(PreferenceConstantsSomeIP.PROJECT_PAGEID, PreferenceConstantsSomeIP.P_OUTPUT_PROXIES_SOMEIP));
 			outputFolderStubs = resource.getPersistentProperty(new QualifiedName(PreferenceConstantsSomeIP.PROJECT_PAGEID, PreferenceConstantsSomeIP.P_OUTPUT_STUBS_SOMEIP));
 			licenseHeader = resource.getPersistentProperty(new QualifiedName(PreferenceConstantsSomeIP.PROJECT_PAGEID, PreferenceConstantsSomeIP.P_LICENSE_SOMEIP));
+			generateCommon = resource.getPersistentProperty(new QualifiedName(PreferenceConstantsSomeIP.PROJECT_PAGEID, PreferenceConstantsSomeIP.P_GENERATE_COMMON_SOMEIP));
 			generateProxy = resource.getPersistentProperty(new QualifiedName(PreferenceConstantsSomeIP.PROJECT_PAGEID, PreferenceConstantsSomeIP.P_GENERATEPROXY_SOMEIP));
 			generateStub = resource.getPersistentProperty(new QualifiedName(PreferenceConstantsSomeIP.PROJECT_PAGEID, PreferenceConstantsSomeIP.P_GENERATESTUB_SOMEIP));
 			generateDependencies = resource.getPersistentProperty(new QualifiedName(PreferenceConstantsSomeIP.PROJECT_PAGEID, PreferenceConstantsSomeIP.P_GENERATE_DEPENDENCIES_SOMEIP));
-			System.out.println("GENERATE DEPENDENCIES: " + generateDependencies);
 			generateSyncCalls = resource.getPersistentProperty(new QualifiedName(PreferenceConstantsSomeIP.PROJECT_PAGEID, PreferenceConstantsSomeIP.P_GENERATE_SYNC_CALLS_SOMEIP));
 
 		} catch (CoreException e1) {
@@ -107,6 +111,9 @@ public class SomeIPGenerationCommand extends GenerationCommand {
 		if(licenseHeader == null) {
 			licenseHeader = store.getString(PreferenceConstantsSomeIP.P_LICENSE_SOMEIP);
 		}
+		if(generateCommon == null) {
+			generateCommon = store.getString(PreferenceConstantsSomeIP.P_GENERATE_COMMON_SOMEIP);	
+		}
 		if(generateProxy == null) {
 			generateProxy = store.getString(PreferenceConstantsSomeIP.P_GENERATEPROXY_SOMEIP);
 		}
@@ -124,6 +131,7 @@ public class SomeIPGenerationCommand extends GenerationCommand {
 		instance.setPreference(PreferenceConstantsSomeIP.P_OUTPUT_PROXIES_SOMEIP, outputFolderProxies);
 		instance.setPreference(PreferenceConstantsSomeIP.P_OUTPUT_STUBS_SOMEIP, outputFolderStubs);
 		instance.setPreference(PreferenceConstantsSomeIP.P_LICENSE_SOMEIP, licenseHeader);
+		instance.setPreference(PreferenceConstantsSomeIP.P_GENERATE_COMMON_SOMEIP, generateCommon);
 		instance.setPreference(PreferenceConstantsSomeIP.P_GENERATEPROXY_SOMEIP, generateProxy);
 		instance.setPreference(PreferenceConstantsSomeIP.P_GENERATESTUB_SOMEIP, generateStub);
 		instance.setPreference(PreferenceConstantsSomeIP.P_GENERATE_DEPENDENCIES_SOMEIP, generateDependencies);

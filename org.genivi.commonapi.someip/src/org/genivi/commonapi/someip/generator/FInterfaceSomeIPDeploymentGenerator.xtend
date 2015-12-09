@@ -46,12 +46,12 @@ class FInterfaceSomeIPDeploymentGenerator extends FTypeCollectionSomeIPDeploymen
                                          IResource _modelid) '''
         «generateCommonApiSomeIPLicenseHeader()»
         
-        #ifndef COMMONAPI_SOMEIP_«_interface.name.toUpperCase»_DEPLOYMENT_HPP_
-        #define COMMONAPI_SOMEIP_«_interface.name.toUpperCase»_DEPLOYMENT_HPP_
+        #ifndef «_interface.defineName»_SOMEIP_DEPLOYMENT_HPP_
+        #define «_interface.defineName»_SOMEIP_DEPLOYMENT_HPP_
         
         «val DeploymentHeaders = _interface.getDeploymentInputIncludes(_accessor)»
         «FOR deploymentHeader : DeploymentHeaders.sort»
-            «IF !(deploymentHeader.contains(_interface.name))»
+            «IF !deploymentHeader.equals(someipDeploymentHeaderPath(_interface))»
                 #include <«deploymentHeader»>
             «ENDIF»
         «ENDFOR»
@@ -106,7 +106,7 @@ class FInterfaceSomeIPDeploymentGenerator extends FTypeCollectionSomeIPDeploymen
         «_interface.model.generateNamespaceEndDeclaration»
         «_interface.generateVersionNamespaceEnd»
         
-        #endif // COMMONAPI_SOMEIP_«_interface.name.toUpperCase»_DEPLOYMENT_HPP_
+        #endif // «_interface.defineName»_SOMEIP_DEPLOYMENT_HPP_
     '''
 
     def private generateDeploymentSource(FInterface _interface, 

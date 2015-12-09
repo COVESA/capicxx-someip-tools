@@ -71,14 +71,16 @@ public class CommonAPISomeIPPreferencePage extends FieldEditorOverlayPage implem
     @Override
     protected void performDefaults()
     {
-        DefaultScope.INSTANCE.getNode(PreferenceConstantsSomeIP.SCOPE).put(PreferenceConstantsSomeIP.P_OUTPUT_COMMON_SOMEIP,
-                PreferenceConstantsSomeIP.DEFAULT_OUTPUT_SOMEIP);
-        DefaultScope.INSTANCE.getNode(PreferenceConstantsSomeIP.SCOPE).put(PreferenceConstantsSomeIP.P_OUTPUT_PROXIES_SOMEIP,
-                PreferenceConstantsSomeIP.DEFAULT_OUTPUT_SOMEIP);
-        DefaultScope.INSTANCE.getNode(PreferenceConstantsSomeIP.SCOPE).put(PreferenceConstantsSomeIP.P_OUTPUT_STUBS_SOMEIP,
-                PreferenceConstantsSomeIP.DEFAULT_OUTPUT_SOMEIP);
+    	if(!projectSettingIsActive) {
+    		DefaultScope.INSTANCE.getNode(PreferenceConstantsSomeIP.SCOPE).put(PreferenceConstantsSomeIP.P_OUTPUT_COMMON_SOMEIP,
+    				PreferenceConstantsSomeIP.DEFAULT_OUTPUT_SOMEIP);
+    		DefaultScope.INSTANCE.getNode(PreferenceConstantsSomeIP.SCOPE).put(PreferenceConstantsSomeIP.P_OUTPUT_PROXIES_SOMEIP,
+    				PreferenceConstantsSomeIP.DEFAULT_OUTPUT_SOMEIP);
+    		DefaultScope.INSTANCE.getNode(PreferenceConstantsSomeIP.SCOPE).put(PreferenceConstantsSomeIP.P_OUTPUT_STUBS_SOMEIP,
+    				PreferenceConstantsSomeIP.DEFAULT_OUTPUT_SOMEIP);
 
-        super.performDefaults();
+    		super.performDefaults();
+    	}
     }
 
     @Override
@@ -103,9 +105,12 @@ public class CommonAPISomeIPPreferencePage extends FieldEditorOverlayPage implem
     @Override
     public boolean performOk()
     {
-        boolean result = super.performOk();
+    	if(!projectSettingIsActive) {
+    		boolean result = super.performOk();
 
-       return result;
+    		return result;
+    	}
+    	return true;
     }
 
 }

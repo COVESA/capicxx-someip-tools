@@ -71,7 +71,7 @@
                                 <copy
                                     file="${project.build.directory}/products/org.genivi.commonapi.someip.cli.product/linux/gtk/x86/commonapi-someip-generator"
                                     tofile="${project.build.directory}/products/org.genivi.commonapi.someip.cli.product/linux/gtk/x86/commonapi-someip-generator-linux-x86" />
-                                <chmod file="${project.build.directory}/products/org.genivi.commonapi.someip.cli.product/linux/gtk/x86/commonapi-someip-generator-linux-x86" perm="777" />
+                                <chmod file="${project.build.directory}/products/org.genivi.commonapi.someip.cli.product/linux/gtk/x86/commonapi-someip-generator-linux-x86" perm="755" />
                                 <copy
                                     file="${project.build.directory}/products/org.genivi.commonapi.someip.cli.product/linux/gtk/x86/commonapi-someip-generator.ini"
                                     tofile="${project.build.directory}/products/org.genivi.commonapi.someip.cli.product/linux/gtk/x86/commonapi-someip-generator-linux-x86.ini" />
@@ -88,7 +88,7 @@
                                 <copy
                                     file="${project.build.directory}/products/org.genivi.commonapi.someip.cli.product/linux/gtk/x86_64/commonapi-someip-generator"
                                     tofile="${project.build.directory}/products/org.genivi.commonapi.someip.cli.product/linux/gtk/x86_64/commonapi-someip-generator-linux-x86_64" />
-                                <chmod file="${project.build.directory}/products/org.genivi.commonapi.someip.cli.product/linux/gtk/x86_64/commonapi-someip-generator-linux-x86_64" perm="777" />
+                                <chmod file="${project.build.directory}/products/org.genivi.commonapi.someip.cli.product/linux/gtk/x86_64/commonapi-someip-generator-linux-x86_64" perm="755" />
                                 <copy
                                     file="${project.build.directory}/products/org.genivi.commonapi.someip.cli.product/linux/gtk/x86_64/commonapi-someip-generator.ini"
                                     tofile="${project.build.directory}/products/org.genivi.commonapi.someip.cli.product/linux/gtk/x86_64/commonapi-someip-generator-linux-x86_64.ini" />
@@ -113,10 +113,10 @@
                                     excludes="commonapi-someip-generator-linux-x86,commonapi-someip-generator-linux-x86_64,commonapi-someip-generator-windows-x86.exe,commonapi-someip-generator-windows-x86_64.exe"
                                     destfile="${project.build.directory}/products/commonapi_someip_generator.zip"
                                     basedir="${project.build.directory}/products/org.genivi.commonapi.someip.cli.product/all">
-                                    <zipfileset file="${project.build.directory}/products/org.genivi.commonapi.someip.cli.product/all/commonapi-someip-generator-linux-x86" filemode="777"/>
-                                    <zipfileset file="${project.build.directory}/products/org.genivi.commonapi.someip.cli.product/all/commonapi-someip-generator-linux-x86_64" filemode="777"/>
-                                    <zipfileset file="${project.build.directory}/products/org.genivi.commonapi.someip.cli.product/all/commonapi-someip-generator-windows-x86.exe" filemode="777"/>
-                                    <zipfileset file="${project.build.directory}/products/org.genivi.commonapi.someip.cli.product/all/commonapi-someip-generator-windows-x86_64.exe" filemode="777"/>
+                                    <zipfileset file="${project.build.directory}/products/org.genivi.commonapi.someip.cli.product/all/commonapi-someip-generator-linux-x86" filemode="755"/>
+                                    <zipfileset file="${project.build.directory}/products/org.genivi.commonapi.someip.cli.product/all/commonapi-someip-generator-linux-x86_64" filemode="755"/>
+                                    <zipfileset file="${project.build.directory}/products/org.genivi.commonapi.someip.cli.product/all/commonapi-someip-generator-windows-x86.exe" filemode="755"/>
+                                    <zipfileset file="${project.build.directory}/products/org.genivi.commonapi.someip.cli.product/all/commonapi-someip-generator-windows-x86_64.exe" filemode="755"/>
                                 </zip>
                             </target>          
                         </configuration>
@@ -131,7 +131,7 @@
     <parent>
         <groupId>commonapi</groupId>
         <artifactId>org.genivi.commonapi.someip.releng</artifactId>
-        <version>3.1.4-SNAPSHOT</version>
+        <version>3.1.5-SNAPSHOT</version>
         <relativePath>../org.genivi.commonapi.someip.releng</relativePath>
     </parent>
 </project>

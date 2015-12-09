@@ -236,6 +236,12 @@ public class SomeIPCommandlineToolMain extends CommandlineTool {
 		ConsoleLogger.printLog("No stub code will be generated");
 	}
 
+	public void setNoCommonCode() {
+		someIpPref.setPreference(PreferenceConstantsSomeIP.P_GENERATE_COMMON_SOMEIP,
+				"false");
+		ConsoleLogger.printLog("No common code will be generated");
+	}
+	
 	public void setDefaultDirectory(String optionValue) {
 		ConsoleLogger.printLog("Default output directory: " + optionValue);
 		someIpPref.setPreference(
