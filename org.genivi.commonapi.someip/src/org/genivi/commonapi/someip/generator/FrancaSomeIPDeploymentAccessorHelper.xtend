@@ -581,7 +581,6 @@ class FrancaSomeIPDeploymentAccessorHelper {
     def dispatch boolean hasDeployment(PropertyAccessor _accessor, FStructType _struct) {
         if (_accessor.hasSomeIpStructLengthWidth(_struct))
             return true
-            
         for (element : _struct.elements) {
             if (_accessor.hasDeployment(element)) {
                 return true
