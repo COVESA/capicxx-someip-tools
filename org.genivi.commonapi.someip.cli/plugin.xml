@@ -57,6 +57,15 @@
                   shortName="d">
             </option>
             <option
+                  argCount="0"
+                  description="Use subdir per interface"
+                  hasOptionalArg="false"
+                  id="org.genivi.commonapi.core.cli.option.dir.subdirs"
+                  longName="dest-subdirs"
+                  required="false"
+                  shortName="dsub">
+            </option>
+            <option
                   argCount="1"
                   description="The directory for the common code"
                   hasOptionalArg="false"
@@ -100,7 +109,7 @@
                   longName="loglevel"
                   required="false"
                   shortName="ll">
-            </option>  
+            </option>
             <option
                   argCount="0"
                   description="Print out generated files"
@@ -154,7 +163,7 @@
                   longName="no-sync-calls"
                   required="false"
                   shortName="nsc">
-            </option>         
+            </option>
          </options>
       </command>
    </extension>

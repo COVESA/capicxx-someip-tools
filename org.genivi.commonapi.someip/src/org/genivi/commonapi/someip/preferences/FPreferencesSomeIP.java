@@ -11,6 +11,7 @@ package org.genivi.commonapi.someip.preferences;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.io.File;
 
 import org.eclipse.xtext.generator.IFileSystemAccess;
 import org.eclipse.xtext.generator.OutputConfiguration;
@@ -59,6 +60,9 @@ public class FPreferencesSomeIP
         }
         if (!preferences.containsKey(PreferenceConstantsSomeIP.P_OUTPUT_STUBS_SOMEIP)) {
             preferences.put(PreferenceConstantsSomeIP.P_OUTPUT_STUBS_SOMEIP, PreferenceConstantsSomeIP.DEFAULT_OUTPUT_SOMEIP);
+        }
+        if (!preferences.containsKey(PreferenceConstantsSomeIP.P_OUTPUT_SUBDIRS_SOMEIP)) {
+            preferences.put(PreferenceConstantsSomeIP.P_OUTPUT_SUBDIRS_SOMEIP, "false");
         }
         if (!preferences.containsKey(PreferenceConstantsSomeIP.P_LICENSE_SOMEIP)) {
             preferences.put(PreferenceConstantsSomeIP.P_LICENSE_SOMEIP, PreferenceConstantsSomeIP.DEFAULT_LICENSE);
@@ -110,12 +114,28 @@ public class FPreferencesSomeIP
      * @return
      */
     public HashMap<String, OutputConfiguration> getOutputpathConfiguration() {
+        return getOutputpathConfiguration(null);
+    }
 
+    /**
+     * Set the output path configurations (based on stored preference values) for file system access types
+     * (instance of AbstractFileSystemAccess)
+     * @subdir the subdir to use, can be null
+     * @return
+     */
+    public HashMap<String, OutputConfiguration> getOutputpathConfiguration(String subdir) {
         String defaultDir = getPreference(PreferenceConstantsSomeIP.P_OUTPUT_DEFAULT_SOMEIP, PreferenceConstantsSomeIP.DEFAULT_OUTPUT_SOMEIP);
         String commonDir = getPreference(PreferenceConstantsSomeIP.P_OUTPUT_COMMON_SOMEIP, defaultDir);
         String outputProxyDir = getPreference(PreferenceConstantsSomeIP.P_OUTPUT_PROXIES_SOMEIP, defaultDir);
         String outputStubDir = getPreference(PreferenceConstantsSomeIP.P_OUTPUT_STUBS_SOMEIP, defaultDir);
-    	
+
+        if (null != subdir && getPreference(PreferenceConstantsSomeIP.P_OUTPUT_SUBDIRS_SOMEIP, "false").equals("true")) {
+            defaultDir = new File(defaultDir, subdir).getPath();
+            commonDir = new File(commonDir, subdir).getPath();
+            outputProxyDir = new File(outputProxyDir, subdir).getPath();
+            outputStubDir = new File(outputStubDir, subdir).getPath();
+        }
+
         HashMap<String, OutputConfiguration>  outputs = new HashMap<String, OutputConfiguration> ();
 
         OutputConfiguration commonOutput = new OutputConfiguration(PreferenceConstantsSomeIP.P_OUTPUT_COMMON_SOMEIP);

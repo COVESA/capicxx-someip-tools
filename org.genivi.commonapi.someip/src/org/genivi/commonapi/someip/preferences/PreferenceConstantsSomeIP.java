@@ -14,6 +14,7 @@ public interface PreferenceConstantsSomeIP extends PreferenceConstants
     public static final String P_OUTPUT_STUBS_SOMEIP    = P_OUTPUT_STUBS;
 	public static final String P_OUTPUT_COMMON_SOMEIP   = P_OUTPUT_COMMON;
 	public static final String P_OUTPUT_DEFAULT_SOMEIP  = P_OUTPUT_DEFAULT;
+	public static final String P_OUTPUT_SUBDIRS_SOMEIP  = P_OUTPUT_SUBDIRS;
     public static final String P_GENERATEPROXY_SOMEIP   = P_GENERATE_PROXY;
     public static final String P_GENERATESTUB_SOMEIP    = P_GENERATE_STUB;
     public static final String P_GENERATE_COMMON_SOMEIP	= P_GENERATE_COMMON;    

@@ -140,6 +140,14 @@ public class SomeIPCommandlineToolMain extends CommandlineTool {
 				} else if (isCodeGeneration) {
 					ConsoleLogger.printLog("Generating code for " + file);
 					try {
+						if (FPreferencesSomeIP.getInstance().getPreference(
+								PreferenceConstantsSomeIP.P_OUTPUT_SUBDIRS_SOMEIP, "false").equals("true")) {
+							String subdir = (new File(file)).getName();
+							subdir = subdir.replace(".fidl", "");
+							subdir = subdir.replace(".fdepl", "");
+							fsa.setOutputConfigurations(FPreferencesSomeIP.getInstance()
+								.getOutputpathConfiguration(subdir));
+							}
 						francaGenerator.doGenerate(resource, fsa);
 					} catch (Exception e) {
 						System.err.println("Failed to generate code for "
@@ -254,6 +262,12 @@ public class SomeIPCommandlineToolMain extends CommandlineTool {
 				PreferenceConstantsSomeIP.P_OUTPUT_PROXIES_SOMEIP, optionValue);
 		someIpPref.setPreference(
 				PreferenceConstantsSomeIP.P_OUTPUT_STUBS_SOMEIP, optionValue);
+	}
+
+	public void setDestinationSubdirs() {
+		ConsoleLogger.printLog("Using destination subdirs");
+		someIpPref.setPreference(
+			PreferenceConstantsSomeIP.P_OUTPUT_SUBDIRS_SOMEIP, "true");
 	}
 
 	public void setCommonDirectory(String optionValue) {
