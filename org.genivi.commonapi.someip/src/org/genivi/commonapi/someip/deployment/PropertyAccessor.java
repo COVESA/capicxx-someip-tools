@@ -20,6 +20,9 @@ import org.franca.deploymodel.core.FDeployedProvider;
 import org.franca.deploymodel.core.FDeployedTypeCollection;
 import org.franca.deploymodel.dsl.fDeploy.FDInterfaceInstance;
 import org.genivi.commonapi.someip.DeploymentInterfacePropertyAccessor;
+import org.genivi.commonapi.someip.DeploymentInterfacePropertyAccessor.SomeIpAttributeEndianess;
+import org.genivi.commonapi.someip.DeploymentInterfacePropertyAccessor.SomeIpBroadcastEndianess;
+import org.genivi.commonapi.someip.DeploymentInterfacePropertyAccessor.SomeIpMethodEndianess;
 import org.genivi.commonapi.someip.DeploymentProviderPropertyAccessor;
 import org.genivi.commonapi.someip.DeploymentTypeCollectionPropertyAccessor;
 
@@ -178,6 +181,16 @@ public class PropertyAccessor extends org.genivi.commonapi.core.deployment.Prope
 		return null;
 	}
 	
+	public String getSomeIpEndianess (FAttribute obj) {
+		try {
+			if (type_ == DeploymentType.INTERFACE)
+				return (someipInterface_.getSomeIpAttributeEndianess(obj) 
+							== SomeIpAttributeEndianess.le ? "true" : "false");
+		}
+		catch (java.lang.NullPointerException e) {}
+		return "false";
+	}
+	
 	public Integer getSomeIpMethodID (FMethod obj) {
 		try {
 			if (type_ == DeploymentType.INTERFACE) {
@@ -195,6 +208,16 @@ public class PropertyAccessor extends org.genivi.commonapi.core.deployment.Prope
 		}
 		catch (java.lang.NullPointerException e) {}		
 		return null;
+	}
+	
+	public String getSomeIpEndianess (FMethod obj) {
+		try {
+			if (type_ == DeploymentType.INTERFACE)
+				return (someipInterface_.getSomeIpMethodEndianess(obj) 
+							== SomeIpMethodEndianess.le ? "true" : "false");
+		}
+		catch (java.lang.NullPointerException e) {}
+		return "false";		
 	}
 	
 	public Integer getSomeIpPriority (FMethod obj) {
@@ -250,6 +273,16 @@ public class PropertyAccessor extends org.genivi.commonapi.core.deployment.Prope
 		catch (java.lang.NullPointerException e) {}
 		return null;
 	}
+	
+	public String getSomeIpEndianess (FBroadcast obj) {
+		try {
+			if (type_ == DeploymentType.INTERFACE)
+				return (someipInterface_.getSomeIpBroadcastEndianess(obj) 
+							== SomeIpBroadcastEndianess.le ? "true" : "false");
+		}
+		catch (java.lang.NullPointerException e) {}
+		return "false";
+	}	
 	
 	public Integer getSomeIpArrayMinLength (EObject obj) {
 		try {
@@ -350,6 +383,28 @@ public class PropertyAccessor extends org.genivi.commonapi.core.deployment.Prope
 		return null;
 	}
 	
+	public Integer getSomeIpEnumBitWidth (FEnumerationType obj) {
+		try {
+			if (type_ == DeploymentType.INTERFACE)
+				return someipInterface_.getSomeIpEnumBitWidth(obj);
+			if (type_ == DeploymentType.TYPE_COLLECTION)
+				return someipTypeCollection_.getSomeIpEnumBitWidth(obj);
+		}
+		catch (java.lang.NullPointerException e) {}
+		return null;
+	}
+
+	public Integer getSomeIpEnumInvalidValue (FEnumerationType obj) {
+		try {
+			if (type_ == DeploymentType.INTERFACE)
+				return someipInterface_.getSomeIpEnumInvalidValue(obj);
+			if (type_ == DeploymentType.TYPE_COLLECTION)
+				return someipTypeCollection_.getSomeIpEnumInvalidValue(obj);
+		}
+		catch (java.lang.NullPointerException e) {}
+		return null;
+	}
+
 	public Integer getSomeIpStringLength (EObject obj) {
 		try {
 			if (type_ == DeploymentType.INTERFACE)
@@ -484,6 +539,24 @@ public class PropertyAccessor extends org.genivi.commonapi.core.deployment.Prope
 		catch (java.lang.NullPointerException e) {}
 		return null;
 	}
+
+	public Integer getSomeIpAttrEnumBitWidth (FAttribute obj) {
+		try {
+			if (type_ == DeploymentType.INTERFACE)
+				return someipInterface_.getSomeIpAttrEnumBitWidth(obj);
+		}
+		catch (java.lang.NullPointerException e) {}
+		return null;
+	}
+	
+	public Integer getSomeIpAttrIntegerBitWidth (FAttribute obj) {
+		try {
+			if (type_ == DeploymentType.INTERFACE)
+				return someipInterface_.getSomeIpAttrIntegerBitWidth(obj);
+		}
+		catch (java.lang.NullPointerException e) {}
+		return null;
+	}
 	
 	public Integer getSomeIpArgArrayMinLength (FArgument obj) {
 		try {
@@ -512,6 +585,60 @@ public class PropertyAccessor extends org.genivi.commonapi.core.deployment.Prope
 		return null;	
 	}
 	
+	public Integer getSomeIpArgMapMinLength (FArgument obj) {
+		try {
+			if (type_ == DeploymentType.INTERFACE)
+				return someipInterface_.getSomeIpArgMapMinLength(obj);
+		}
+		catch (java.lang.NullPointerException e) {}
+		return null;
+	}
+
+	public Integer getSomeIpArgMapMaxLength (FArgument obj) {
+		try {
+			if (type_ == DeploymentType.INTERFACE)
+				return someipInterface_.getSomeIpArgMapMaxLength(obj);
+		}
+		catch (java.lang.NullPointerException e) {}
+		return null;
+	}
+
+	public Integer getSomeIpArgMapLengthWidth (FArgument obj) {
+		try {
+			if (type_ == DeploymentType.INTERFACE)
+				return someipInterface_.getSomeIpArgMapLengthWidth(obj);
+		}
+		catch (java.lang.NullPointerException e) {}
+		return null;
+	}
+
+	public Integer getSomeIpAttrMapMinLength (FAttribute obj) {
+		try {
+			if (type_ == DeploymentType.INTERFACE)
+				return someipInterface_.getSomeIpAttrMapMinLength(obj);
+		}
+		catch (java.lang.NullPointerException e) {}
+		return null;
+	}
+
+	public Integer getSomeIpAttrMapMaxLength (FAttribute obj) {
+		try {
+			if (type_ == DeploymentType.INTERFACE)
+				return someipInterface_.getSomeIpAttrMapMaxLength(obj);
+		}
+		catch (java.lang.NullPointerException e) {}
+		return null;
+	}
+
+	public Integer getSomeIpAttrMapLengthWidth (FAttribute obj) {
+		try {
+			if (type_ == DeploymentType.INTERFACE)
+				return someipInterface_.getSomeIpAttrMapLengthWidth(obj);
+		}
+		catch (java.lang.NullPointerException e) {}
+		return null;
+	}
+
 	public Integer getSomeIpArgUnionLengthWidth (FArgument obj) {
 		try {
 			if (type_ == DeploymentType.INTERFACE)
@@ -564,6 +691,42 @@ public class PropertyAccessor extends org.genivi.commonapi.core.deployment.Prope
 		}
 		catch (java.lang.NullPointerException e) {}
 		return null;
+	}
+
+	public Integer getSomeIpArgEnumBitWidth (FArgument obj) {
+		try {
+			if (type_ == DeploymentType.INTERFACE)
+				return someipInterface_.getSomeIpArgEnumBitWidth(obj);
+		}
+		catch (java.lang.NullPointerException e) {}
+		return null;
+	}
+
+	public Integer getSomeIpArgEnumInvalidValue(FArgument obj) {
+		try {
+			if (type_ == DeploymentType.INTERFACE)
+				return someipInterface_.getSomeIpArgEnumInvalidValue(obj);
+		}
+		catch (java.lang.NullPointerException e) {}
+		return null;		
+	}
+	
+	public Integer getSomeIpArgIntegerBitWidth (FArgument obj) {
+		try {
+			if (type_ == DeploymentType.INTERFACE)
+				return someipInterface_.getSomeIpArgIntegerBitWidth(obj);
+		}
+		catch (java.lang.NullPointerException e) {}
+		return null;
+	}
+	
+	public Integer getSomeIpArgIntegerInvalidValue(FArgument obj) {
+		try {
+			if (type_ == DeploymentType.INTERFACE)
+				return someipInterface_.getSomeIpArgIntegerInvalidValue(obj);
+		}
+		catch (java.lang.NullPointerException e) {}
+		return null;		
 	}
 	
 	public Integer getSomeIpStructArrayMinLength (FField obj) {
@@ -664,6 +827,50 @@ public class PropertyAccessor extends org.genivi.commonapi.core.deployment.Prope
 		catch (java.lang.NullPointerException e) {}
 		return null;
 	}
+
+	public Integer getSomeIpStructEnumBitWidth (FField obj) {
+		try {
+			if (type_ == DeploymentType.INTERFACE)
+				return someipInterface_.getSomeIpStructEnumBitWidth(obj);
+			if (type_ == DeploymentType.TYPE_COLLECTION)
+				return someipTypeCollection_.getSomeIpStructEnumBitWidth(obj);
+		}
+		catch (java.lang.NullPointerException e) {}
+		return null;
+	}
+	
+	public Integer getSomeIpStructEnumInvalidValue (FField obj) {
+		try {
+			if (type_ == DeploymentType.INTERFACE)
+				return someipInterface_.getSomeIpStructEnumInvalidValue(obj);
+			if (type_ == DeploymentType.TYPE_COLLECTION)
+				return someipTypeCollection_.getSomeIpStructEnumInvalidValue(obj);
+		}
+		catch (java.lang.NullPointerException e) {}
+		return null;
+	}
+	
+	public Integer getSomeIpStructIntegerBitWidth (FField obj) {
+		try {
+			if (type_ == DeploymentType.INTERFACE)
+				return someipInterface_.getSomeIpStructIntegerBitWidth(obj);
+			if (type_ == DeploymentType.TYPE_COLLECTION)
+				return someipTypeCollection_.getSomeIpStructIntegerBitWidth(obj);
+		}
+		catch (java.lang.NullPointerException e) {}
+		return null;
+	}
+
+	public Integer getSomeIpStructIntegerInvalidValue (FField obj) {
+		try {
+			if (type_ == DeploymentType.INTERFACE)
+				return someipInterface_.getSomeIpStructIntegerInvalidValue(obj);
+			if (type_ == DeploymentType.TYPE_COLLECTION)
+				return someipTypeCollection_.getSomeIpStructIntegerInvalidValue(obj);
+		}
+		catch (java.lang.NullPointerException e) {}
+		return null;
+	}
 	
 	public Integer getSomeIpUnionArrayMinLength (EObject obj) {
 		try {
@@ -759,6 +966,28 @@ public class PropertyAccessor extends org.genivi.commonapi.core.deployment.Prope
 				return someipInterface_.getSomeIpUnionEnumWidth(obj);
 			if (type_ == DeploymentType.TYPE_COLLECTION)
 				return someipTypeCollection_.getSomeIpUnionEnumWidth(obj);
+		}
+		catch (java.lang.NullPointerException e) {}
+		return null;
+	}
+
+	public Integer getSomeIpUnionEnumBitWidth (FField obj) {
+		try {
+			if (type_ == DeploymentType.INTERFACE)
+				return someipInterface_.getSomeIpUnionEnumBitWidth(obj);
+			if (type_ == DeploymentType.TYPE_COLLECTION)
+				return someipTypeCollection_.getSomeIpUnionEnumBitWidth(obj);
+		}
+		catch (java.lang.NullPointerException e) {}
+		return null;
+	}
+	
+	public Integer getSomeIpUnionIntegerBitWidth (FField obj) {
+		try {
+			if (type_ == DeploymentType.INTERFACE)
+				return someipInterface_.getSomeIpUnionIntegerBitWidth(obj);
+			if (type_ == DeploymentType.TYPE_COLLECTION)
+				return someipTypeCollection_.getSomeIpUnionIntegerBitWidth(obj);
 		}
 		catch (java.lang.NullPointerException e) {}
 		return null;

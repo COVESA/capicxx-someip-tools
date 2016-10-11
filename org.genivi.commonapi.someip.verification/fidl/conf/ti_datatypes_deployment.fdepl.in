@@ -1,0 +1,284 @@
+import "platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-SOMEIP_deployment_spec.fdepl"
+import "@COMMONAPI_TEST_FIDL_PATH@/ti_datatypes_deployment.fidl"
+
+define org.genivi.commonapi.someip.deployment for interface commonapi.datatypes.deployment.TestInterface {
+    SomeIpServiceID = 4680
+
+    // 1
+    // should have warning
+    attribute myAttrGetterIsZeroSetterIsZeroNotifierIsZero {
+        SomeIpGetterID = 0
+        SomeIpSetterID = 0
+        SomeIpNotifierID = 0
+        SomeIpEventGroups = {1}
+    }
+    // 2
+    // should have no warning
+    attribute myAttrGetterIsZeroSetterIsZeroNotifierIsNotZero_ReadOnly {
+        SomeIpGetterID = 0
+        SomeIpSetterID = 0
+        SomeIpNotifierID = 33201
+        SomeIpEventGroups = {2}
+    }
+    // should have warning
+    attribute myAttrGetterIsZeroSetterIsZeroNotifierIsNotZero {
+        SomeIpGetterID = 0
+        SomeIpSetterID = 0
+        SomeIpNotifierID = 33202
+        SomeIpEventGroups = {2}
+    }
+    // should have warning
+    attribute myAttrGetterIsZeroSetterIsZeroNotifierIsNotZero_NoSub {
+        SomeIpGetterID = 0
+        SomeIpSetterID = 0
+        SomeIpNotifierID = 33203
+        SomeIpEventGroups = {2}
+    }
+    // should have warning
+    attribute myAttrGetterIsZeroSetterIsZeroNotifierIsNotZero_ReadOnlyNoSub {
+        SomeIpGetterID = 0
+        SomeIpSetterID = 0
+        SomeIpNotifierID = 33204
+        SomeIpEventGroups = {2}
+    }
+
+    // 3
+    // should have no warning
+    attribute myAttrGetterIsZeroSetterIsNotZeroNotifierIsZero_NoSub {
+        SomeIpGetterID = 0
+        SomeIpSetterID = 3301
+        SomeIpNotifierID = 0
+        SomeIpEventGroups = {3}
+    }
+    // should have warning
+    attribute myAttrGetterIsZeroSetterIsNotZeroNotifierIsZero{
+        SomeIpGetterID = 0
+        SomeIpSetterID = 3302
+        SomeIpNotifierID = 0
+        SomeIpEventGroups = {3}
+    }
+    // should have warning
+    attribute myAttrGetterIsZeroSetterIsNotZeroNotifierIsZero_ReadOnly {
+        SomeIpGetterID = 0
+        SomeIpSetterID = 3303
+        SomeIpNotifierID = 0
+        SomeIpEventGroups = {3}
+    }
+    // should have warning
+    attribute myAttrGetterIsZeroSetterIsNotZeroNotifierIsZero_ReadOnlyNoSub{
+        SomeIpGetterID = 0
+        SomeIpSetterID = 3304
+        SomeIpNotifierID = 0
+        SomeIpEventGroups = {3}
+    }
+
+    // 4
+    // should have no warning
+    attribute myAttrGetterIsZeroSetterIsNotZeroNotifierIsNotZero {
+        SomeIpGetterID = 0
+        SomeIpSetterID = 3401
+        SomeIpNotifierID = 33401
+        SomeIpEventGroups = {4}
+    }
+    // should have warning
+    attribute myAttrGetterIsZeroSetterIsNotZeroNotifierIsNotZero_NoSub {
+        SomeIpGetterID = 0
+        SomeIpSetterID = 3402
+        SomeIpNotifierID = 33402
+        SomeIpEventGroups = {4}
+    }
+    // should have warning
+    attribute myAttrGetterIsZeroSetterIsNotZeroNotifierIsNotZero_ReadOnly {
+        SomeIpGetterID = 0
+        SomeIpSetterID = 3403
+        SomeIpNotifierID = 33403
+        SomeIpEventGroups = {4}
+    }
+    // should have warning
+    attribute myAttrGetterIsZeroSetterIsNotZeroNotifierIsNotZero_ReadOnlyNoSub {
+        SomeIpGetterID = 0
+        SomeIpSetterID = 3404
+        SomeIpNotifierID = 33404
+        SomeIpEventGroups = {4}
+    }
+
+    // 5
+    // should have no warning
+    attribute myAttrGetterIsNotZeroSetterIsZeroNotifierIsZero_ReadOnlyNoSub {
+        SomeIpGetterID = 3501
+        SomeIpSetterID = 0
+        SomeIpNotifierID = 0
+        SomeIpEventGroups = {5}
+    }
+    // should have warning
+    attribute myAttrGetterIsNotZeroSetterIsZeroNotifierIsZero {
+        SomeIpGetterID = 3502
+        SomeIpSetterID = 0
+        SomeIpNotifierID = 0
+        SomeIpEventGroups = {5}
+    }
+    // should have warning
+    attribute myAttrGetterIsNotZeroSetterIsZeroNotifierIsZero_ReadOnly {
+        SomeIpGetterID = 3503
+        SomeIpSetterID = 0
+        SomeIpNotifierID = 0
+        SomeIpEventGroups = {5}
+    }
+    // should have warning
+    attribute myAttrGetterIsNotZeroSetterIsZeroNotifierIsZero_NoSub {
+        SomeIpGetterID = 3504
+        SomeIpSetterID = 0
+        SomeIpNotifierID = 0
+        SomeIpEventGroups = {5}
+    }
+
+    // 6
+    // should have no warning
+    attribute myAttrGetterIsNotZeroSetterIsZeroNotifierIsNotZero_ReadOnly {
+        SomeIpGetterID = 3601
+        SomeIpSetterID = 0
+        SomeIpNotifierID = 33601
+        SomeIpEventGroups = {6}
+    }
+    // should have warning
+    attribute myAttrGetterIsNotZeroSetterIsZeroNotifierIsNotZero {
+        SomeIpGetterID = 3602
+        SomeIpSetterID = 0
+        SomeIpNotifierID = 33602
+        SomeIpEventGroups = {6}
+    }
+    // should have warning
+    attribute myAttrGetterIsNotZeroSetterIsZeroNotifierIsNotZero_NoSub {
+        SomeIpGetterID = 3603
+        SomeIpSetterID = 0
+        SomeIpNotifierID = 33603
+        SomeIpEventGroups = {6}
+    }
+    // should have warning
+    attribute myAttrGetterIsNotZeroSetterIsZeroNotifierIsNotZero_ReadOnlyNoSub {
+        SomeIpGetterID = 3604
+        SomeIpSetterID = 0
+        SomeIpNotifierID = 33604
+        SomeIpEventGroups = {6}
+    }
+
+    // 7
+    // should have no warning
+    attribute myAttrGetterIsNotZeroSetterIsNotZeroNotifierIsZero_NoSub {
+        SomeIpGetterID = 3701
+        SomeIpSetterID = 3702
+        SomeIpNotifierID = 0
+        SomeIpEventGroups = {7}
+    }
+    // should have warning
+    attribute myAttrGetterIsNotZeroSetterIsNotZeroNotifierIsZero {
+        SomeIpGetterID = 3703
+        SomeIpSetterID = 3704
+        SomeIpNotifierID = 0
+        SomeIpEventGroups = {7}
+    }
+    // should have warning
+    attribute myAttrGetterIsNotZeroSetterIsNotZeroNotifierIsZero_ReadOnly {
+        SomeIpGetterID = 3705
+        SomeIpSetterID = 3706
+        SomeIpNotifierID = 0
+        SomeIpEventGroups = {7}
+    }
+    // should have warning
+    attribute myAttrGetterIsNotZeroSetterIsNotZeroNotifierIsZero_ReadOnlyNoSub {
+        SomeIpGetterID = 3707
+        SomeIpSetterID = 3708
+        SomeIpNotifierID = 0
+        SomeIpEventGroups = {7}
+    }
+
+    // 8
+    // should have no warning
+    attribute myAttrGetterIsNotZeroSetterIsNotZeroNotifierIsNotZero {
+        SomeIpGetterID = 3801
+        SomeIpSetterID = 3802
+        SomeIpNotifierID = 33801
+        SomeIpEventGroups = {11}
+    }
+    // should have warning
+    attribute myAttrGetterIsNotZeroSetterIsNotZeroNotifierIsNotZero_NoSub {
+        SomeIpGetterID = 3803
+        SomeIpSetterID = 3804
+        SomeIpNotifierID = 33802
+        SomeIpEventGroups = {8}
+    }
+    // should have warning
+    attribute myAttrGetterIsNotZeroSetterIsNotZeroNotifierIsNotZero_ReadOnly {
+        SomeIpGetterID = 3805
+        SomeIpSetterID = 3806
+        SomeIpNotifierID = 33803
+        SomeIpEventGroups = {9}
+    }
+    // should have warning
+    attribute myAttrGetterIsNotZeroSetterIsNotZeroNotifierIsNotZero_ReadOnlyNoSub {
+        SomeIpGetterID = 3807
+        SomeIpSetterID = 3808
+        SomeIpNotifierID = 33804
+        SomeIpEventGroups = {10}
+    }
+
+    // partial not deployed attributes
+
+    // comment in to check if deployment warnings are displayed but code won't be compilable anymore
+
+//    // should have warning
+//    attribute myAttrGetterIsNotDeployedSetterIsNotDeployedNotifierIsNotDeployed {
+//        SomeIpEventGroups = {11}
+//    }
+//    // should have warning
+//    attribute myAttrGetterIsNotDeployedSetterIsNotDeployedNotifierIsDeployed {
+//        SomeIpNotifierID = 40002
+//        SomeIpEventGroups = {11}
+//    }
+//    // should have warning
+//    attribute myAttrGetterIsNotDeployedSetterIsDeployedNotifierIsNotDeployed {
+//        SomeIpSetterID = 4006
+//        SomeIpEventGroups = {11}
+//    }
+//    // should have no warning
+//    attribute myAttrGetterIsNotDeployedSetterIsDeployedNotifierIsDeployed {
+//        SomeIpSetterID = 4008
+//        SomeIpNotifierID = 40004
+//        SomeIpEventGroups = {11}
+//    }
+//    // should have warning
+//    attribute myAttrGetterIsDeployedSetterIsNotDeployedNotifierIsNotDeployed {
+//        SomeIpGetterID = 4009
+//        SomeIpEventGroups = {11}
+//    }
+//    // should have warning
+//    attribute myAttrGetterIsDeployedSetterIsNotDeployedNotifierIsDeployed {
+//        SomeIpGetterID = 4011
+//        SomeIpNotifierID = 40006
+//        SomeIpEventGroups = {11}
+//    }
+//    // should have warning
+//    attribute myAttrGetterIsDeployedSetterIsDeployedNotifierIsNotDeployed {
+//        SomeIpGetterID = 4013
+//        SomeIpSetterID = 4014
+//        SomeIpEventGroups = {11}
+//    }
+    // should have no warning
+    attribute myAttrGetterIsDeployedSetterIsDeployedNotifierIsDeployed {
+        SomeIpGetterID = 4015
+        SomeIpSetterID = 4016
+        SomeIpNotifierID = 40008
+        SomeIpEventGroups = {11}
+    }
+}
+
+define org.genivi.commonapi.someip.deployment for provider Service {
+    instance commonapi.datatypes.deployment.TestInterface {
+        InstanceId = "commonapi.datatypes.deployment.TestInterface"
+
+        // 0x1 -> 1
+        SomeIpInstanceID = 1
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpUnreliableUnicastPort = 31000
+    }
+}

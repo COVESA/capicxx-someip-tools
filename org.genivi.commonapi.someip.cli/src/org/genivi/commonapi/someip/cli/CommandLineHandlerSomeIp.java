@@ -27,35 +27,35 @@ public class CommandLineHandlerSomeIp extends AbstractCommandLineHandler impleme
     {
 		@SuppressWarnings("unchecked")
 		List<String> files = parsedArguments.getArgList();
-		
+
 		// a search path may be specified, collect all fdepl files
 		if(parsedArguments.hasOption("sp")) {
 			files.addAll(cliTool.searchFdeplFiles(parsedArguments.getOptionValue("sp")));
-		}			
+		}
 		// We expect at least one fdepl file
 		if(files.size() > 0 && files.get(0) != null) {
-			String file = files.get(0); 
+			String file = files.get(0);
 			if(file.endsWith(FILE_EXTENSION_FDEPL)) {
 				// handle command line options
-				
+
 				// -ll --loglevel quiet or verbose
 				if(parsedArguments.hasOption("ll")) {
 					cliTool.setLogLevel(parsedArguments.getOptionValue("ll"));
 				}
 				ConsoleLogger.printLog("Executing CommonAPI SomeIP Code Generation...\n");
-				
+
 				// Switch off generation of proxy code
 				// -np --no-proxy do not generate proxy code
 				if(parsedArguments.hasOption("np")) {
 					cliTool.setNoProxyCode();
 				}
-				
+
 				// Switch off generation of stub code
-				// -ns --no-stub do not generate stub code				
+				// -ns --no-stub do not generate stub code
 				if(parsedArguments.hasOption("ns")) {
 					cliTool.setNoStubCode();
 				}
-				
+
 				// destination: -d --dest overwrite default directory
 				if(parsedArguments.hasOption("d")) {
 					cliTool.setDefaultDirectory(parsedArguments.getOptionValue("d"));
@@ -95,6 +95,10 @@ public class CommandLineHandlerSomeIp extends AbstractCommandLineHandler impleme
 				if(parsedArguments.hasOption("nv")) {
 					cliTool.disableValidation();
 				}
+                // Treat validation warnings as errors
+                if(parsedArguments.hasOption("ve")) {
+                    cliTool.enableValidationWarningsAsErrors();
+                }
 				// Don't generate code for included types and interfaces
 				if(parsedArguments.hasOption("wod")) {
 					cliTool.noCodeforDependencies();
@@ -103,14 +107,14 @@ public class CommandLineHandlerSomeIp extends AbstractCommandLineHandler impleme
 				if(parsedArguments.hasOption("nsc")) {
 					cliTool.disableSyncCalls();
 				}
-				// Switch off code generation at all 
+				// Switch off code generation at all
 				if(parsedArguments.hasOption("ng")) {
 					cliTool.disableCodeGeneration();
 				}
-				
+
 				// finally invoke the generator.
-                cliTool.generateSomeIp(files);
-                }
+                return cliTool.generateSomeIp(files);
+            }
             else
             {
                 System.out.println("The file extension should be ." + FILE_EXTENSION_FDEPL);

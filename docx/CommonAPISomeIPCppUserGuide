@@ -216,6 +216,20 @@ define org.genivi.commonapi.someip.deployment for provider <Name> {
 The easiest way to define a complete deployment is to use the "auto-complete" function of the Eclipse editor for .fidl/.fdepl files. It will insert all
 mandatory elements and you only need to provide the settings for them.
 
+For a better understanding of the SOME/IP deployment parameters please refer to the SOME/IP specification at http://some-ip.com/. Here are the most important rules:
+
+- Method identifiers must be unique within the interface but must also be unique considering the extensions. Extended interfaces must not have the same method identifiers as base interfaces. Method identifiers are: SomeIpMethodID, SomeIpGetterID and SomeIpSetterID.
+- The range of method identifiers must be 1 to 32767.
+- Event identifiers must be unique within the interface (also when extensions are considered). The range must be 32769 to 65534. Event identifiers are SomeIpEventID and SomeIpNotifierID.
+- Every selective broadcast must have its own event group; there must not be two selective broadcasts in the same eventgroup within one interface (again considering extensions).
+- The eventgroup identifier (SomeIpEventGroups) must at least 1; each event (broadcast, attributes with notifier) must be at least in one event group.
+- If attributes have a notifier they must be in at least one event group.
+- Getter and setter identifiers of attributes must be consistent concerning the attribute keywords readonly and nosubscriptions.
+
+[NOTE]
+All these rules which can be checked within one interface and its dependencies are validated by the CommonAPI-SomeIp code generator (warning). There are additional rules which are not checked at the moment because they concern all applications or services in one device; the user has to take care of it without support from the code generator:
+- The combination of SomeIpServiceID and SomeIpInstanceID must be unique in the SOME/IP network.
+- Do not deploy two instances of the same interface on the same port.
 
 === Windows
 

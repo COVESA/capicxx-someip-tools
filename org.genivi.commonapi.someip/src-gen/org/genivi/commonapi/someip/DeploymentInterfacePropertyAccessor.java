@@ -82,6 +82,22 @@ public class DeploymentInterfacePropertyAccessor
 		return target.getIntegerArray(obj, "SomeIpEventGroups");
 	}
 	
+	public enum SomeIpAttributeEndianess {
+		le, be
+	}
+	public SomeIpAttributeEndianess getSomeIpAttributeEndianess (FAttribute obj) {
+		String e = target.getEnum(obj, "SomeIpAttributeEndianess");
+		if (e==null) return null;
+		return convertSomeIpAttributeEndianess(e);
+	}
+	private SomeIpAttributeEndianess convertSomeIpAttributeEndianess (String val) {
+		if (val.equals("le"))
+			return SomeIpAttributeEndianess.le; else 
+		if (val.equals("be"))
+			return SomeIpAttributeEndianess.be;
+		return null;
+	}
+	
 	public Integer getSomeIpMethodID (FMethod obj) {
 		return target.getInteger(obj, "SomeIpMethodID");
 	}
@@ -108,6 +124,22 @@ public class DeploymentInterfacePropertyAccessor
 		return null;
 	}
 	
+	public enum SomeIpMethodEndianess {
+		le, be
+	}
+	public SomeIpMethodEndianess getSomeIpMethodEndianess (FMethod obj) {
+		String e = target.getEnum(obj, "SomeIpMethodEndianess");
+		if (e==null) return null;
+		return convertSomeIpMethodEndianess(e);
+	}
+	private SomeIpMethodEndianess convertSomeIpMethodEndianess (String val) {
+		if (val.equals("le"))
+			return SomeIpMethodEndianess.le; else 
+		if (val.equals("be"))
+			return SomeIpMethodEndianess.be;
+		return null;
+	}
+	
 	public Integer getSomeIpEventID (FBroadcast obj) {
 		return target.getInteger(obj, "SomeIpEventID");
 	}
@@ -126,6 +158,22 @@ public class DeploymentInterfacePropertyAccessor
 	
 	public List<Integer> getSomeIpEventGroups (FBroadcast obj) {
 		return target.getIntegerArray(obj, "SomeIpEventGroups");
+	}
+	
+	public enum SomeIpBroadcastEndianess {
+		le, be
+	}
+	public SomeIpBroadcastEndianess getSomeIpBroadcastEndianess (FBroadcast obj) {
+		String e = target.getEnum(obj, "SomeIpBroadcastEndianess");
+		if (e==null) return null;
+		return convertSomeIpBroadcastEndianess(e);
+	}
+	private SomeIpBroadcastEndianess convertSomeIpBroadcastEndianess (String val) {
+		if (val.equals("le"))
+			return SomeIpBroadcastEndianess.le; else 
+		if (val.equals("be"))
+			return SomeIpBroadcastEndianess.be;
+		return null;
 	}
 	
 	public Integer getSomeIpArrayMinLength (EObject obj) {
@@ -162,6 +210,14 @@ public class DeploymentInterfacePropertyAccessor
 	
 	public Integer getSomeIpEnumWidth (FEnumerationType obj) {
 		return target.getInteger(obj, "SomeIpEnumWidth");
+	}
+	
+	public Integer getSomeIpEnumBitWidth (FEnumerationType obj) {
+		return target.getInteger(obj, "SomeIpEnumBitWidth");
+	}
+	
+	public Integer getSomeIpEnumInvalidValue (FEnumerationType obj) {
+		return target.getInteger(obj, "SomeIpEnumInvalidValue");
 	}
 	
 	public Integer getSomeIpStringLength (EObject obj) {
@@ -210,6 +266,18 @@ public class DeploymentInterfacePropertyAccessor
 		return target.getInteger(obj, "SomeIpAttrArrayLengthWidth");
 	}
 	
+	public Integer getSomeIpAttrMapMinLength (FAttribute obj) {
+		return target.getInteger(obj, "SomeIpAttrMapMinLength");
+	}
+	
+	public Integer getSomeIpAttrMapMaxLength (FAttribute obj) {
+		return target.getInteger(obj, "SomeIpAttrMapMaxLength");
+	}
+	
+	public Integer getSomeIpAttrMapLengthWidth (FAttribute obj) {
+		return target.getInteger(obj, "SomeIpAttrMapLengthWidth");
+	}
+	
 	public Integer getSomeIpAttrUnionLengthWidth (FAttribute obj) {
 		return target.getInteger(obj, "SomeIpAttrUnionLengthWidth");
 	}
@@ -234,6 +302,14 @@ public class DeploymentInterfacePropertyAccessor
 		return target.getInteger(obj, "SomeIpAttrEnumWidth");
 	}
 	
+	public Integer getSomeIpAttrEnumBitWidth (FAttribute obj) {
+		return target.getInteger(obj, "SomeIpAttrEnumBitWidth");
+	}
+	
+	public Integer getSomeIpAttrIntegerBitWidth (FAttribute obj) {
+		return target.getInteger(obj, "SomeIpAttrIntegerBitWidth");
+	}
+	
 	public Integer getSomeIpArgArrayMinLength (FArgument obj) {
 		return target.getInteger(obj, "SomeIpArgArrayMinLength");
 	}
@@ -244,6 +320,18 @@ public class DeploymentInterfacePropertyAccessor
 	
 	public Integer getSomeIpArgArrayLengthWidth (FArgument obj) {
 		return target.getInteger(obj, "SomeIpArgArrayLengthWidth");
+	}
+	
+	public Integer getSomeIpArgMapMinLength (FArgument obj) {
+		return target.getInteger(obj, "SomeIpArgMapMinLength");
+	}
+	
+	public Integer getSomeIpArgMapMaxLength (FArgument obj) {
+		return target.getInteger(obj, "SomeIpArgMapMaxLength");
+	}
+	
+	public Integer getSomeIpArgMapLengthWidth (FArgument obj) {
+		return target.getInteger(obj, "SomeIpArgMapLengthWidth");
 	}
 	
 	public Integer getSomeIpArgUnionLengthWidth (FArgument obj) {
@@ -268,6 +356,22 @@ public class DeploymentInterfacePropertyAccessor
 	
 	public Integer getSomeIpArgEnumWidth (FArgument obj) {
 		return target.getInteger(obj, "SomeIpArgEnumWidth");
+	}
+	
+	public Integer getSomeIpArgEnumBitWidth (FArgument obj) {
+		return target.getInteger(obj, "SomeIpArgEnumBitWidth");
+	}
+	
+	public Integer getSomeIpArgEnumInvalidValue (FArgument obj) {
+		return target.getInteger(obj, "SomeIpArgEnumInvalidValue");
+	}
+	
+	public Integer getSomeIpArgIntegerBitWidth (FArgument obj) {
+		return target.getInteger(obj, "SomeIpArgIntegerBitWidth");
+	}
+	
+	public Integer getSomeIpArgIntegerInvalidValue (FArgument obj) {
+		return target.getInteger(obj, "SomeIpArgIntegerInvalidValue");
 	}
 	
 	public Integer getSomeIpStructArrayMinLength (FField obj) {
@@ -306,6 +410,22 @@ public class DeploymentInterfacePropertyAccessor
 		return target.getInteger(obj, "SomeIpStructEnumWidth");
 	}
 	
+	public Integer getSomeIpStructEnumBitWidth (FField obj) {
+		return target.getInteger(obj, "SomeIpStructEnumBitWidth");
+	}
+	
+	public Integer getSomeIpStructEnumInvalidValue (FField obj) {
+		return target.getInteger(obj, "SomeIpStructEnumInvalidValue");
+	}
+	
+	public Integer getSomeIpStructIntegerBitWidth (FField obj) {
+		return target.getInteger(obj, "SomeIpStructIntegerBitWidth");
+	}
+	
+	public Integer getSomeIpStructIntegerInvalidValue (FField obj) {
+		return target.getInteger(obj, "SomeIpStructIntegerInvalidValue");
+	}
+	
 	public Integer getSomeIpUnionArrayMinLength (EObject obj) {
 		return target.getInteger(obj, "SomeIpUnionArrayMinLength");
 	}
@@ -340,6 +460,14 @@ public class DeploymentInterfacePropertyAccessor
 	
 	public Integer getSomeIpUnionEnumWidth (EObject obj) {
 		return target.getInteger(obj, "SomeIpUnionEnumWidth");
+	}
+	
+	public Integer getSomeIpUnionEnumBitWidth (EObject obj) {
+		return target.getInteger(obj, "SomeIpUnionEnumBitWidth");
+	}
+	
+	public Integer getSomeIpUnionIntegerBitWidth (EObject obj) {
+		return target.getInteger(obj, "SomeIpUnionIntegerBitWidth");
 	}
 	
 	

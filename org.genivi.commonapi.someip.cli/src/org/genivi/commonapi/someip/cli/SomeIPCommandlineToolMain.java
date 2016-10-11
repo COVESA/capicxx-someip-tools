@@ -58,6 +58,7 @@ public class SomeIPCommandlineToolMain extends CommandlineTool {
 		public void acceptWarning(String message, EObject object,
 				EStructuralFeature feature, int index, String code,
 				String... issueData) {
+		    hasValidationWarning = true;
 			ConsoleLogger.printLog("Warning: " + scope + message);
 		}
 
@@ -85,11 +86,11 @@ public class SomeIPCommandlineToolMain extends CommandlineTool {
 		File itsFile = new File(_path);
 		return itsFile.getAbsolutePath();
 	}
-	
-	public void generateSomeIp(List<String> fileList) {
+
+	public int generateSomeIp(List<String> fileList) {
 		francaGenerator = injector.getInstance(FrancaSomeIPGenerator.class);
 
-		doGenerate(fileList);
+		return doGenerate(fileList);
 	}
 
 	/**
@@ -98,7 +99,7 @@ public class SomeIPCommandlineToolMain extends CommandlineTool {
 	 * @param fileList
 	 *            the list of files to generate code from
 	 */
-	protected void doGenerate(List<String> _fileList) {
+	protected int doGenerate(List<String> _fileList) {
 		fsa.setOutputConfigurations(FPreferencesSomeIP.getInstance()
 				.getOutputpathConfiguration());
 
@@ -114,7 +115,7 @@ public class SomeIPCommandlineToolMain extends CommandlineTool {
 			String absolutePath = normalize(path);
 			fileList.add(absolutePath);
 		}
-		
+
 		for (String file : fileList) {
 			if (file.endsWith(FDEPL_EXTENSION)) {
 				URI uri = URI.createFileURI(file);
@@ -132,11 +133,17 @@ public class SomeIPCommandlineToolMain extends CommandlineTool {
 				if (isValidation) {
 					validateSomeIP(resource);
 				}
-				
+
 				if (hasValidationError) {
 					ConsoleLogger.printErrorLog(file
 							+ " contains validation errors !");
 					error_state = ERROR_STATE;
+				}
+				else if (hasValidationWarning && isValidationWarningsAsErrors) {
+				    cliMessageAcceptor.acceptError("Warnings are treated as errors - validation failed", null, null, 0, null, (String[])null);
+                    ConsoleLogger.printErrorLog(file
+                            + " contains validation warnings !");
+                    error_state = ERROR_STATE;
 				} else if (isCodeGeneration) {
 					ConsoleLogger.printLog("Generating code for " + file);
 					try {
@@ -173,7 +180,7 @@ public class SomeIPCommandlineToolMain extends CommandlineTool {
 		}
 		fsa.clearFileList();
 		dumpGeneratedFiles = false;
-		System.exit(error_state);
+		return error_state;
 	}
 
 	/**
@@ -201,15 +208,7 @@ public class SomeIPCommandlineToolMain extends CommandlineTool {
 				// perform Some/IP specific deployment validation
 				cliValidator.validateDeployment(resource.getURI());
 			}
-			// Many error logs would be displayed if a SomeIP deployment file had DBus
-			// deployment information (or vice versa).
-			// Therefore don't validate fdepl files at the moment
-			return;
-			// XText validation
-			// cliValidator.validateResource(resource);
 		}
-
-
 	}
 
 	/**
@@ -249,7 +248,7 @@ public class SomeIPCommandlineToolMain extends CommandlineTool {
 				"false");
 		ConsoleLogger.printLog("No common code will be generated");
 	}
-	
+
 	public void setDefaultDirectory(String optionValue) {
 		ConsoleLogger.printLog("Default output directory: " + optionValue);
 		someIpPref.setPreference(
@@ -306,6 +305,10 @@ public class SomeIPCommandlineToolMain extends CommandlineTool {
 	public void disableValidation() {
 		ConsoleLogger.printLog("Validation is off");
 		isValidation = false;
+	}
+
+	public void enableValidationWarningsAsErrors() {
+	    isValidationWarningsAsErrors = true;
 	}
 
 	/**

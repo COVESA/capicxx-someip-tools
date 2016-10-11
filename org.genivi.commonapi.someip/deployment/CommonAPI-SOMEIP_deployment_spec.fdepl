@@ -63,6 +63,8 @@ specification org.genivi.commonapi.someip.deployment extends org.genivi.commonap
          * The event group is necessary if the attribute is notifiable.
          */
         SomeIpEventGroups:           Integer[]                       (optional);
+
+        SomeIpAttributeEndianess:    {le, be}                        (default: be);
     }
 
     for methods {
@@ -74,6 +76,8 @@ specification org.genivi.commonapi.someip.deployment extends org.genivi.commonap
          * define how to retrieve an error message and map it to Franca error parameters
          */
         SomeIpErrorCoding:           {Header}                        (default: Header);
+
+        SomeIpMethodEndianess:       {le, be}                        (default: be);
     }
 
     for broadcasts {
@@ -82,6 +86,8 @@ specification org.genivi.commonapi.someip.deployment extends org.genivi.commonap
         SomeIpPriority:              Integer                         (optional);
         SomeIpMulticast:             Boolean                         (default: false);
         SomeIpEventGroups:           Integer[]                       (optional);
+
+        SomeIpBroadcastEndianess:    {le, be}                        (default: be);
     }
 
     for arrays {
@@ -103,21 +109,21 @@ specification org.genivi.commonapi.someip.deployment extends org.genivi.commonap
          * allowed values are 0, 1, 2, 4.
          * 0 means that all types in the union have the same size.
          */
-        SomeIpUnionLengthWidth:      Integer                         (default: 4);
+        SomeIpUnionLengthWidth:      Integer                         (optional);
         /*
          * 2^SomeIpUnionTypeWidth*8 different Types in the union.
          */
-        SomeIpUnionTypeWidth:        Integer                         (default: 4);
+        SomeIpUnionTypeWidth:        Integer                         (optional);
         /*
          * True means length field before type field, false means length field
          * after type field.
          */
-        SomeIpUnionDefaultOrder:     Boolean                         (default: true);
+        SomeIpUnionDefaultOrder:     Boolean                         (optional);
         /*
          * If SomeIpUnionLengthWidth == 0, SomeIpUnionMaxLength must be set to the 
          * size of the biggest contained type.
          */
-        SomeIpUnionMaxLength:        Integer                         (default: 0);
+        SomeIpUnionMaxLength:        Integer                         (optional);
     }
 
     for structs {
@@ -131,7 +137,11 @@ specification org.genivi.commonapi.someip.deployment extends org.genivi.commonap
 
     for enumerations {
         // Bytes of base type
-        SomeIpEnumWidth:          Integer                            (default: 4);
+        SomeIpEnumWidth:             Integer                         (default: 4);
+        // Bits to serialize/deserialize
+        SomeIpEnumBitWidth:          Integer                         (optional);
+        // Invalid value
+        SomeIpEnumInvalidValue:		 Integer						 (optional);
     }
 
     for strings {
@@ -148,58 +158,76 @@ specification org.genivi.commonapi.someip.deployment extends org.genivi.commonap
     }
 
     for byte_buffers {
-        SomeIpByteBufferMaxLength:    Integer                        (default: 0);    // 0 means unlimited length
-        SomeIpByteBufferMinLength:    Integer                        (default: 0);
+        SomeIpByteBufferMaxLength:   Integer                        (default: 0);    // 0 means unlimited length
+        SomeIpByteBufferMinLength:   Integer                        (default: 0);
     }
 
     /*
      * From here workaround for missing Franca deployment features.
      */
     for attributes {
-        SomeIpAttrArrayMinLength:    Integer                         (default: 0);
-        SomeIpAttrArrayMaxLength:    Integer                         (default: 0);
-        SomeIpAttrArrayLengthWidth:  Integer                         (default: 4);
-        SomeIpAttrUnionLengthWidth:  Integer                         (default: 4);
-        SomeIpAttrUnionTypeWidth:    Integer                         (default: 4);
-        SomeIpAttrUnionDefaultOrder: Boolean                         (default: true);
-        SomeIpAttrUnionMaxLength:    Integer                         (default: 0);
-        SomeIpAttrStructLengthWidth: Integer                         (default: 0);
-        SomeIpAttrEnumWidth:         Integer                         (default: 4);
+        SomeIpAttrArrayMinLength:    Integer                         (optional);
+        SomeIpAttrArrayMaxLength:    Integer                         (optional);
+        SomeIpAttrArrayLengthWidth:  Integer                         (optional);
+        SomeIpAttrMapMinLength:      Integer                         (optional);
+        SomeIpAttrMapMaxLength:      Integer                         (optional);
+        SomeIpAttrMapLengthWidth:    Integer                         (optional);
+        SomeIpAttrUnionLengthWidth:  Integer                         (optional);
+        SomeIpAttrUnionTypeWidth:    Integer                         (optional);
+        SomeIpAttrUnionDefaultOrder: Boolean                         (optional);
+        SomeIpAttrUnionMaxLength:    Integer                         (optional);
+        SomeIpAttrStructLengthWidth: Integer                         (optional);
+        SomeIpAttrEnumWidth:         Integer                         (optional);
+        SomeIpAttrEnumBitWidth:      Integer                         (optional);
+        SomeIpAttrIntegerBitWidth:   Integer                         (optional);
     }
 
     for arguments {
-        SomeIpArgArrayMinLength:     Integer                         (default: 0);
-        SomeIpArgArrayMaxLength:     Integer                         (default: 0);
-        SomeIpArgArrayLengthWidth:   Integer                         (default: 4);
-        SomeIpArgUnionLengthWidth:   Integer                         (default: 4);
-        SomeIpArgUnionTypeWidth:     Integer                         (default: 4);
-        SomeIpArgUnionDefaultOrder:  Boolean                         (default: true);
-        SomeIpArgUnionMaxLength:     Integer                         (default: 0);
-        SomeIpArgStructLengthWidth:  Integer                         (default: 0);
-        SomeIpArgEnumWidth:          Integer                         (default: 4);
+        SomeIpArgArrayMinLength:      Integer                         (optional);
+        SomeIpArgArrayMaxLength:      Integer                         (optional);
+        SomeIpArgArrayLengthWidth:    Integer                         (optional);
+        SomeIpArgMapMinLength:        Integer                         (optional);
+        SomeIpArgMapMaxLength:        Integer                         (optional);
+        SomeIpArgMapLengthWidth:      Integer                         (optional);
+        SomeIpArgUnionLengthWidth:    Integer                         (optional);
+        SomeIpArgUnionTypeWidth:      Integer                         (optional);
+        SomeIpArgUnionDefaultOrder:   Boolean                         (optional);
+        SomeIpArgUnionMaxLength:      Integer                         (optional);
+        SomeIpArgStructLengthWidth:   Integer                         (optional);
+        SomeIpArgEnumWidth:           Integer                         (optional);
+        SomeIpArgEnumBitWidth:        Integer                         (optional);
+        SomeIpArgEnumInvalidValue:    Integer                         (optional);
+        SomeIpArgIntegerBitWidth:     Integer                         (optional);
+        SomeIpArgIntegerInvalidValue: Integer                         (optional);
     }
 
     for struct_fields {
-        SomeIpStructArrayMinLength:    Integer                       (default: 0);
-        SomeIpStructArrayMaxLength:    Integer                       (default: 0);
-        SomeIpStructArrayLengthWidth:  Integer                       (default: 4);
-        SomeIpStructUnionLengthWidth:  Integer                       (default: 4);
-        SomeIpStructUnionTypeWidth:    Integer                       (default: 4);
-        SomeIpStructUnionDefaultOrder: Boolean                       (default: true);
-        SomeIpStructUnionMaxLength:    Integer                       (default: 0);
-        SomeIpStructStructLengthWidth: Integer                       (default: 0);
-        SomeIpStructEnumWidth:         Integer                       (default: 4);
+        SomeIpStructArrayMinLength:      Integer                       (optional);
+        SomeIpStructArrayMaxLength:      Integer                       (optional);
+        SomeIpStructArrayLengthWidth:    Integer                       (optional);
+        SomeIpStructUnionLengthWidth:    Integer                       (optional);
+        SomeIpStructUnionTypeWidth:      Integer                       (optional);
+        SomeIpStructUnionDefaultOrder:   Boolean                       (optional);
+        SomeIpStructUnionMaxLength:      Integer                       (optional);
+        SomeIpStructStructLengthWidth:   Integer                       (optional);
+        SomeIpStructEnumWidth:           Integer                       (optional);
+        SomeIpStructEnumBitWidth:        Integer                       (optional);
+        SomeIpStructEnumInvalidValue:    Integer                       (optional);
+        SomeIpStructIntegerBitWidth:     Integer                       (optional);
+        SomeIpStructIntegerInvalidValue: Integer                       (optional);
     }
 
     for union_fields {
-        SomeIpUnionArrayMinLength:    Integer                        (default: 0);
-        SomeIpUnionArrayMaxLength:    Integer                        (default: 0);
-        SomeIpUnionArrayLengthWidth:  Integer                        (default: 4);
-        SomeIpUnionUnionLengthWidth:  Integer                        (default: 4);
-        SomeIpUnionUnionTypeWidth:    Integer                        (default: 4);
-        SomeIpUnionUnionDefaultOrder: Boolean                        (default: true);
-        SomeIpUnionUnionMaxLength:    Integer                        (default: 0);
-        SomeIpUnionStructLengthWidth: Integer                        (default: 0);
-        SomeIpUnionEnumWidth:         Integer                        (default: 4);
+        SomeIpUnionArrayMinLength:    Integer                        (optional);
+        SomeIpUnionArrayMaxLength:    Integer                        (optional);
+        SomeIpUnionArrayLengthWidth:  Integer                        (optional);
+        SomeIpUnionUnionLengthWidth:  Integer                        (optional);
+        SomeIpUnionUnionTypeWidth:    Integer                        (optional);
+        SomeIpUnionUnionDefaultOrder: Boolean                        (optional);
+        SomeIpUnionUnionMaxLength:    Integer                        (optional);
+        SomeIpUnionStructLengthWidth: Integer                        (optional);
+        SomeIpUnionEnumWidth:         Integer                        (optional);
+        SomeIpUnionEnumBitWidth:      Integer                        (optional);
+        SomeIpUnionIntegerBitWidth:   Integer                        (optional);
     }
 }

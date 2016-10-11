@@ -33,6 +33,9 @@ define org.genivi.commonapi.someip.deployment for interface commonapi.datatypes.
         SomeIpSetterID = 3009
         SomeIpNotifierID = 33004
         SomeIpEventGroups = { 17749 }
+        SomeIpAttrMapLengthWidth = 2
+        SomeIpAttrMapMinLength = 2
+        SomeIpAttrMapMaxLength = 4
     }
     attribute aTypedef {
         SomeIpGetterID = 3010
@@ -43,6 +46,20 @@ define org.genivi.commonapi.someip.deployment for interface commonapi.datatypes.
 
     method fTest {
         SomeIpMethodID = 1029
+        in {
+            tMapIn {
+                SomeIpArgMapLengthWidth = 2
+                SomeIpArgMapMinLength = 2
+                SomeIpArgMapMaxLength = 4
+            }
+        }
+        out {
+            tMapOut {
+                SomeIpArgMapLengthWidth = 2
+                SomeIpArgMapMinLength = 2
+                SomeIpArgMapMaxLength = 4
+            }
+        }
     }
 
     broadcast bTest {

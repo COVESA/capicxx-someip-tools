@@ -74,83 +74,104 @@ public class ValidatorSomeIP implements IFrancaExternalValidator
     @Override
     public void validateModel(FModel model, ValidationMessageAcceptor messageAcceptor)
     {
-        if (!isValidatorEnabled())
-        {
-            return;
-        }
-        resourceSet = new ResourceSetImpl();
-        Resource res = model.eResource();
-        URI uri = res.getURI();
-        int segCount = uri.segmentCount() - 2;
-        final Path platformPath = new Path(res.getURI().toPlatformString(true));
-        final IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(platformPath);
-        IPath filePath = file.getLocation();
-        String cwd = filePath.removeLastSegments(1).toString();
-        try
-        {
-            initImportList(model, cwd, file.getLocation().toString());
-            importList = buildImportList(importList);
-        }
-        catch (NullPointerException e)
-        {
-        }
-        List<String> interfaceTypecollectionNames = new ArrayList<String>();
-        for (FTypeCollection fTypeCollection : model.getTypeCollections())
-        {
-            interfaceTypecollectionNames.add(fTypeCollection.getName());
-            validateImportedTypeCollections(model, messageAcceptor, file, cwd, fTypeCollection);
-        }
-
-        cwd = filePath.removeLastSegments(segCount).toString();
-        if (isWholeWorkspaceCheckActive())
-        {
-            if (aimBuilder.buildAllInfos(cwd))
+        try {
+            if (!isValidatorEnabled())
             {
-                fastAllInfo = aimBuilder.fastAllInfo;
+                return;
+            }
+            resourceSet = new ResourceSetImpl();
+            Resource res = model.eResource();
+            URI uri = res.getURI();
+
+            boolean isWorkspaceUri = res.getURI().isPlatform();
+            IPath filePath;
+            String filePathString;
+            if (isWorkspaceUri)
+            {
+                Path platformPath = new Path(res.getURI().toPlatformString(true));
+                IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(platformPath);
+                filePath = file.getLocation();
+                filePathString = file.getLocation().toString();
             }
             else
             {
-                if (!uri.segment(2).toString().equals("bin"))
-                    aimBuilder.updateAllInfo((EObject) model, filePath.toString());
-                fastAllInfo = aimBuilder.fastAllInfo;
+                filePath = new Path(res.getURI().toFileString());
+                filePathString = filePath.toString();
             }
-        }
-        else
-        {
-            resourceList.add(model);
-            aimBuilder.buildAllInfo(resourceList);
-        }
 
-        HashMap<FInterface, EList<FInterface>> managedInterfaces = new HashMap<FInterface, EList<FInterface>>();
-        for (FInterface fInterface : model.getInterfaces())
-        {
-            interfaceTypecollectionNames.add(fInterface.getName());
-            managedInterfaces.put(fInterface, fInterface.getManagedInterfaces());
-            validateImportedTypeCollections(model, messageAcceptor, file, cwd, fInterface);
-        }
 
-        for (FTypeCollection fTypeCollection : model.getTypeCollections())
-        {
+            List<String> interfaceTypecollectionNames = new ArrayList<String>();
             try
             {
-                validateTypeCollectionName(model, messageAcceptor, filePath, interfaceTypecollectionNames, fTypeCollection);
+                String cwd = filePath.removeLastSegments(1).toString();
+                initImportList(model, cwd, filePathString);
+                importList = buildImportList(importList);
+
+                for (FTypeCollection fTypeCollection : model.getTypeCollections())
+                {
+                    interfaceTypecollectionNames.add(fTypeCollection.getName());
+                    validateImportedTypeCollections(model, messageAcceptor, filePath.lastSegment(), cwd, fTypeCollection);
+                }
             }
-            catch (Exception e)
+            catch (NullPointerException e)
             {
-                e.printStackTrace();
             }
-            validateTypeCollectionElements(messageAcceptor, fTypeCollection);
-        }
 
-        for (FInterface fInterface : model.getInterfaces())
-        {
-            validateTypeCollectionName(model, messageAcceptor, filePath, interfaceTypecollectionNames, fInterface);
-            validateFInterfaceElements(messageAcceptor, fInterface);
-        }
-        resourceList.clear();
-        interfaceTypecollectionNames.clear();
-        importList.clear();
 
+            if (isWorkspaceUri)
+            {
+                // That path segment logic works only for paths within an Eclipse Workspace, but not for the command line
+                // which may point to files outside an Eclipse Workspace.
+                int segCount = uri.segmentCount() - 2;
+                String cwd = filePath.removeLastSegments(segCount).toString();
+                if (isWholeWorkspaceCheckActive())
+                {
+                    if (aimBuilder.buildAllInfos(cwd))
+                    {
+                        fastAllInfo = aimBuilder.fastAllInfo;
+                    }
+                    else
+                    {
+                        if (!uri.segment(2).toString().equals("bin"))
+                            aimBuilder.updateAllInfo(model, filePath.toString());
+                        fastAllInfo = aimBuilder.fastAllInfo;
+                    }
+                }
+                else
+                {
+                    resourceList.add(model);
+                    aimBuilder.buildAllInfo(resourceList);
+                }
+
+
+                HashMap<FInterface, EList<FInterface>> managedInterfaces = new HashMap<FInterface, EList<FInterface>>();
+                for (FInterface fInterface : model.getInterfaces())
+                {
+                    interfaceTypecollectionNames.add(fInterface.getName());
+                    managedInterfaces.put(fInterface, fInterface.getManagedInterfaces());
+                    validateImportedTypeCollections(model, messageAcceptor, filePath.lastSegment(), cwd, fInterface);
+                }
+            }
+
+            for (FTypeCollection fTypeCollection : model.getTypeCollections())
+            {
+                validateTypeCollectionName(model, messageAcceptor, filePath, interfaceTypecollectionNames, fTypeCollection);
+                validateTypeCollectionElements(messageAcceptor, fTypeCollection);
+            }
+
+            for (FInterface fInterface : model.getInterfaces())
+            {
+                validateTypeCollectionName(model, messageAcceptor, filePath, interfaceTypecollectionNames, fInterface);
+                validateFInterfaceElements(messageAcceptor, fInterface);
+            }
+            resourceList.clear();
+            interfaceTypecollectionNames.clear();
+            importList.clear();
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+            throw ex;
+        }
     }
 
     private void initImportList(FModel model, String cwd, String filePath)
@@ -317,7 +338,7 @@ public class ValidatorSomeIP implements IFrancaExternalValidator
         }
     }
 
-    private void validateImportedTypeCollections(FModel model, ValidationMessageAcceptor messageAcceptor, final IFile file, String cwd,
+    private void validateImportedTypeCollections(FModel model, ValidationMessageAcceptor messageAcceptor, String fileName, String cwd,
             FTypeCollection fTypeCollection)
     {
         String type = "typeCollection name";
@@ -325,11 +346,11 @@ public class ValidatorSomeIP implements IFrancaExternalValidator
             type = "interface name";
         for (Entry<String, Triple<String, ArrayList<String>, ArrayList<String>>> entry : aimBuilder.allInfo.entrySet())
         {
-            if (!entry.getKey().equals(cwd + "/" + file.getName()))
+            if (!entry.getKey().equals(cwd + "/" + fileName))
             {
                 if (entry.getValue().packageName.startsWith(model.getName() + "." + fTypeCollection.getName()))
                 {
-                    if (importList.get(cwd + "/" + file.getName()).contains(entry.getKey()))
+                    if (importList.get(cwd + "/" + fileName).contains(entry.getKey()))
                     {
                         acceptError(
                                 "Imported file's package " + entry.getValue().packageName + " may not start with package "
@@ -359,7 +380,7 @@ public class ValidatorSomeIP implements IFrancaExternalValidator
 
         if (value.length() == 1)
         {
-            if (48 > (int) value.charAt(0) || (int) value.charAt(0) > 57)
+            if (48 > value.charAt(0) || value.charAt(0) > 57)
             {
                 acceptWarning("Not a valid number!", fEnumerator, FrancaPackage.Literals.FENUMERATOR__VALUE, -1, messageAcceptor);
                 return;
@@ -389,8 +410,8 @@ public class ValidatorSomeIP implements IFrancaExternalValidator
                 {
                     for (int i = 2; i < value.length(); i++)
                     {
-                        if ((48 > (int) value.charAt(i) || (int) value.charAt(i) > 57)
-                                && (97 > (int) value.charAt(i) || (int) value.charAt(i) > 102))
+                        if ((48 > value.charAt(i) || value.charAt(i) > 57)
+                                && (97 > value.charAt(i) || value.charAt(i) > 102))
                         {
                             acceptWarning("Not a valid number! Should be hexadecimal", fEnumerator,
                                     FrancaPackage.Literals.FENUMERATOR__VALUE, -1, messageAcceptor);
@@ -406,7 +427,7 @@ public class ValidatorSomeIP implements IFrancaExternalValidator
             // oct
             for (int i = 1; i < value.length(); i++)
             {
-                if (48 > (int) value.charAt(i) || (int) value.charAt(i) > 55)
+                if (48 > value.charAt(i) || value.charAt(i) > 55)
                 {
                     acceptWarning("Not a valid number! Should be octal", fEnumerator, FrancaPackage.Literals.FENUMERATOR__VALUE, -1,
                             messageAcceptor);
@@ -418,7 +439,7 @@ public class ValidatorSomeIP implements IFrancaExternalValidator
         // dec
         for (int i = 0; i < value.length(); i++)
         {
-            if (48 > (int) value.charAt(i) || (int) value.charAt(i) > 57)
+            if (48 > value.charAt(i) || value.charAt(i) > 57)
             {
                 acceptWarning("Not a valid number! Should be decimal", fEnumerator, FrancaPackage.Literals.FENUMERATOR__VALUE, -1,
                         messageAcceptor);
@@ -452,7 +473,7 @@ public class ValidatorSomeIP implements IFrancaExternalValidator
 
     private void validateMapKey(FMapType m, ValidationMessageAcceptor messageAcceptor)
     {
-        if ((boolean) cycleDetector.hasCycle(m))
+        if (cycleDetector.hasCycle(m))
         {
             return;
         }

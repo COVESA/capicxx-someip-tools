@@ -139,6 +139,15 @@
             </option>
             <option
                   argCount="0"
+                  description="Treat validation warnings as errors"
+                  hasOptionalArg="false"
+                  id="org.genivi.commonapi.someip.cli.option.validationWarningsAsErrors"
+                  longName="val-warnings-as-errors"
+                  required="false"
+                  shortName="ve">
+            </option>
+            <option
+                  argCount="0"
                   description="Switch off code generation"
                   hasOptionalArg="false"
                   id="org.genivi.commonapi.someip.cli.option.nogeneration"

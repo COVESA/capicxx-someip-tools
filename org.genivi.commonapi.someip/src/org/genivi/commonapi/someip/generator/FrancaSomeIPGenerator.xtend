@@ -34,12 +34,12 @@ class FrancaSomeIPGenerator implements IGenerator {
     @Inject private extension FInterfaceSomeIPProxyGenerator
     @Inject private extension FInterfaceSomeIPStubAdapterGenerator
     @Inject private extension FInterfaceSomeIPDeploymentGenerator
-    
+
     @Inject private FDeployManager fDeployManager
 
     val String SOMEIP_SPECIFICATION_TYPE = "someip.deployment"
     val String CORE_SPECIFICATION_TYPE = "core.deployment"
-        
+
     override doGenerate(Resource input, IFileSystemAccess fileSystemAccess) {
         if (!input.URI.fileExtension.equals(FDeployManager.fileExtension)) {
                 return
@@ -51,37 +51,37 @@ class FrancaSomeIPGenerator implements IGenerator {
         var IResource res = null
 
         var rootModel = fDeployManager.loadModel(input.URI, input.URI);
-        
+
         generatedFiles_ = new HashSet<String>()
-        
+
         withDependencies_ = FPreferencesSomeIP::instance.getPreference(
             PreferenceConstantsSomeIP::P_GENERATE_DEPENDENCIES_SOMEIP, "true"
         ).equals("true")
-        
+
         // models holds the map of all models from imported .fidl files
         var models = fDeployManager.fidlModels
         // deployments holds the map of all models from imported .fdepl files
         var deployments = fDeployManager.deploymentModels
-        
+
         if (rootModel instanceof FDModel) {
             deployments.put(input.URI.toString , rootModel)
         } else {
             System.err.println("CommonAPI-SomeIP requires a deployment model!")
             return
         }
-     
+
         for (itsEntry : deployments.entrySet) {
             val itsDeployment = itsEntry.value
-           
+
             // Get Core deployments
             val itsCoreInterfaces = getFDInterfaces(itsDeployment, CORE_SPECIFICATION_TYPE)
             val itsCoreTypeCollections = getFDTypesList(itsDeployment, CORE_SPECIFICATION_TYPE)
-            
+
             // Get SOME/IP deployments
             val itsSomeIPInterfaces = getFDInterfaces(itsDeployment, SOMEIP_SPECIFICATION_TYPE)
             val itsSomeIPTypeCollections = getFDTypesList(itsDeployment, SOMEIP_SPECIFICATION_TYPE)
             val itsSomeIPProviders = getFDProviders(itsDeployment, SOMEIP_SPECIFICATION_TYPE)
-            
+
             // Merge Core deployments for interfaces to their SOME/IP deployments
             for (itsSomeIPDeployment : itsSomeIPInterfaces)
                 for (itsCoreDeployment : itsCoreInterfaces)
@@ -91,20 +91,20 @@ class FrancaSomeIPGenerator implements IGenerator {
             for (itsSomeIPDeployment : itsSomeIPTypeCollections)
                 for (itsCoreDeployment : itsCoreTypeCollections)
                     mergeDeployments(itsCoreDeployment, itsSomeIPDeployment)
-                    
+
             deployedInterfaces.addAll(itsSomeIPInterfaces)
             deployedTypeCollections.addAll(itsSomeIPTypeCollections)
-            deployedProviders.addAll(itsSomeIPProviders)                    
-        }  
+            deployedProviders.addAll(itsSomeIPProviders)
+        }
 
         doGenerateDeployment(rootModel as FDModel, deployments, models,
             deployedInterfaces, deployedTypeCollections, deployedProviders,
             fileSystemAccess, res, true)
-            
+
         fDeployManager.clearFidlModels
-        fDeployManager.clearDeploymentModels            
+        fDeployManager.clearDeploymentModels
     }
-    
+
     def private void doGenerateDeployment(FDModel _deployment,
                                           Map<String, FDModel> _deployments,
                                           Map<String, FModel> _models,
@@ -116,7 +116,7 @@ class FrancaSomeIPGenerator implements IGenerator {
                                           boolean _mustGenerate) {
         val String deploymentName
             = _deployments.entrySet.filter[it.value == _deployment].head.key
-        
+
         var int lastIndex = deploymentName.lastIndexOf(File.separatorChar)
         if (lastIndex == -1) {
             lastIndex = deploymentName.lastIndexOf('/')
@@ -124,36 +124,36 @@ class FrancaSomeIPGenerator implements IGenerator {
 
         var String basePath = deploymentName.substring(
             0, lastIndex)
-            
+
         var Set<String> itsImports = new HashSet<String>()
         for (anImport : _deployment.imports) {
             val String cannonical = basePath.getCanonical(anImport.importURI)
             itsImports.add(cannonical)
-        }                                               
+        }
 
         for (itsEntry : _models.entrySet) {
             if (itsImports.contains(itsEntry.key)) {
                 doInsertAccessors(itsEntry.value, _interfaces, _typeCollections)
-            }                                
+            }
         }
-                
+
         for (itsEntry : _deployments.entrySet) {
             if (itsImports.contains(itsEntry.key)) {
                 doGenerateDeployment(itsEntry.value, _deployments, _models,
                     _interfaces, _typeCollections, _providers,
                     _access, _res, withDependencies_)
-            }                                
+            }
         }
-        
+
         if (_mustGenerate) {
             for (itsEntry : _models.entrySet) {
                 if (itsImports.contains(itsEntry.key)) {
-                    
+
                     doGenerateModel(itsEntry.value, _models,
                         _interfaces, _typeCollections, _providers,
                         _access, _res)
-                }   
-            } 
+                }
+            }
         }
     }
 
@@ -166,17 +166,17 @@ class FrancaSomeIPGenerator implements IGenerator {
                                      IResource _res) {
         val String modelName
             = _models.entrySet.filter[it.value == _model].head.key
-            
+
         if (generatedFiles_.contains(modelName)) {
             return
-        }       
-        
+        }
+
         generatedFiles_.add(modelName)
-                
+
         doGenerateComponents(_model,
             _interfaces, _typeCollections, _providers,
             _access, _res)
-            
+
         if (withDependencies_) {
             for (itsEntry : _models.entrySet) {
                 var FModel itsModel = itsEntry.value
@@ -185,15 +185,15 @@ class FrancaSomeIPGenerator implements IGenerator {
                         _interfaces, _typeCollections, _providers,
                         _access, _res)
                 }
-            }            
-        }                       
+            }
+        }
     }
 
     def private doInsertAccessors(FModel _model,
                                   List<FDInterface> _interfaces,
                                   List<FDTypes> _typeCollections) {
         val defaultDeploymentAccessor = new PropertyAccessor()
-        
+
         _model.typeCollections.forEach [
             var PropertyAccessor typeCollectionDeploymentAccessor
             val currentTypeCollection = it
@@ -218,7 +218,7 @@ class FrancaSomeIPGenerator implements IGenerator {
             insertAccessor(currentInterface, interfaceDeploymentAccessor)
         ]
     }
-    
+
     def private doGenerateComponents(FModel _model,
                                      List<FDInterface> _interfaces,
                                      List<FDTypes> _typeCollections,
@@ -227,7 +227,7 @@ class FrancaSomeIPGenerator implements IGenerator {
                                      IResource res) {
         var typeCollectionsToGenerate = _model.typeCollections.toSet
         var interfacesToGenerate = _model.interfaces.toSet
-            
+
         typeCollectionsToGenerate.forEach [
             it.generateTypeCollectionDeployment(fileSystemAccess, getAccessor(it), res)
         ]

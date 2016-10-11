@@ -4,7 +4,7 @@ PROJECT(libsomeipglue)
 
 SET( ${PROJECT_NAME}_MAJOR_VERSION 3 )
 SET( ${PROJECT_NAME}_MINOR_VERSION 1 )
-SET( ${PROJECT_NAME}_PATCH_LEVEL 5 )
+SET( ${PROJECT_NAME}_PATCH_LEVEL 7 )
 
 message("Project name: ${PROJECT_NAME}")
 
@@ -19,6 +19,12 @@ message("BUILD_SHARED_LIBS is set to value: ${BUILD_SHARED_LIBS}")
 
 OPTION(USE_INSTALLED_COMMONAPI "Set to OFF to use the local (build tree) version of CommonAPI" ON)
 message("USE_INSTALLED_COMMONAPI is set to value: ${USE_INSTALLED_COMMONAPI}")
+
+OPTION(USE_FILE "Set to OFF to disable file logging" OFF )
+message(STATUS "USE_FILE is set to value: ${USE_FILE}")
+
+OPTION(USE_CONSOLE "Set to OFF to disable console logging" OFF )
+message(STATUS "USE_CONSOLE is set to value: ${USE_CONSOLE}")
 
 if(NOT CMAKE_BUILD_TYPE)
    set(CMAKE_BUILD_TYPE "Debug" CACHE STRING
@@ -76,7 +82,7 @@ message("COMMONAPI_SOMEIP_INCLUDE_DIRS: ${COMMONAPI_SOMEIP_INCLUDE_DIRS}")
 # generate code from fidl and fdepl
 
 # TODO check if generators are executable as otherwise they fail silently
-  
+
 file(GLOB FIDL_FILES "${COMMONAPI_TEST_FIDL_PATH}/*.fidl")
 message("FIDL_FILES: ${FIDL_FILES}")
 execute_process(
@@ -84,10 +90,21 @@ execute_process(
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
+IF(USE_FILE)
+  add_definitions(-DUSE_FILE)
+ENDIF(USE_FILE)
+IF(USE_CONSOLE)
+  add_definitions(-DUSE_CONSOLE)
+ENDIF(USE_CONSOLE)
+
+SET(MAX_LOG_LEVEL "DEBUG" CACHE STRING "maximum log level")
+message(STATUS "MAX_LOG_LEVEL is set to value: ${MAX_LOG_LEVEL}")
+add_definitions(-DCOMMONAPI_LOGLEVEL=COMMONAPI_LOGLEVEL_${MAX_LOG_LEVEL})
+
 if (MSVC)
     # Change possible backslashes to normal slashes
     string(REPLACE "\\" "/" COMMONAPI_TEST_FIDL_PATH ${COMMONAPI_TEST_FIDL_PATH})
-    
+
     # GLIPCI-644, remove Drive when under windows
     string(SUBSTRING ${COMMONAPI_TEST_FIDL_PATH} 2 -1 COMMONAPI_TEST_FIDL_PATH)
 endif()
@@ -105,6 +122,8 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/fidl/conf/ti_datatypes_advanced.fdepl
     "${CMAKE_CURRENT_SOURCE_DIR}/fidl/ti_datatypes_advanced.fdepl" @ONLY)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/fidl/conf/ti_datatypes_combined.fdepl.in
     "${CMAKE_CURRENT_SOURCE_DIR}/fidl/ti_datatypes_combined.fdepl" @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/fidl/conf/ti_datatypes_deployment.fdepl.in
+    "${CMAKE_CURRENT_SOURCE_DIR}/fidl/ti_datatypes_deployment.fdepl" @ONLY)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/fidl/conf/ti_datatypes_derived.fdepl.in
     "${CMAKE_CURRENT_SOURCE_DIR}/fidl/ti_datatypes_derived.fdepl" @ONLY)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/fidl/conf/ti_datatypes_primitive.fdepl.in
@@ -119,7 +138,9 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/fidl/conf/ti_stability_sp.fdepl.in
     "${CMAKE_CURRENT_SOURCE_DIR}/fidl/ti_stability_sp.fdepl" @ONLY)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/fidl/conf/ti_threading.fdepl.in
     "${CMAKE_CURRENT_SOURCE_DIR}/fidl/ti_threading.fdepl" @ONLY)
-    
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/fidl/conf/mp_selective.fdepl.in
+    "${CMAKE_CURRENT_SOURCE_DIR}/fidl/mp_selective.fdepl" @ONLY)
+
 file(GLOB FDEPL_FILES "fidl/*.fdepl")
 message("FDEPL_FILES: ${FDEPL_FILES}")
 execute_process(
@@ -143,8 +164,8 @@ endif (${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD")
 
 if (MSVC)
 # Visual C++ is not always sure whether he is really C++
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DBOOST_LOG_DYN_LINK -DUSE_VSOMEIP_STATISTICS -D_CRT_SECURE_NO_WARNINGS /EHsc -DCOMMONAPI_INTERNAL_COMPILATION")
-set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -DBOOST_LOG_DYN_LINK -DUSE_VSOMEIP_STATISTICS -D_CRT_SECURE_NO_WARNINGS -DCOMMONAPI_INTERNAL_COMPILATION")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DBOOST_LOG_DYN_LINK -DUSE_VSOMEIP_STATISTICS -D_CRT_SECURE_NO_WARNINGS /EHsc -DCOMMONAPI_INTERNAL_COMPILATION /wd\\\"4503\\\"")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBOOST_LOG_DYN_LINK -DUSE_VSOMEIP_STATISTICS -D_CRT_SECURE_NO_WARNINGS -DCOMMONAPI_INTERNAL_COMPILATION /wd\\\"4503\\\"")
 else()
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D${OS} -DUSE_VSOMEIP_STATISTICS -DBOOST_LOG_DYN_LINK -pthread -g -std=c++0x -Wall -Wextra -Wformat -Wformat-security -Wconversion -fexceptions -fstrict-aliasing -fstack-protector -fasynchronous-unwind-tables -fno-omit-frame-pointer -D_GLIBCXX_USE_NANOSLEEP")
 endif()
@@ -173,13 +194,14 @@ file(GLOB GLUE_SRCS
     "src-gen/v1/commonapi/datatypes/primitive/*SomeIP*.cpp"
     "src-gen/v1/commonapi/datatypes/advanced/*SomeIP*.cpp"
     "src-gen/v1/commonapi/datatypes/combined/*SomeIP*.cpp"
+    "src-gen/v1/commonapi/datatypes/deployment/*SomeIP*.cpp"
     "src-gen/v1/commonapi/datatypes/derived/*SomeIP*.cpp"
     "src-gen/v1/commonapi/performance/primitive/*SomeIP*.cpp"
     "src-gen/v1/commonapi/performance/complex/*SomeIP*.cpp"
     "src-gen/v1/commonapi/runtime/*SomeIP*.cpp"
     "src-gen/v1/commonapi/threading/*SomeIP*.cpp"
     "src-gen/v1/commonapi/stability/sp/*SomeIP*.cpp"
-    "src-gen/v1/commonapi/stability/mp/*SomeIP*.cpp"
+    "src-gen/v1/commonapi/multiprocess/bselective/*SomeIP*.cpp"
     ${DERIVED_TYPE_SRC}
     ${POLYMORPHIC_TYPE_SRC}
 )

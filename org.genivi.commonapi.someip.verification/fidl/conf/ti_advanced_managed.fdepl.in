@@ -15,6 +15,14 @@ define org.genivi.commonapi.someip.deployment for interface commonapi.advanced.m
         SomeIpNotifierID = 33000
         SomeIpEventGroups = { 17749 }
     }
+
+    method addDevice {
+	SomeIpMethodID = 30003
+    }
+
+    method removeDevice {
+	SomeIpMethodID = 30004
+    }
 }
 
 define org.genivi.commonapi.someip.deployment for provider Service {
@@ -32,7 +40,7 @@ define org.genivi.commonapi.someip.deployment for interface commonapi.advanced.m
     SomeIpServiceID = 4661
 
     method doSomething {
-        SomeIpMethodID = 33001
+        SomeIpMethodID = 30001
     }
 }
 
@@ -63,7 +71,7 @@ define org.genivi.commonapi.someip.deployment for interface commonapi.advanced.m
     SomeIpServiceID = 4662
 
     method doSomethingSpecial {
-        SomeIpMethodID = 33002
+        SomeIpMethodID = 30002
     }
 }
 

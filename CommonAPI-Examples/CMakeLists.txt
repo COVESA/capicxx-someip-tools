@@ -55,8 +55,8 @@ endif()
 message("CommonAPI_CONSIDERED_CONFIGS: ${CommonAPI_CONSIDERED_CONFIGS}")
 message("COMMONAPI_INCLUDE_DIRS: ${COMMONAPI_INCLUDE_DIRS}")
 
-find_package (CommonAPI-SomeIP 3.1.5 REQUIRED)
-find_package (vsomeip 2.0.1 REQUIRED)
+find_package (CommonAPI-SomeIP 3.1.8 REQUIRED)
+find_package (vsomeip 2.2.0 REQUIRED)
 
 include_directories (
     ${COMMONAPI_INCLUDE_DIRS}

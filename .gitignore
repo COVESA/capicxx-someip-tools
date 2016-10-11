@@ -2,3 +2,17 @@
 /Release
 /build/*
 /doc
+/org.genivi.commonapi.someip.verification/fidl/ti_advanced_bselective.fdepl
+/org.genivi.commonapi.someip.verification/fidl/ti_advanced_managed.fdepl
+/org.genivi.commonapi.someip.verification/fidl/ti_advanced_polymorph.fdepl
+/org.genivi.commonapi.someip.verification/fidl/ti_communication.fdepl
+/org.genivi.commonapi.someip.verification/fidl/ti_datatypes_advanced.fdepl
+/org.genivi.commonapi.someip.verification/fidl/ti_datatypes_combined.fdepl
+/org.genivi.commonapi.someip.verification/fidl/ti_datatypes_derived.fdepl
+/org.genivi.commonapi.someip.verification/fidl/ti_datatypes_deployment.fdepl
+/org.genivi.commonapi.someip.verification/fidl/ti_datatypes_primitive.fdepl
+/org.genivi.commonapi.someip.verification/fidl/ti_performance_complex.fdepl
+/org.genivi.commonapi.someip.verification/fidl/ti_performance_primitive.fdepl
+/org.genivi.commonapi.someip.verification/fidl/ti_runtime.fdepl
+/org.genivi.commonapi.someip.verification/fidl/ti_stability_sp.fdepl
+/org.genivi.commonapi.someip.verification/fidl/ti_threading.fdepl

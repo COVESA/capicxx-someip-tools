@@ -33,21 +33,21 @@ class FInterfaceSomeIPProxyGenerator {
 
     def generateProxy(FInterface fInterface, IFileSystemAccess fileSystemAccess, PropertyAccessor deploymentAccessor,
         List<FDProvider> providers, IResource modelid) {
-            
+
         if(FPreferencesSomeIP::getInstance.getPreference(PreferenceConstantsSomeIP::P_GENERATE_CODE_SOMEIP, "true").equals("true")) {
             generateSyncCalls = FPreferencesSomeIP::getInstance.getPreference(PreferenceConstantsSomeIP::P_GENERATE_SYNC_CALLS_SOMEIP, "true").equals("true")
             fileSystemAccess.generateFile(fInterface.someipProxyHeaderPath, PreferenceConstantsSomeIP.P_OUTPUT_PROXIES_SOMEIP,
                 fInterface.generateProxyHeader(deploymentAccessor, modelid))
             fileSystemAccess.generateFile(fInterface.someipProxySourcePath, PreferenceConstantsSomeIP.P_OUTPUT_PROXIES_SOMEIP,
                 fInterface.generateProxySource(deploymentAccessor, providers, modelid))
-        } 
-        else { 
+        }
+        else {
             // feature: suppress code generation
             fileSystemAccess.generateFile(fInterface.someipProxyHeaderPath, PreferenceConstantsSomeIP.P_OUTPUT_PROXIES_SOMEIP,
                 PreferenceConstantsSomeIP::NO_CODE)
             fileSystemAccess.generateFile(fInterface.someipProxySourcePath, PreferenceConstantsSomeIP.P_OUTPUT_PROXIES_SOMEIP,
                 PreferenceConstantsSomeIP::NO_CODE)
-        }               
+        }
     }
 
     def private generateProxyHeader(FInterface _interface, PropertyAccessor _accessor, IResource _modelid) '''
@@ -88,11 +88,31 @@ class FInterfaceSomeIPProxyGenerator {
 
         #include <string>
 
+        #  if _MSC_VER >= 1300
+        /*
+         * Diamond inheritance is used for the CommonAPI::Proxy base class.
+         * The Microsoft compiler put warning (C4250) using a desired c++ feature: "Delegating to a sister class"
+         * A powerful technique that arises from using virtual inheritance is to delegate a method from a class in another class
+         * by using a common abstract base class. This is also called cross delegation.
+         */
+        #    pragma warning( disable : 4250 )
+        #  endif
+
+        #  if _MSC_VER >= 1300
+        /*
+         * Diamond inheritance is used for the CommonAPI::Proxy base class.
+         * The Microsoft compiler put warning (C4250) using a desired c++ feature: "Delegating to a sister class"
+         * A powerful technique that arises from using virtual inheritance is to delegate a method from a class in another class
+         * by using a common abstract base class. This is also called cross delegation.
+         */
+        #    pragma warning( disable : 4250 )
+        #  endif
+
         «_interface.generateVersionNamespaceBegin»
         «_interface.model.generateNamespaceBeginDeclaration»
 
         class «_interface.someipProxyClassName»
-            : virtual public «_interface.proxyBaseClassName», 
+            : virtual public «_interface.proxyBaseClassName»,
             virtual public «IF _interface.base != null»«_interface.base.getTypeCollectionName(_interface)»SomeIPProxy«ELSE»CommonAPI::SomeIP::Proxy«ENDIF» {
         public:
             «_interface.someipProxyClassName»(
@@ -108,10 +128,10 @@ class FInterfaceSomeIPProxyGenerator {
             «FOR broadcast : _interface.broadcasts»
                 virtual «broadcast.generateGetMethodDefinition»;
             «ENDFOR»
-        
+
             «FOR method : _interface.methods»
             «FTypeGenerator::generateComments(method, false)»
-            «IF generateSyncCalls»
+            «IF generateSyncCalls || method.isFireAndForget»
                 virtual «method.generateDefinition(false)»;
             «ENDIF»
             «IF !method.isFireAndForget»
@@ -131,7 +151,7 @@ class FInterfaceSomeIPProxyGenerator {
                 «IF attribute.supportsTypeValidation»
                     class SomeIP«attribute.someipClassVariableName»Attribute : public «attribute.someipClassName(_interface, _accessor)» {
                     public:
-                        template <typename... _A> 
+                        template <typename... _A>
                             SomeIP«attribute.someipClassVariableName»Attribute(«_interface.someipProxyClassName» &_proxy,
                                 _A ... arguments) : «attribute.someipClassName(_interface, _accessor)»(
                                                         _proxy, arguments...) {}
@@ -157,7 +177,7 @@ class FInterfaceSomeIPProxyGenerator {
                                 _callback(CommonAPI::CallStatus::INVALID_VALUE, _returnvalue);
                                 std::promise<CommonAPI::CallStatus> promise;
                                 promise.set_value(CommonAPI::CallStatus::INVALID_VALUE);
-                                return promise.get_future();                            
+                                return promise.get_future();
                             }
                             // call base function if ok
                             return «attribute.someipClassName(_interface, _accessor)»::setValueAsync(requestValue, _callback, _info);
@@ -165,12 +185,12 @@ class FInterfaceSomeIPProxyGenerator {
                     «ENDIF»
                     };
 
-                    SomeIP«attribute.someipClassVariableName»Attribute «attribute.someipClassVariableName»;            
+                    SomeIP«attribute.someipClassVariableName»Attribute «attribute.someipClassVariableName»;
 
                 «ELSE»
                     «attribute.someipClassName(_interface, _accessor)» «attribute.someipClassVariableName»;
                 «ENDIF»
-             «ENDFOR»        
+             «ENDFOR»
 
              «FOR broadcast : _interface.broadcasts»
                  «broadcast.someipClassName(_interface, _accessor)» «broadcast.someipClassVariableName»;
@@ -180,10 +200,10 @@ class FInterfaceSomeIPProxyGenerator {
                  CommonAPI::SomeIP::ProxyManager «managed.proxyManagerMemberName»;
              «ENDFOR»
         };
-        
+
         «_interface.model.generateNamespaceEndDeclaration»
         «_interface.generateVersionNamespaceEnd»
-        
+
         #endif // «_interface.defineName»_SOMEIP_PROXY_HPP_
     '''
 
@@ -191,25 +211,25 @@ class FInterfaceSomeIPProxyGenerator {
         «generateCommonApiSomeIPLicenseHeader()»
         «FTypeGenerator::generateComments(_interface, false)»
         #include <«_interface.someipProxyHeaderPath»>
-        
+
         #if !defined (COMMONAPI_INTERNAL_COMPILATION)
         #define COMMONAPI_INTERNAL_COMPILATION
         #endif
-        
+
         #include <CommonAPI/SomeIP/AddressTranslator.hpp>
-        
+
         #undef COMMONAPI_INTERNAL_COMPILATION
-        
+
         «_interface.generateVersionNamespaceBegin»
         «_interface.model.generateNamespaceBeginDeclaration»
-        
+
         std::shared_ptr<CommonAPI::SomeIP::Proxy> create«_interface.someipProxyClassName»(
             const CommonAPI::SomeIP::Address &_address,
             const std::shared_ptr<CommonAPI::SomeIP::ProxyConnection> &_connection) {
-            return std::make_shared<«_interface.someipProxyClassName»>(_address, _connection);
+            return std::make_shared< «_interface.someipProxyClassName»>(_address, _connection);
         }
-        
-        INITIALIZER(register«_interface.someipProxyClassName») {
+
+        void initialize«_interface.someipProxyClassName»() {
             «FOR p : providers»
                 «val PropertyAccessor providerAccessor = new PropertyAccessor(new FDeployedProvider(p))»
                 «FOR i : p.instances.filter[target == _interface]»
@@ -223,7 +243,11 @@ class FInterfaceSomeIPProxyGenerator {
                  «_interface.elementName»::getInterface(),
                  &create«_interface.someipProxyClassName»);
         }
-        
+
+        INITIALIZER(register«_interface.someipProxyClassName») {
+            CommonAPI::SomeIP::Factory::get()->registerInterface(initialize«_interface.someipProxyClassName»);
+        }
+
         «_interface.someipProxyClassName»::«_interface.someipProxyClassName»(
             const CommonAPI::SomeIP::Address &_address,
             const std::shared_ptr<CommonAPI::SomeIP::ProxyConnection> &_connection)
@@ -233,20 +257,20 @@ class FInterfaceSomeIPProxyGenerator {
                   «attribute.generateVariableInit(_accessor, _interface)»
                   «ENDFOR»
                   «FOR broadcast : _interface.broadcasts BEFORE ',' SEPARATOR ','»
-                  «broadcast.someipClassVariableName»(*this, «broadcast.getEventGroups(_accessor).head», «broadcast.getEventIdentifier(_accessor)», false, «broadcast.getDeployments(_interface, _accessor)»)
+                  «broadcast.someipClassVariableName»(*this, «broadcast.getEventGroups(_accessor).head», «broadcast.getEventIdentifier(_accessor)», false, «broadcast.getEndianess(_accessor)», «broadcast.getDeployments(_interface, _accessor)»)
                   «ENDFOR»
                   «FOR managed : _interface.managedInterfaces BEFORE ',' SEPARATOR ','»
                   «managed.proxyManagerMemberName»(*this, "«managed.fullyQualifiedName»", «getSomeIpServiceIDForInterface(providers, managed)»)
                   «ENDFOR»
             {
             }
-        
+
             «FOR attribute : _interface.attributes»
                 «attribute.generateGetMethodDefinitionWithin(_interface.someipProxyClassName)» {
                     return «attribute.someipClassVariableName»;
                 }
             «ENDFOR»
-            
+
             «FOR broadcast : _interface.broadcasts»
                 «broadcast.generateGetMethodDefinitionWithin(_interface.someipProxyClassName)» {
                     return «broadcast.someipClassVariableName»;
@@ -258,7 +282,7 @@ class FInterfaceSomeIPProxyGenerator {
                 «val inParams = method.generateInParams(_accessor)»
                 «val outParams = method.generateOutParams(_accessor, false)»
                 «FTypeGenerator::generateComments(method, false)»
-                «IF generateSyncCalls»
+                «IF generateSyncCalls || method.isFireAndForget»
                     «method.generateDefinitionWithin(_interface.someipProxyClassName, false)» {
                         «method.generateProxyHelperDeployments(_interface, false, _accessor)»
                         «IF method.isFireAndForget»
@@ -272,6 +296,7 @@ class FInterfaceSomeIPProxyGenerator {
                         *this,
                         «method.getMethodIdentifier(_accessor)»,
                         «method.isReliable(_accessor)»,
+                        «method.isLittleEndian(_accessor)»,
                 «IF !method.isFireAndForget»(_info ? _info : «IF timeout != 0»&info«ELSE»&CommonAPI::SomeIP::defaultCallInfo«ENDIF»),«ENDIF»
                 «IF inParams != ""»«inParams»,«ENDIF»
                 _internalCallStatus«IF method.hasError»,
@@ -290,20 +315,21 @@ class FInterfaceSomeIPProxyGenerator {
                             *this,
                             «method.getMethodIdentifier(_accessor)»,
                             «method.isReliable(_accessor)»,
+                            «method.isLittleEndian(_accessor)»,
                             (_info ? _info : «IF timeout != 0»&info«ELSE»&CommonAPI::SomeIP::defaultCallInfo«ENDIF»),
                             «IF inParams != ""»«inParams»,«ENDIF»
                             «method.generateCallback(_interface, _accessor)»);
                     }
                 «ENDIF»
             «ENDFOR»
-            
+
             «FOR managed : _interface.managedInterfaces»
                 CommonAPI::ProxyManager& «_interface.someipProxyClassName»::«managed.proxyManagerGetterName»() {
                     return «managed.proxyManagerMemberName»;
                 }
             «ENDFOR»
-            
-            
+
+
             void «_interface.someipProxyClassName»::getOwnVersion(uint16_t& ownVersionMajor, uint16_t& ownVersionMinor) const {
             «val FVersion itsVersion = _interface.version»
             «IF itsVersion != null»
@@ -314,7 +340,7 @@ class FInterfaceSomeIPProxyGenerator {
                 ownVersionMinor = 0;
             «ENDIF»
             }
-            
+
         «_interface.model.generateNamespaceEndDeclaration»
         «_interface.generateVersionNamespaceEnd»
     '''
@@ -358,15 +384,15 @@ class FInterfaceSomeIPProxyGenerator {
     def private generateProxyHelperDeployments(FMethod _method, FInterface _interface, boolean _isAsync,
         PropertyAccessor _accessor) '''
         «IF _method.hasError»
-            CommonAPI::Deployable<«_method.errorType», «_method.getErrorDeploymentType(false)»> deploy_error(«_method.
+            CommonAPI::Deployable< «_method.errorType», «_method.getErrorDeploymentType(false)»> deploy_error(«_method.
             getErrorDeploymentRef(_interface, _accessor)»);
         «ENDIF»
         «FOR a : _method.inArgs»
-            CommonAPI::Deployable<«a.getTypeName(_method, true)», «a.getDeploymentType(_interface, true)»> deploy_«a.name»(_«a.
+            CommonAPI::Deployable< «a.getTypeName(_method, true)», «a.getDeploymentType(_interface, true)»> deploy_«a.name»(_«a.
             name», «a.getDeploymentRef(a.array, _method, _interface, _accessor)»);
         «ENDFOR»
         «FOR a : _method.outArgs»
-            CommonAPI::Deployable<«a.getTypeName(_method, true)», «a.getDeploymentType(_interface, true)»> deploy_«a.name»(«a.
+            CommonAPI::Deployable< «a.getTypeName(_method, true)», «a.getDeploymentType(_interface, true)»> deploy_«a.name»(«a.
             getDeploymentRef(a.array, _method, _interface, _accessor)»);
         «ENDFOR»
     '''
@@ -376,7 +402,7 @@ class FInterfaceSomeIPProxyGenerator {
         CommonAPI::SomeIP::SerializableArguments<
             «FOR a : _method.inArgs»
                 CommonAPI::Deployable<
-                    «a.getTypeName(_method, true)», 
+                    «a.getTypeName(_method, true)»,
                     «a.getDeploymentType(_interface, true)»
                 >«IF a != _method.inArgs.last»,«ENDIF»
             «ENDFOR»
@@ -390,7 +416,7 @@ class FInterfaceSomeIPProxyGenerator {
             «ENDIF»
             «FOR a : _method.outArgs»
                 CommonAPI::Deployable<
-                    «a.getTypeName(_method, true)», 
+                    «a.getTypeName(_method, true)»,
                     «a.getDeploymentType(_interface, true)»
                 >«IF a != _method.outArgs.last»,«ENDIF»
             «ENDFOR»
@@ -434,8 +460,8 @@ class FInterfaceSomeIPProxyGenerator {
         }
 
         var String callback = "[_callback] (" + generateCallbackParameter(_method, _interface, _accessor) + ") {\n"
-        callback += "\tif (_callback)\n"
-        callback += "\t\t_callback(_internalCallStatus"
+        callback += "    if (_callback)\n"
+        callback += "        _callback(_internalCallStatus"
         if(_method.hasError) callback += ", _deploy_error.getValue()"
         for (a : _method.outArgs) {
             callback += ", _" + a.name
@@ -453,12 +479,12 @@ class FInterfaceSomeIPProxyGenerator {
     def private generateCallbackParameter(FMethod _method, FInterface _interface, PropertyAccessor _accessor) {
         var String declaration = "CommonAPI::CallStatus _internalCallStatus"
         if (_method.hasError)
-            declaration += ", CommonAPI::Deployable<" + _method.errorType + ", " + _method.getErrorDeploymentType(false) +
-                "> _deploy_error"
+            declaration += ", CommonAPI::Deployable< " + _method.errorType + ", " + _method.getErrorDeploymentType(false) +
+                " > _deploy_error"
         for (a : _method.outArgs) {
             declaration += ", "
-            declaration += "CommonAPI::Deployable<" + a.getTypeName(_method, true) + ", " +
-                a.getDeploymentType(_interface, true) + "> _" + a.name
+            declaration += "CommonAPI::Deployable< " + a.getTypeName(_method, true) + ", " +
+                a.getDeploymentType(_interface, true) + " > _" + a.name
         }
         return declaration
     }
@@ -488,11 +514,11 @@ class FInterfaceSomeIPProxyGenerator {
                 _attribute.getNotifierIdentifier(_accessor)
         }
 
+        init += ", " + _attribute.getGetterIdentifier(_accessor) + ", " + _attribute.isGetterReliable(_accessor)
+        init += ", " + _attribute.getEndianess(_accessor)
+
         if (!_attribute.isReadonly) {
-            init += ", " + _attribute.getGetterIdentifier(_accessor) + ", " + _attribute.isGetterReliable(_accessor) +
-                ", " + _attribute.getSetterIdentifier(_accessor) + ", " + _attribute.isSetterReliable(_accessor)
-        } else {
-            init += ", " + _attribute.getGetterIdentifier(_accessor) + ", " + _attribute.isGetterReliable(_accessor)
+            init += ", " + _attribute.getSetterIdentifier(_accessor) + ", " + _attribute.isSetterReliable(_accessor)
         }
 
         val String deployment = _attribute.getDeploymentRef(_attribute.array, null, _interface, _accessor)
