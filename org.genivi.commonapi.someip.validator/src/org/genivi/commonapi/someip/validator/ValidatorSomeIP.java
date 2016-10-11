@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -100,7 +99,6 @@ public class ValidatorSomeIP implements IFrancaExternalValidator
             }
 
 
-            List<String> interfaceTypecollectionNames = new ArrayList<String>();
             try
             {
                 String cwd = filePath.removeLastSegments(1).toString();
@@ -109,7 +107,6 @@ public class ValidatorSomeIP implements IFrancaExternalValidator
 
                 for (FTypeCollection fTypeCollection : model.getTypeCollections())
                 {
-                    interfaceTypecollectionNames.add(fTypeCollection.getName());
                     validateImportedTypeCollections(model, messageAcceptor, filePath.lastSegment(), cwd, fTypeCollection);
                 }
             }
@@ -147,7 +144,6 @@ public class ValidatorSomeIP implements IFrancaExternalValidator
                 HashMap<FInterface, EList<FInterface>> managedInterfaces = new HashMap<FInterface, EList<FInterface>>();
                 for (FInterface fInterface : model.getInterfaces())
                 {
-                    interfaceTypecollectionNames.add(fInterface.getName());
                     managedInterfaces.put(fInterface, fInterface.getManagedInterfaces());
                     validateImportedTypeCollections(model, messageAcceptor, filePath.lastSegment(), cwd, fInterface);
                 }
@@ -155,17 +151,16 @@ public class ValidatorSomeIP implements IFrancaExternalValidator
 
             for (FTypeCollection fTypeCollection : model.getTypeCollections())
             {
-                validateTypeCollectionName(model, messageAcceptor, filePath, interfaceTypecollectionNames, fTypeCollection);
+                validateTypeCollectionName(model, messageAcceptor, filePath, fTypeCollection);
                 validateTypeCollectionElements(messageAcceptor, fTypeCollection);
             }
 
             for (FInterface fInterface : model.getInterfaces())
             {
-                validateTypeCollectionName(model, messageAcceptor, filePath, interfaceTypecollectionNames, fInterface);
+                validateTypeCollectionName(model, messageAcceptor, filePath, fInterface);
                 validateFInterfaceElements(messageAcceptor, fInterface);
             }
             resourceList.clear();
-            interfaceTypecollectionNames.clear();
             importList.clear();
         }
         catch (Exception ex) {
@@ -201,8 +196,7 @@ public class ValidatorSomeIP implements IFrancaExternalValidator
 
         if (cwd != null && cwd.length() > 0)
         {
-            resourceSet.getURIConverter().getURIMap()
-                    .put(fileURI, URI.createURI((cwdURI.toString() + "/" + fileURI.toString()).replaceAll("/+", "/")));
+            fileURI = URI.createURI((cwdURI.toString() + "/" + fileURI.toString()).replaceAll("/+", "/"));
         }
 
         try
@@ -280,7 +274,7 @@ public class ValidatorSomeIP implements IFrancaExternalValidator
     }
 
     private void validateTypeCollectionName(FModel model, ValidationMessageAcceptor messageAcceptor, IPath filePath,
-            List<String> interfaceTypecollectionNames, FTypeCollection fTypeCollection)
+            FTypeCollection fTypeCollection)
     {
         if (fTypeCollection.getName() == null)
             return;
@@ -348,21 +342,25 @@ public class ValidatorSomeIP implements IFrancaExternalValidator
         {
             if (!entry.getKey().equals(cwd + "/" + fileName))
             {
-                if (entry.getValue().packageName.startsWith(model.getName() + "." + fTypeCollection.getName()))
+                Triple<String, ArrayList<String>, ArrayList<String>> entryValue = entry.getValue();
+                if (entryValue.packageName != null)
                 {
-                    if (importList.get(cwd + "/" + fileName).contains(entry.getKey()))
+                    if (entryValue.packageName.startsWith(model.getName() + "." + fTypeCollection.getName()))
                     {
-                        acceptError(
-                                "Imported file's package " + entry.getValue().packageName + " may not start with package "
-                                        + model.getName() + " + " + type + fTypeCollection.getName(), fTypeCollection,
-                                FrancaPackage.Literals.FMODEL_ELEMENT__NAME, -1, messageAcceptor);
-                    }
-                    else
-                    {
-                        acceptWarning(
-                                entry.getKey() + ". File's package " + entry.getValue().packageName + " starts with package "
-                                        + model.getName() + " + " + type + fTypeCollection.getName(), fTypeCollection, null, -1,
-                                messageAcceptor);
+                        if (importList.get(cwd + "/" + fileName).contains(entry.getKey()))
+                        {
+                            acceptError(
+                                    "Imported file's package " + entryValue.packageName + " may not start with package "
+                                            + model.getName() + " + " + type + fTypeCollection.getName(), fTypeCollection,
+                                    FrancaPackage.Literals.FMODEL_ELEMENT__NAME, -1, messageAcceptor);
+                        }
+                        else
+                        {
+                            acceptWarning(
+                                    entry.getKey() + ". File's package " + entryValue.packageName + " starts with package "
+                                            + model.getName() + " + " + type + fTypeCollection.getName(), fTypeCollection, null, -1,
+                                    messageAcceptor);
+                        }
                     }
                 }
             }

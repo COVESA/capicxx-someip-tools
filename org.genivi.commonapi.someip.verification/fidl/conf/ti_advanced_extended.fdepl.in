@@ -1,0 +1,98 @@
+/* Copyright (C) 2015 Bayerische Motoren Werke Aktiengesellschaft (BMW AG)
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+import "platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-SOMEIP_deployment_spec.fdepl"
+import "@COMMONAPI_TEST_FIDL_PATH@/ti_advanced_extended.fidl"
+
+define org.genivi.commonapi.someip.deployment for interface commonapi.advanced.extended.AFExtendedBase {
+    SomeIpServiceID = 5555
+
+    attribute baseAttribute {
+        SomeIpGetterID = 3001
+        SomeIpSetterID = 3002
+        SomeIpNotifierID = 33001
+        SomeIpEventGroups = { 33001 }
+    }
+    method doSomething {
+        SomeIpMethodID = 535
+        SomeIpReliable = true
+    }
+    broadcast bBase {
+        SomeIpEventID = 41913
+        SomeIpEventGroups = { 17750 }
+    }
+}
+
+define org.genivi.commonapi.someip.deployment for provider Service {
+    instance commonapi.advanced.extended.AFExtendedBase {
+        InstanceId = "commonapi.advanced.extended.AFExtendedBase"
+
+        SomeIpInstanceID = 1000
+
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 30555
+    }
+}
+
+define org.genivi.commonapi.someip.deployment for interface commonapi.advanced.extended.AFExtendedOnce {
+    SomeIpServiceID = 5556
+
+    attribute specialAttribute {
+        SomeIpGetterID = 3003
+        SomeIpSetterID = 3004
+        SomeIpNotifierID = 33002
+        SomeIpEventGroups = { 33002 }
+    }
+
+    method doSomethingSpecial {
+        SomeIpMethodID = 536
+        SomeIpReliable = true
+    }
+    broadcast bSpecial {
+        SomeIpEventID = 41914
+        SomeIpEventGroups = { 17751 }
+    }
+}
+
+define org.genivi.commonapi.someip.deployment for provider Service {
+    instance commonapi.advanced.extended.AFExtendedOnce {
+        InstanceId = "commonapi.advanced.extended.AFExtendedOnce"
+
+        SomeIpInstanceID = 1001
+
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 30556
+    }
+}
+
+define org.genivi.commonapi.someip.deployment for interface commonapi.advanced.extended.AFExtendedTwice {
+    SomeIpServiceID = 5557
+
+    attribute extraSpecialAttribute {
+        SomeIpGetterID = 3005
+        SomeIpSetterID = 3006
+        SomeIpNotifierID = 33003
+        SomeIpEventGroups = { 33003 }
+    }
+    method doSomethingExtraSpecial {
+        SomeIpMethodID = 547
+        SomeIpReliable = true
+    }
+    broadcast bExtraSpecial {
+        SomeIpEventID = 41915
+        SomeIpEventGroups = { 17752 }
+    }
+}
+
+define org.genivi.commonapi.someip.deployment for provider Service {
+    instance commonapi.advanced.extended.AFExtendedTwice {
+        InstanceId = "commonapi.advanced.extended.AFExtendedTwice"
+
+        SomeIpInstanceID = 1002
+
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 30557
+    }
+}

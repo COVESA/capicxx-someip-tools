@@ -10,7 +10,6 @@ import org.eclipse.xtext.validation.FeatureBasedDiagnostic
 import org.franca.core.franca.FInterface
 import org.franca.deploymodel.dsl.fDeploy.FDAttribute
 import org.franca.deploymodel.dsl.fDeploy.FDBroadcast
-import org.franca.deploymodel.dsl.fDeploy.FDComplexValue
 import org.franca.deploymodel.dsl.fDeploy.FDInteger
 import org.franca.deploymodel.dsl.fDeploy.FDInterface
 import org.franca.deploymodel.dsl.fDeploy.FDMethod
@@ -296,64 +295,36 @@ class SomeIPDeploymentValidator
                 // 'SomeIpGetterID = 0' is allowed!
                 if (getterId >= 0)
                     validGetterId = true
-                else
-                {
-                    var diag = new FeatureBasedDiagnostic(
-                        Diagnostic.WARNING,
-                        "Attribute \"" + getAttributeName(attribute) + "\" has no valid 'SomeIpGetterID' specified.",
-                        propSomeIpGetterID, null, -1, null, null)
-                    diagnostics.add(diag)
-                }
             }
 
             if (setterId != null)
             {
                 // 'SomeIpSetterID = 0' is allowed if the attribute is marked as readonly
-                if (setterId > 0 || (setterId == 0 && attribute.target.isReadonly)) {
+                if (setterId > 0 || (setterId == 0 && attribute.target.isReadonly))
                     validSetterId = true
-                } else
-                {
-                    var diag = new FeatureBasedDiagnostic(
-                        Diagnostic.WARNING,
-                        "Attribute \"" + getAttributeName(attribute) + "\" has no valid 'SomeIpSetterID' specified.",
-                        propSomeIpSetterID, null, -1, null, null)
-                    diagnostics.add(diag)
-                }
             }
 
             if (notifierId != null)
             {
                 // 'SomeIpNotifierID = 0' is allowed if the attribute is marked as noSubscriptions
-                if (notifierId > 0 || (notifierId == 0 && attribute.target.isNoSubscriptions)) {
+                if (notifierId > 0 || (notifierId == 0 && attribute.target.isNoSubscriptions))
                     validNotifierId = true
-                } else
-                {
-                    var diag = new FeatureBasedDiagnostic(
-                        Diagnostic.WARNING,
-                        "Attribute \"" + getAttributeName(attribute) + "\" has no valid 'SomeIpNotifierID' specified.",
-                        propSomeIpNotifierID, null, -1, null, null)
-                    diagnostics.add(diag)
-                }
             }
 
             // It isn't valid to specify 'SomeIpGetterID = 0' + 'SomeIpSetterID = 0' + 'SomeIpNotifierID = 0'
-            // further more it isn't valid to deploy an attribute
-            // w/o any of 'SomeIpGetterID','SomeIpSetterID' and 'SomeIpNotifierID'
             if (((setterId != null && setterId == 0) &&
                 (getterId != null && getterId == 0) &&
-                (notifierId != null && notifierId == 0)) ||
-                ( setterId == null && getterId == null && notifierId == null) ) {
+                (notifierId != null && notifierId == 0))) {
                 var diag = new FeatureBasedDiagnostic(Diagnostic.WARNING,
                     "Attribute \"" + getAttributeName(attribute) + "\" has " +
                     "'SomeIpGetterID' and 'SomeIpSetterID' and 'SomeIpNotifierID' " +
-                    "either set to zero or not deployed at all, this is not allowed.",
+                    "all set to zero.",
                     attribute, FD_ATTRIBUTE__TARGET, -1, null, null)
                 diagnostics.add(diag)
             }
-
             // The SomeIp deployment for attributes needs to have at least one of the following properties specified
             //
-            if (!validGetterId && !validSetterId && !validNotifierId)
+            else if (!validGetterId && !validSetterId && !validNotifierId)
             {
                 var diag = new FeatureBasedDiagnostic(
                     Diagnostic.WARNING,
@@ -404,7 +375,7 @@ class SomeIPDeploymentValidator
                 }
                 else
                 {
-                    if (attribute.target.noSubscriptions  && notifierId > 0)
+                    if (attribute.target.noSubscriptions && notifierId > 0)
                     {
                         var attrName = getAttributeName(attribute)
                         var diag = new FeatureBasedDiagnostic(Diagnostic.WARNING,
@@ -426,7 +397,7 @@ class SomeIPDeploymentValidator
                         {
                             if (fdEventGroup instanceof FDInteger)
                             {
-                                var eventGroupId = (fdEventGroup as FDInteger).value
+                                var eventGroupId = fdEventGroup.value
                                 if (eventGroupId >= 1)
                                 {
                                     var props = eventGroupIds.get(eventGroupId)
@@ -460,7 +431,7 @@ class SomeIPDeploymentValidator
                 // Duplicate 'SomeIpGetterId = 0' are valid and Ok.
                 if (validGetterId && getterId > 0)
                 {
-                    var id = ((propSomeIpGetterID.value as FDComplexValue).single as FDInteger).value
+                    var id = (propSomeIpGetterID.value.single as FDInteger).value
                     var props = methodIds.get(id)
                     if (props == null) {
                         props = new ArrayList<FDProperty>
@@ -468,11 +439,12 @@ class SomeIPDeploymentValidator
                     }
                     props.add(propSomeIpGetterID)
                 }
+
                 // Duplicate 'SomeIpSetterId = 0' are valid and Ok because a interface could contain
                 // multiple readonly attributes with SomeIpSetterId set to 0
                 if (validSetterId && setterId > 0)
                 {
-                    var id = ((propSomeIpSetterID.value as FDComplexValue).single as FDInteger).value
+                    var id = (propSomeIpSetterID.value.single as FDInteger).value
                     var props = methodIds.get(id)
                     if (props == null) {
                         props = new ArrayList<FDProperty>
@@ -485,7 +457,7 @@ class SomeIPDeploymentValidator
                 // multiple noSubscription attributes with SomeIpNotifierId set to 0
                 if (validNotifierId && notifierId > 0)
                 {
-                    var id = ((propSomeIpNotifierID.value as FDComplexValue).single as FDInteger).value
+                    var id = (propSomeIpNotifierID.value.single as FDInteger).value
                     var props = eventIds.get(id)
                     if (props == null) {
                         props = new ArrayList<FDProperty>
@@ -509,7 +481,7 @@ class SomeIPDeploymentValidator
             var propMethodId = fdMethod.properties.findFirst[it.decl.name == "SomeIpMethodID"]
             if (isValidId(propMethodId))
             {
-                var methodId = ((propMethodId.value as FDComplexValue).single as FDInteger).value
+                var methodId = (propMethodId.value.single as FDInteger).value
                 if (methodId >= MIN_ID_VALUE && methodId <= MAX_ID_VALUE)
                 {
                     var props = methodIds.get(methodId)
@@ -559,7 +531,7 @@ class SomeIPDeploymentValidator
             var propEventId = fdBroadcast.properties.findFirst[it.decl.name == "SomeIpEventID"]
             if (isValidId(propEventId))
             {
-                var eventId = ((propEventId.value as FDComplexValue).single as FDInteger).value
+                var eventId = (propEventId.value.single as FDInteger).value
                 if (eventId >= MIN_ID_VALUE && eventId <= MAX_ID_VALUE)
                 {
                     var props = eventIds.get(eventId)
@@ -595,7 +567,7 @@ class SomeIPDeploymentValidator
                 {
                     if (fdEventGroup instanceof FDInteger)
                     {
-                        var eventGroupId = (fdEventGroup as FDInteger).value
+                        var eventGroupId = fdEventGroup.value
                         if (eventGroupId >= 1)
                         {
                             var props = eventGroupIds.get(eventGroupId)
@@ -667,27 +639,21 @@ class SomeIPDeploymentValidator
 
     private def isValidId(FDProperty prop)
     {
-        if (prop == null)
+        if (prop == null || prop.value == null)
             return false
-        if (!(prop.value instanceof FDComplexValue))
+        if (!(prop.value.single instanceof FDInteger))
             return false
-        var propValue = prop.value as FDComplexValue
-        if (!(propValue.single instanceof FDInteger))
-            return false
-        if ((propValue.single as FDInteger).value <= 0)
+        if ((prop.value.single as FDInteger).value <= 0)
             return false
         return true
     }
 
     private def getId(FDProperty prop)
     {
-        if (prop == null)
+        if (prop == null || prop.value == null)
             return null
-        if (!(prop.value instanceof FDComplexValue))
+        if (!(prop.value.single instanceof FDInteger))
             return null
-        var propValue = prop.value as FDComplexValue
-        if (!(propValue.single instanceof FDInteger))
-            return null
-        return (propValue.single as FDInteger).value
+        return (prop.value.single as FDInteger).value
     }
 }

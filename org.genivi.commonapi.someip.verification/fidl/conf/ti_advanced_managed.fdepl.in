@@ -28,9 +28,9 @@ define org.genivi.commonapi.someip.deployment for interface commonapi.advanced.m
 define org.genivi.commonapi.someip.deployment for provider Service {
     instance commonapi.advanced.managed.Manager {
         InstanceId = "commonapi.advanced.managed.Manager"
-        
+
         SomeIpInstanceID = 1000
-    
+
         SomeIpUnicastAddress = "127.0.0.1"
         SomeIpReliableUnicastPort = 30499
     }
@@ -48,9 +48,9 @@ define org.genivi.commonapi.someip.deployment for interface commonapi.advanced.m
 define org.genivi.commonapi.someip.deployment for provider Service {
     instance commonapi.advanced.managed.Device {
         InstanceId = "commonapi.advanced.managed.Manager.device01"
-        
+
         SomeIpInstanceID = 2000
-    
+
         SomeIpUnicastAddress = "127.0.0.1"
         SomeIpUnreliableUnicastPort = 30500
     }
@@ -59,9 +59,9 @@ define org.genivi.commonapi.someip.deployment for provider Service {
 define org.genivi.commonapi.someip.deployment for provider Service {
     instance commonapi.advanced.managed.Device {
         InstanceId = "commonapi.advanced.managed.Manager.device02"
-        
+
         SomeIpInstanceID = 2001
-    
+
         SomeIpUnicastAddress = "127.0.0.1"
         SomeIpUnreliableUnicastPort = 30501
     }
@@ -78,10 +78,70 @@ define org.genivi.commonapi.someip.deployment for interface commonapi.advanced.m
 define org.genivi.commonapi.someip.deployment for provider Service {
     instance commonapi.advanced.managed.SpecialDevice {
         InstanceId = "commonapi.advanced.managed.Manager.specialDevice00"
-        
+
         SomeIpInstanceID = 3000
-    
+
         SomeIpUnicastAddress = "127.0.0.1"
         SomeIpUnreliableUnicastPort = 30600
     }
+}
+
+define org.genivi.commonapi.someip.deployment for interface commonapi.advanced.managed.HLevelTop {
+	  SomeIpServiceID = 4663
+
+    method test {
+		    SomeIpMethodID = 33003
+    }
+}
+
+define org.genivi.commonapi.someip.deployment for provider Service {
+	  instance commonapi.advanced.managed.HLevelTop {
+  		  InstanceId = "commonapi.advanced.managed.HLevelTop"
+
+	  	  SomeIpInstanceID = 3001
+
+		    SomeIpUnicastAddress = "127.0.0.1"
+		    SomeIpUnreliableUnicastPort = 30601
+	  }
+}
+define org.genivi.commonapi.someip.deployment for interface commonapi.advanced.managed.HLevelMiddle {
+  	SomeIpServiceID = 4664
+
+  	attribute a {
+    		SomeIpGetterID = 3004
+    		SomeIpSetterID = 3005
+    		SomeIpNotifierID = 33004
+    		SomeIpEventGroups = { 17750 }
+  	}
+}
+define org.genivi.commonapi.someip.deployment for provider Service {
+  	instance commonapi.advanced.managed.HLevelMiddle {
+    		InstanceId = "commonapi.advanced.managed.HLevelTop.middle01"
+
+    		SomeIpInstanceID = 3002
+
+    		SomeIpUnicastAddress = "127.0.0.1"
+    		SomeIpUnreliableUnicastPort = 30602
+  	}
+}
+define org.genivi.commonapi.someip.deployment for interface commonapi.advanced.managed.HLevelBottom {
+  	SomeIpServiceID = 4665
+
+  	attribute a {
+    		SomeIpGetterID = 3006
+    		SomeIpSetterID = 3007
+    		SomeIpNotifierID = 33005
+    		SomeIpEventGroups = { 17751 }
+  	}
+}
+
+define org.genivi.commonapi.someip.deployment for provider Service {
+  	instance commonapi.advanced.managed.HLevelBottom {
+    		InstanceId = "commonapi.advanced.managed.HLevelTop.middle01.bottom01"
+
+    		SomeIpInstanceID = 3003
+
+    		SomeIpUnicastAddress = "127.0.0.1"
+    		SomeIpUnreliableUnicastPort = 30603
+  	}
 }

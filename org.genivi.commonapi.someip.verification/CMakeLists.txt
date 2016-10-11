@@ -4,7 +4,7 @@ PROJECT(libsomeipglue)
 
 SET( ${PROJECT_NAME}_MAJOR_VERSION 3 )
 SET( ${PROJECT_NAME}_MINOR_VERSION 1 )
-SET( ${PROJECT_NAME}_PATCH_LEVEL 7 )
+SET( ${PROJECT_NAME}_PATCH_LEVEL 9 )
 
 message("Project name: ${PROJECT_NAME}")
 
@@ -116,6 +116,8 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/fidl/conf/ti_advanced_bselective.fdep
     "${CMAKE_CURRENT_SOURCE_DIR}/fidl/ti_advanced_bselective.fdepl" @ONLY)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/fidl/conf/ti_advanced_managed.fdepl.in
     "${CMAKE_CURRENT_SOURCE_DIR}/fidl/ti_advanced_managed.fdepl" @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/fidl/conf/ti_advanced_extended.fdepl.in
+    "${CMAKE_CURRENT_SOURCE_DIR}/fidl/ti_advanced_extended.fdepl" @ONLY)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/fidl/conf/ti_advanced_polymorph.fdepl.in
     "${CMAKE_CURRENT_SOURCE_DIR}/fidl/ti_advanced_polymorph.fdepl" @ONLY)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/fidl/conf/ti_datatypes_advanced.fdepl.in
@@ -190,6 +192,7 @@ file(GLOB GLUE_SRCS
     "src-gen/v1/commonapi/communication/*SomeIP*.cpp"
     "src-gen/v1/commonapi/advanced/bselective/*SomeIP*.cpp"
     "src-gen/v1/commonapi/advanced/managed/*SomeIP*.cpp"
+    "src-gen/v1/commonapi/advanced/extended/*SomeIP*.cpp"
     "src-gen/v1/commonapi/advanced/polymorph/*SomeIP*.cpp"
     "src-gen/v1/commonapi/datatypes/primitive/*SomeIP*.cpp"
     "src-gen/v1/commonapi/datatypes/advanced/*SomeIP*.cpp"

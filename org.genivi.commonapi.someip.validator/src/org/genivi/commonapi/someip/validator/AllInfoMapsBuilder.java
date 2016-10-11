@@ -168,12 +168,8 @@ public class AllInfoMapsBuilder {
         Resource resource = null;
 
         if (cwd != null && cwd.length() > 0) {
-            resourceSet
-                    .getURIConverter()
-                    .getURIMap()
-                    .put(fileURI,
-                            URI.createURI((cwdURI.toString() + "/" + fileURI
-                                    .toString()).replaceAll("/+", "/")));
+            fileURI = URI.createURI((cwdURI.toString() + "/" + fileURI
+                    .toString()).replaceAll("/+", "/"));
         }
 
         try {

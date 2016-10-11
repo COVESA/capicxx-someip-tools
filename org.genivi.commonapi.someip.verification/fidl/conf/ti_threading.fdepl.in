@@ -12,6 +12,11 @@ define org.genivi.commonapi.someip.deployment for interface commonapi.threading.
         SomeIpEventID = 41913
         SomeIpEventGroups = { 17749 }
     }
+
+    broadcast secondTestBroadcast {
+        SomeIpEventID = 41914
+        SomeIpEventGroups = { 17750 }
+    }
 }
 
 define org.genivi.commonapi.someip.deployment for provider Service {

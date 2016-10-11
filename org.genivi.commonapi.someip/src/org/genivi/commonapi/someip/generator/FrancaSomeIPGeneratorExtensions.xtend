@@ -540,12 +540,19 @@ class FrancaSomeIPGeneratorExtensions {
         if (name != "")
             return "&" + name
 
-        if(_typedElement.type.derived != null) {
-           var containerName =_typedElement.type.derived.eContainer.fullName
-           var typeName =_typedElement.type.derived.name
-            return "static_cast< " + containerName + "_::" + typeName + "Deployment_t* >(nullptr)"
+        var String elemType = ''
+
+        if (_typedElement.type.derived != null) {
+            var containerName =_typedElement.type.derived.eContainer.fullName
+            var typeName =_typedElement.type.derived.name
+            elemType = containerName + "_::" + typeName + "Deployment_t"
+            if (_typedElement.array)
+                elemType = "CommonAPI::SomeIP::ArrayDeployment< " + elemType + " >"
+        } else {
+            elemType = _typedElement.getDeploymentType(null, false)
         }
-        return "static_cast< " + _typedElement.getDeploymentType(null, false) + "* >(nullptr)"
+
+        return "static_cast< " + elemType + "* >(nullptr)"
     }
 
     def String getDeploymentRef(FTypeRef _typeRef, PropertyAccessor _accessor) {
@@ -666,7 +673,7 @@ class FrancaSomeIPGeneratorExtensions {
             if (x.type.derived != null) {
                 ret.addAll(x.type.derived.getDeploymentInputIncludes(_accessor))
             }
-            if(_accessor.hasSpecificDeployment(x)) {
+            if(_accessor.hasSpecificDeployment(x) || (x.array && _accessor.hasDeployment(x))) {
                 ret.add(_interface.someipDeploymentHeaderPath)
             }
         }

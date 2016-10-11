@@ -234,7 +234,7 @@ class FInterfaceSomeIPProxyGenerator {
                 «val PropertyAccessor providerAccessor = new PropertyAccessor(new FDeployedProvider(p))»
                 «FOR i : p.instances.filter[target == _interface]»
                     CommonAPI::SomeIP::AddressTranslator::get()->insert(
-                        "local:«_interface.fullyQualifiedName»:«providerAccessor.getInstanceId(i)»",
+                        "local:«_interface.fullyQualifiedNameWithVersion»:«providerAccessor.getInstanceId(i)»",
                         «_interface.getSomeIpServiceID», 0x«Integer.toHexString(
                             providerAccessor.getSomeIpInstanceID(i))», «_interface.version.major», «_interface.version.minor»);
                 «ENDFOR»
@@ -260,7 +260,7 @@ class FInterfaceSomeIPProxyGenerator {
                   «broadcast.someipClassVariableName»(*this, «broadcast.getEventGroups(_accessor).head», «broadcast.getEventIdentifier(_accessor)», false, «broadcast.getEndianess(_accessor)», «broadcast.getDeployments(_interface, _accessor)»)
                   «ENDFOR»
                   «FOR managed : _interface.managedInterfaces BEFORE ',' SEPARATOR ','»
-                  «managed.proxyManagerMemberName»(*this, "«managed.fullyQualifiedName»", «getSomeIpServiceIDForInterface(providers, managed)»)
+                  «managed.proxyManagerMemberName»(*this, "«managed.fullyQualifiedNameWithVersion»", «getSomeIpServiceIDForInterface(providers, managed)»)
                   «ENDFOR»
             {
             }

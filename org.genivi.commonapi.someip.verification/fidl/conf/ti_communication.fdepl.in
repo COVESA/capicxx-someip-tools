@@ -32,6 +32,11 @@ define org.genivi.commonapi.someip.deployment for interface commonapi.communicat
         SomeIpMethodID = 515
         SomeIpReliable = true
     }
+
+    method testMethodTimeout {
+        SomeIpMethodID = 516
+        SomeIpReliable = true
+    }
         
     broadcast bTest {
         SomeIpEventID = 41913
@@ -49,6 +54,15 @@ define org.genivi.commonapi.someip.deployment for provider Service {
 
         // 0x5684 -> 22148
         SomeIpInstanceID = 22148
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31000
+    }
+
+    instance commonapi.communication.TestInterface {
+        InstanceId = "commonapi.communication.TestInterface2"
+
+        // 0x5685 -> 22149
+        SomeIpInstanceID = 22149
         SomeIpUnicastAddress = "127.0.0.1"
         SomeIpReliableUnicastPort = 31000
     }

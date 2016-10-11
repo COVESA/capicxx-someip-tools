@@ -17,7 +17,7 @@ int main(int argc, char **argv) {
 
     while (!itsProxy->isAvailable())
     {
-        usleep(10);
+        std::this_thread::sleep_for(std::chrono::microseconds(10));
     }
     std::cout << "Service \"E05Sample\" is available." << std::endl;
 
