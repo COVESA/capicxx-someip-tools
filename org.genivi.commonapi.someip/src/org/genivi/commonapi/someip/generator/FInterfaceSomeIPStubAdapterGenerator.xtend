@@ -7,6 +7,7 @@ package org.genivi.commonapi.someip.generator
 
 import java.util.HashMap
 import java.util.List
+import java.util.LinkedList
 import javax.inject.Inject
 import org.eclipse.core.resources.IResource
 import org.eclipse.xtext.generator.IFileSystemAccess
@@ -108,7 +109,9 @@ class FInterfaceSomeIPStubAdapterGenerator {
                     void «broadcast.unsubscribeSelectiveMethodName»(const std::shared_ptr<CommonAPI::ClientId> clientId);
                     std::shared_ptr<CommonAPI::ClientIdList> const «broadcast.stubAdapterClassSubscribersMethodName»();
                 «ELSE»
-                    void «broadcast.stubAdapterClassFireEventMethodName»(«broadcast.outArgs.map['const ' + getTypeName(_interface, true) + '& ' + elementName].join(', ')»);
+                    «IF !broadcast.isErrorType(_accessor)»
+                        void «broadcast.stubAdapterClassFireEventMethodName»(«broadcast.outArgs.map['const ' + getTypeName(_interface, true) + '& ' + elementName].join(', ')»);
+                    «ENDIF»
                 «ENDIF»
 
             «ENDFOR»
@@ -162,7 +165,7 @@ class FInterfaceSomeIPStubAdapterGenerator {
 
             «var counterMap = new HashMap<String, Integer>()»
             «var methodNumberMap = new HashMap<FMethod, Integer>()»
-            «_interface.generateMethodDispatcherDeclarations(_interface, counterMap, methodNumberMap)»
+            «_interface.generateMethodDispatcherDeclarations(_interface, counterMap, methodNumberMap, _accessor)»
 
             «_interface.someipStubAdapterClassNameInternal»(
                 const CommonAPI::SomeIP::Address &_address,
@@ -198,13 +201,15 @@ class FInterfaceSomeIPStubAdapterGenerator {
                 «ENDIF»
                 // Provided events/fields
                 «FOR broadcast : _interface.broadcasts»
-                    {
-                        std::set<CommonAPI::SomeIP::eventgroup_id_t> itsEventGroups;
-                        «FOR eventgroup : broadcast.getEventGroups(_accessor)»
-                            itsEventGroups.insert(CommonAPI::SomeIP::eventgroup_id_t(«eventgroup»));
-                        «ENDFOR»
-                        CommonAPI::SomeIP::StubAdapter::registerEvent(«broadcast.getEventIdentifier(_accessor)», itsEventGroups, false);
-                    }
+                    «IF !broadcast.isErrorType(_accessor)»
+                        {
+                            std::set<CommonAPI::SomeIP::eventgroup_id_t> itsEventGroups;
+                            «FOR eventgroup : broadcast.getEventGroups(_accessor)»
+                                itsEventGroups.insert(CommonAPI::SomeIP::eventgroup_id_t(«eventgroup»));
+                            «ENDFOR»
+                            CommonAPI::SomeIP::StubAdapter::registerEvent(«broadcast.getEventIdentifier(_accessor)», itsEventGroups, false);
+                        }
+                    «ENDIF»
                 «ENDFOR»
                 «FOR attribute : _interface.attributes»
                     «IF attribute.observable»
@@ -349,23 +354,25 @@ class FInterfaceSomeIPStubAdapterGenerator {
                 }
 
             «ELSE»
-                template <typename _Stub, typename... _Stubs>
-                void «_interface.someipStubAdapterClassNameInternal»<_Stub, _Stubs...>::«broadcast.stubAdapterClassFireEventMethodName»(«broadcast.outArgs.map['const ' + getTypeName(_interface, true) + '& _' + elementName].join(', ')») {
-                    «FOR arg: broadcast.outArgs»
-                        «val String deploymentType = arg.getDeploymentType(_interface, true)»
-                        «val String deployment = arg.getDeploymentRef(arg.array, broadcast, _interface, _accessor)»
-                        «IF deploymentType != "CommonAPI::EmptyDeployment" && deploymentType != ""»
-                            CommonAPI::Deployable< «arg.getTypeName(arg, true)», «deploymentType»> deployed_«arg.name»(_«arg.name», «IF deployment != ""»«deployment»«ELSE»nullptr«ENDIF»);
-                        «ENDIF»
-                    «ENDFOR»
-                    CommonAPI::SomeIP::StubEventHelper<CommonAPI::SomeIP::SerializableArguments< «broadcast.outArgs.map[getDeployedTypeName(_interface, _accessor)].join(', ')»>>
-                        ::sendEvent(
-                            *this,
-                            «broadcast.getEventIdentifier(_accessor)»,
-                            «broadcast.getEndianess(_accessor)»«IF broadcast.outArgs.size > 0»,«ENDIF»
-                            «broadcast.outArgs.map[getDeployedElementName(_interface, _accessor)].join(', ')»
-                    );
-                }
+                «IF !broadcast.isErrorType(_accessor)»
+                    template <typename _Stub, typename... _Stubs>
+                    void «_interface.someipStubAdapterClassNameInternal»<_Stub, _Stubs...>::«broadcast.stubAdapterClassFireEventMethodName»(«broadcast.outArgs.map['const ' + getTypeName(_interface, true) + '& _' + elementName].join(', ')») {
+                        «FOR arg: broadcast.outArgs»
+                            «val String deploymentType = arg.getDeploymentType(_interface, true)»
+                            «val String deployment = arg.getDeploymentRef(arg.array, broadcast, _interface, _accessor)»
+                            «IF deploymentType != "CommonAPI::EmptyDeployment" && deploymentType != ""»
+                                CommonAPI::Deployable< «arg.getTypeName(arg, true)», «deploymentType»> deployed_«arg.name»(_«arg.name», «IF deployment != ""»«deployment»«ELSE»nullptr«ENDIF»);
+                            «ENDIF»
+                        «ENDFOR»
+                        CommonAPI::SomeIP::StubEventHelper<CommonAPI::SomeIP::SerializableArguments< «broadcast.outArgs.map[getDeployedTypeName(_interface, _accessor)].join(', ')»>>
+                            ::sendEvent(
+                                *this,
+                                «broadcast.getEventIdentifier(_accessor)»,
+                                «broadcast.getEndianess(_accessor)»«IF broadcast.outArgs.size > 0»,«ENDIF»
+                                «broadcast.outArgs.map[getDeployedElementName(_interface, _accessor)].join(', ')»
+                        );
+                    }
+                «ENDIF»
             «ENDIF»
 
         «ENDFOR»
@@ -454,17 +461,27 @@ class FInterfaceSomeIPStubAdapterGenerator {
     def private String generateMethodDispatcherDeclarations(FInterface _interface,
                                                             FInterface _container,
                                                             HashMap<String, Integer> _counters,
-                                                            HashMap<FMethod, Integer> _methods) '''
+                                                            HashMap<FMethod, Integer> _methods,
+                                                            PropertyAccessor _accessor) '''
         «val accessor = getAccessor(_interface)»
         «FOR method : _interface.methods»
             «FTypeGenerator::generateComments(method, false)»
             «IF !method.isFireAndForget»
+                «var errorReplyTypes = new LinkedList()»
+                «FOR broadcast : _interface.broadcasts»
+                    «IF broadcast.isErrorType(method, _accessor)»
+                        «{errorReplyTypes.add(broadcast.errorReplyTypes(method, _accessor));""}»
+                        «broadcast.generateErrorReplyCallback(_interface, method, _accessor)»
+                    «ENDIF»
+                «ENDFOR»
+                
                 static CommonAPI::SomeIP::MethodWithReplyStubDispatcher<
                     «_interface.stubFullClassName»,
                     std::tuple< «method.allInTypes»>,
                     std::tuple< «method.allOutTypes»>,
                     std::tuple< «method.inArgs.getDeploymentTypes(_interface, accessor)»>,
-                    std::tuple< «method.getErrorDeploymentType(true)»«method.outArgs.getDeploymentTypes(_interface, accessor)»>
+                    std::tuple< «method.getErrorDeploymentType(true)»«method.outArgs.getDeploymentTypes(_interface, accessor)»>«IF errorReplyTypes.size > 0»,«ENDIF»
+                    «errorReplyTypes.map['std::function< void (' + it + ')>'].join(',\n')»
                     «IF !(_counters.containsKey(method.someipStubDispatcherVariable))»
                         «{_counters.put(method.someipStubDispatcherVariable, 0);  _methods.put(method, 0);""}»
                 > «method.someipStubDispatcherVariable»;
@@ -491,10 +508,11 @@ class FInterfaceSomeIPStubAdapterGenerator {
     def private String recursivelyGenerateMethodDispatcherDeclarations(FInterface _interface,
                                                                        FInterface _container,
                                                                        HashMap<String, Integer> _counters,
-                                                                       HashMap<FMethod, Integer> _methods) '''
-        «_interface.generateMethodDispatcherDeclarations(_container, _counters, _methods)»
+                                                                       HashMap<FMethod, Integer> _methods,
+                                                                       PropertyAccessor _accessor) '''
+        «_interface.generateMethodDispatcherDeclarations(_container, _counters, _methods, _accessor)»
         «IF _interface.base != null»
-            «_interface.base.recursivelyGenerateMethodDispatcherDeclarations(_container, _counters, _methods)»
+            «_interface.base.recursivelyGenerateMethodDispatcherDeclarations(_container, _counters, _methods, _accessor)»
         «ENDIF»
     '''
 
@@ -535,27 +553,38 @@ class FInterfaceSomeIPStubAdapterGenerator {
                                                     HashMap<FMethod, Integer> methodnumberMap) '''
         «FTypeGenerator::generateComments(_method, false)»
         «IF !_method.isFireAndForget»
+            «var errorReplyTypes = new LinkedList()»
+            «var errorReplyCallbacks = new LinkedList()»
+            «FOR broadcast : _interface.broadcasts»
+                «IF broadcast.isErrorType(_method, _accessor)»
+                    «{errorReplyTypes.add(broadcast.errorReplyTypes(_method, _accessor));""}»
+                    «{errorReplyCallbacks.add('std::bind(&' + _interface.someipStubAdapterClassNameInternal + '<_Stub, _Stubs...>::' +
+                        broadcast.errorReplyCallbackName(_accessor) + ', ' + broadcast.errorReplyCallbackBindArgs(_accessor) + ')'
+                    );""}»
+                «ENDIF»
+            «ENDFOR»
             template <typename _Stub, typename... _Stubs>
             CommonAPI::SomeIP::MethodWithReplyStubDispatcher<
                 «_interface.stubFullClassName»,
                 std::tuple< «_method.allInTypes»>,
                 std::tuple< «_method.allOutTypes»>,
                 std::tuple< «_method.inArgs.getDeploymentTypes(_interface, _accessor)»>,
-                std::tuple< «_method.getErrorDeploymentType(true)»«_method.outArgs.getDeploymentTypes(_interface, _accessor)»>
+                std::tuple< «_method.getErrorDeploymentType(true)»«_method.outArgs.getDeploymentTypes(_interface, _accessor)»>«IF errorReplyTypes.size > 0»,«ENDIF»
+                «errorReplyTypes.map['std::function< void (' + it + ')>'].join(',\n')»
             «IF !(counterMap.containsKey(_method.someipStubDispatcherVariable))»
                 «{counterMap.put(_method.someipStubDispatcherVariable, 0);  methodnumberMap.put(_method, 0);""}»
                 > «_thisInterface.someipStubAdapterClassNameInternal»<_Stub, _Stubs...>::«_method.someipStubDispatcherVariable»(
                     &«_interface.stubClassName + "::" + _method.elementName»,
                     «_method.isLittleEndian(_accessor)»,
                     «_method.getDeployments(_interface, _accessor, true, false)»,
-                    «_method.getDeployments(_interface, _accessor, false, true)»);
+                    «_method.getDeployments(_interface, _accessor, false, true)»«IF errorReplyCallbacks.size > 0»,«'\n' + errorReplyCallbacks.map[it].join(',\n')»«ENDIF»);
             «ELSE»
                 «{counterMap.put(_method.someipStubDispatcherVariable, counterMap.get(_method.someipStubDispatcherVariable) + 1);  methodnumberMap.put(_method, counterMap.get(_method.someipStubDispatcherVariable));""}»
                 > «_interface.someipStubAdapterClassNameInternal»<_Stub, _Stubs...>::«_method.someipStubDispatcherVariable»«Integer::toString(counterMap.get(_method.someipStubDispatcherVariable))»(
                     &«_interface.stubClassName + "::" + _method.elementName»,
                     «_method.isLittleEndian(_accessor)»
                     «_method.getDeployments(_interface, _accessor, true, false)»,
-                    «_method.getDeployments(_interface, _accessor, false, true)»);
+                    «_method.getDeployments(_interface, _accessor, false, true)»«IF errorReplyCallbacks.size > 0»,«'\n' + errorReplyCallbacks.map[it].join(',\n')»«ENDIF»);
             «ENDIF»
         «ELSE»
             template <typename _Stub, typename... _Stubs>
@@ -809,4 +838,17 @@ class FInterfaceSomeIPStubAdapterGenerator {
     def private generateStubAttributeTableInitializer(FInterface _interface, PropertyAccessor _accessor) '''
     '''
 
+    def private generateErrorReplyCallback(FBroadcast _broadcast, FInterface _interface, FMethod _method, PropertyAccessor _accessor) '''
+            
+        static void «_broadcast.errorReplyCallbackName(_accessor)»(«_broadcast.generateErrorReplyCallbackSignature(_method, _accessor)») {
+            «IF _broadcast.errorArgs(_accessor).size > 1»
+                auto args = std::make_tuple(
+                    «_broadcast.errorArgs(_accessor).map[it.getDeployable(_interface, _accessor) + '(' + '_' + it.elementName + ', ' + getDeploymentRef(it.array, _broadcast, _interface, _accessor) + ')'].join(",\n")  + ");"»
+            «ELSE»
+                auto args = std::make_tuple();
+            «ENDIF»
+            (void)args;
+            //sayHelloStubDispatcher.sendErrorReplyMessage(_callId, «_broadcast.errorName(_accessor)», args);
+        }
+    '''
 }

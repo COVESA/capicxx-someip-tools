@@ -1,0 +1,1012 @@
+{
+    "unicast" : "127.0.0.1",
+    "logging" :
+    {
+        "level" : "warning",
+        "console" : "true",
+        "file" : { "enable" : "false", "path" : "/var/log/vsomeip.log" },
+        "dlt" : "false"
+    },
+    "applications" :
+    [
+        {
+            "name" : "vsomeipd",
+            "id" : "0x1111"
+        },
+        {
+            "name" : "client-sample",
+            "num_dispatchers" : "3",
+            "id" : "0x1343"
+        },
+        {
+            "name" : "other-client-sample",
+            "id" : "0x1344"
+        },
+        {
+            "name" : "service-sample",
+            "id" : "0x1277"
+        },
+        {
+            "name" : "test-service",
+            "id" : "0x1488"
+        },
+        {
+            "name" : "StabilityMP-Child0",
+            "id" : "0x1400"
+        },
+        {
+            "name" : "StabilityMP-Child1",
+            "id" : "0x1401"
+        },
+        {
+            "name" : "StabilityMP-Child2",
+            "id" : "0x1402"
+        },
+        {
+            "name" : "StabilityMP-Child3",
+            "id" : "0x1403"
+        },
+        {
+            "name" : "StabilityMP-Child4",
+            "id" : "0x1404"
+        },
+        {
+            "name" : "StabilityMP-Child5",
+            "id" : "0x1405"
+        },
+        {
+            "name" : "StabilityMP-Child6",
+            "id" : "0x1406"
+        },
+        {
+            "name" : "StabilityMP-Child7",
+            "id" : "0x1407"
+        },
+        {
+            "name" : "StabilityMP-Child8",
+            "id" : "0x1408"
+        },
+        {
+            "name" : "StabilityMP-Child9",
+            "id" : "0x1409"
+        },
+        {
+            "name" : "StabilityMP-Child10",
+            "id" : "0x140a"
+        },
+        {
+            "name" : "mainloop-thirdParty",
+            "id" : "0x140d"
+        },
+        {
+            "name" : "blub",
+            "id" : "0x1345"
+        }
+    ],
+    "servicegroups" :
+    [
+        {
+            "name" : "default",
+            "delays" :
+            {
+                "initial" : { "minimum" : "10", "maximum" : "100" },
+                "repetition-base" : "200",
+                "repetition-max" : "3",
+                "cyclic-offer" : "2000",
+                "cyclic-request" : "2001"
+            },
+            "services" :
+            [
+                {
+                    "service" : "0x1234",
+                    "instance" : "0x5678",
+                    "reliable" : { "port" : "30509", "enable-magic-cookies" : "false" },
+                    "unreliable" : "31000"
+                },
+                {
+                    "service" : "0x1234",
+                    "instance" : "0x5706",
+                    "unreliable" : "31017"
+                },
+                {
+                    "service" : "0x1235",
+                    "instance" : "0x5679",
+                    "reliable" : { "port" : "30506", "enable-magic-cookies" : "false" },
+                    "unreliable" : "31000"
+                },
+                {
+                    "service" : "0x1236",
+                    "instance" : "0x5680",
+                    "unreliable" : "31000"
+                },
+                {
+                    "service" : "0x1237",
+                    "instance" : "0x5681",
+                    "reliable" : { "port" : "30506", "enable-magic-cookies" : "false" },
+                    "unreliable" : "31000"
+                },
+                {
+                    "service" : "0x1238",
+                    "instance" : "0x5682",
+                    "unreliable" : "31000"
+                },
+                {
+                    "service" : "0x1239",
+                    "instance" : "0x5683",
+                    "unreliable" : "31000"
+                },
+                {
+                    "service" : "0x1240",
+                    "instance" : "0x5684",
+                    "reliable" : { "port" : "30506", "enable-magic-cookies" : "false" },
+                    "unreliable" : "31000"
+                },
+                {
+                    "service" : "0x1240",
+                    "instance" : "0x5685",
+                    "reliable" : { "port" : "30506", "enable-magic-cookies" : "false" },
+                    "unreliable" : "31000"
+                },
+                {
+                    "service" : "0x1A85",
+                    "instance" : "0x5999",
+                    "reliable" : { "port" : "30506", "enable-magic-cookies" : "false" },
+                    "unreliable" : "31000"
+                },
+                {
+                    "service" : "0x1241",
+                    "instance" : "0x5685",
+                    "reliable" : { "port" : "30506", "enable-magic-cookies" : "false" },
+                    "unreliable" : "31000"
+                },
+                {
+                    "service" : "0x1242",
+                    "instance" : "0x5686",
+                    "reliable" : { "port" : "30506", "enable-magic-cookies" : "false" },
+                    "unreliable" : "31000"
+                },
+                {
+                    "service" : "0x1243",
+                    "instance" : "0x5687",
+                    "unreliable" : "31000"
+                },
+                {
+                    "service" : "0x1243",
+                    "instance" : "0x5690",
+                    "unreliable" : "31001"
+                },
+                {
+                    "service" : "0x1243",
+                    "instance" : "0x5691",
+                    "unreliable" : "31002"
+                },
+                {
+                    "service" : "0x1243",
+                    "instance" : "0x5692",
+                    "unreliable" : "31003"
+                },
+                {
+                    "service" : "0x1243",
+                    "instance" : "0x5693",
+                    "unreliable" : "31004"
+                },
+                {
+                    "service" : "0x1243",
+                    "instance" : "0x5694",
+                    "unreliable" : "31005"
+                },
+                {
+                    "service" : "0x1243",
+                    "instance" : "0x5695",
+                    "unreliable" : "31006"
+                },
+                {
+                    "service" : "0x1243",
+                    "instance" : "0x5696",
+                    "unreliable" : "31007"
+                },
+                {
+                    "service" : "0x1243",
+                    "instance" : "0x5697",
+                    "unreliable" : "31008"
+                },
+                {
+                    "service" : "0x1243",
+                    "instance" : "0x5698",
+                    "unreliable" : "31009"
+                },
+                {
+                    "service" : "0x1243",
+                    "instance" : "0x5699",
+                    "unreliable" : "31010"
+                },
+                {
+                    "service" : "0x1243",
+                    "instance" : "0x5700",
+                    "unreliable" : "31011"
+                },
+                {
+                    "service" : "0x1243",
+                    "instance" : "0x5701",
+                    "unreliable" : "31012"
+                },
+                {
+                    "service" : "0x1243",
+                    "instance" : "0x5702",
+                    "unreliable" : "31013"
+                },
+                {
+                    "service" : "0x1243",
+                    "instance" : "0x5703",
+                    "unreliable" : "31014"
+                },
+                {
+                    "service" : "0x1243",
+                    "instance" : "0x5704",
+                    "unreliable" : "31015"
+                },
+                {
+                    "service" : "0x1243",
+                    "instance" : "0x5705",
+                    "unreliable" : "31016"
+                },
+                {
+                    "service" : "0x1243",
+                    "instance" : "0x5706",
+                    "unreliable" : "31017"
+                },
+                {
+                    "service" : "0x1243",
+                    "instance" : "0x5707",
+                    "unreliable" : "31018"
+                },
+                {
+                    "service" : "0x1243",
+                    "instance" : "0x5708",
+                    "unreliable" : "31019"
+                },
+                {
+                    "service" : "0x1243",
+                    "instance" : "0x5709",
+                    "unreliable" : "31020"
+                },
+                {
+                    "service" : "0x1243",
+                    "instance" : "0x5710",
+                    "unreliable" : "31021"
+                },
+                {
+                    "service" : "0x1243",
+                    "instance" : "0x5711",
+                    "unreliable" : "31022"
+                },
+                {
+                    "service" : "0x1243",
+                    "instance" : "0x5712",
+                    "unreliable" : "31023"
+                },
+                {
+                    "service" : "0x1243",
+                    "instance" : "0x5713",
+                    "unreliable" : "31024"
+                },
+                {
+                    "service" : "0x1243",
+                    "instance" : "0x5714",
+                    "unreliable" : "31025"
+                },
+                {
+                    "service" : "0x1243",
+                    "instance" : "0x5715",
+                    "unreliable" : "31026"
+                },
+                {
+                    "service" : "0x1243",
+                    "instance" : "0x5716",
+                    "unreliable" : "31027"
+                },
+                {
+                    "service" : "0x1243",
+                    "instance" : "0x5717",
+                    "unreliable" : "31028"
+                },
+                {
+                    "service" : "0x1243",
+                    "instance" : "0x5718",
+                    "unreliable" : "31029"
+                },
+                {
+                    "service" : "0x1243",
+                    "instance" : "0x5719",
+                    "unreliable" : "31030"
+                },
+                {
+                    "service" : "0x1243",
+                    "instance" : "0x5720",
+                    "unreliable" : "31031"
+                },
+                {
+                    "service" : "0x1243",
+                    "instance" : "0x5721",
+                    "unreliable" : "31032"
+                },
+                {
+                    "service" : "0x1243",
+                    "instance" : "0x5722",
+                    "unreliable" : "31033"
+                },
+                {
+                    "service" : "0x1243",
+                    "instance" : "0x5723",
+                    "unreliable" : "31034"
+                },
+                {
+                    "service" : "0x1243",
+                    "instance" : "0x5724",
+                    "unreliable" : "31035"
+                },
+                {
+                    "service" : "0x1243",
+                    "instance" : "0x5725",
+                    "unreliable" : "31036"
+                },
+                {
+                    "service" : "0x1243",
+                    "instance" : "0x5726",
+                    "unreliable" : "31037"
+                },
+                {
+                    "service" : "0x1243",
+                    "instance" : "0x5727",
+                    "unreliable" : "31038"
+                },
+                {
+                    "service" : "0x1243",
+                    "instance" : "0x5728",
+                    "unreliable" : "31039"
+                },
+                {
+                    "service" : "0x1243",
+                    "instance" : "0x5729",
+                    "unreliable" : "31040"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5688",
+                    "unreliable" : "31000"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5730",
+                    "unreliable" : "31002"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5731",
+                    "unreliable" : "31003"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5732",
+                    "unreliable" : "31004"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5733",
+                    "unreliable" : "31005"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5734",
+                    "unreliable" : "31006"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5735",
+                    "unreliable" : "31007"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5736",
+                    "unreliable" : "31008"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5737",
+                    "unreliable" : "31009"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5738",
+                    "unreliable" : "31010"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5739",
+                    "unreliable" : "31011"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5740",
+                    "unreliable" : "31012"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5741",
+                    "unreliable" : "31013"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5742",
+                    "unreliable" : "31014"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5743",
+                    "unreliable" : "31015"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5744",
+                    "unreliable" : "31016"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5745",
+                    "unreliable" : "31017"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5746",
+                    "unreliable" : "31018"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5747",
+                    "unreliable" : "31019"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5748",
+                    "unreliable" : "31020"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5749",
+                    "unreliable" : "31021"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5750",
+                    "unreliable" : "31022"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5751",
+                    "unreliable" : "31023"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5752",
+                    "unreliable" : "31024"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5753",
+                    "unreliable" : "31025"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5754",
+                    "unreliable" : "31026"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5755",
+                    "unreliable" : "31027"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5756",
+                    "unreliable" : "31028"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5757",
+                    "unreliable" : "31029"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5758",
+                    "unreliable" : "31030"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5759",
+                    "unreliable" : "31031"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5760",
+                    "unreliable" : "31032"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5761",
+                    "unreliable" : "31033"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5762",
+                    "unreliable" : "31034"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5763",
+                    "unreliable" : "31035"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5764",
+                    "unreliable" : "31036"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5765",
+                    "unreliable" : "31037"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5766",
+                    "unreliable" : "31038"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5767",
+                    "unreliable" : "31039"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5768",
+                    "unreliable" : "31040"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5769",
+                    "unreliable" : "31041"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5770",
+                    "unreliable" : "31042"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5771",
+                    "unreliable" : "31043"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5772",
+                    "unreliable" : "31044"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5773",
+                    "unreliable" : "31045"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5774",
+                    "unreliable" : "31046"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5775",
+                    "unreliable" : "31047"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5776",
+                    "unreliable" : "31048"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5777",
+                    "unreliable" : "31049"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5778",
+                    "unreliable" : "31050"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5779",
+                    "unreliable" : "31051"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5780",
+                    "unreliable" : "31052"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5781",
+                    "unreliable" : "31053"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5782",
+                    "unreliable" : "31054"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5783",
+                    "unreliable" : "31055"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5784",
+                    "unreliable" : "31056"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5785",
+                    "unreliable" : "31057"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5786",
+                    "unreliable" : "31058"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5787",
+                    "unreliable" : "31059"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5788",
+                    "unreliable" : "31060"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5789",
+                    "unreliable" : "31061"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5790",
+                    "unreliable" : "31062"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5791",
+                    "unreliable" : "31063"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5792",
+                    "unreliable" : "31064"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5793",
+                    "unreliable" : "31065"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5794",
+                    "unreliable" : "31066"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5795",
+                    "unreliable" : "31067"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5796",
+                    "unreliable" : "31068"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5797",
+                    "unreliable" : "31069"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5798",
+                    "unreliable" : "31070"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5799",
+                    "unreliable" : "31071"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5800",
+                    "unreliable" : "31072"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5801",
+                    "unreliable" : "31073"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5802",
+                    "unreliable" : "31074"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5803",
+                    "unreliable" : "31075"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5804",
+                    "unreliable" : "31076"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5805",
+                    "unreliable" : "31077"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5806",
+                    "unreliable" : "31078"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5807",
+                    "unreliable" : "31079"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5808",
+                    "unreliable" : "31080"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5809",
+                    "unreliable" : "31081"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5810",
+                    "unreliable" : "31082"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5811",
+                    "unreliable" : "31083"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5812",
+                    "unreliable" : "31084"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5813",
+                    "unreliable" : "31085"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5814",
+                    "unreliable" : "31086"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5815",
+                    "unreliable" : "31087"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5816",
+                    "unreliable" : "31088"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5817",
+                    "unreliable" : "31089"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5818",
+                    "unreliable" : "31090"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5819",
+                    "unreliable" : "31091"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5820",
+                    "unreliable" : "31092"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5821",
+                    "unreliable" : "31093"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5822",
+                    "unreliable" : "31094"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5823",
+                    "unreliable" : "31095"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5824",
+                    "unreliable" : "31096"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5825",
+                    "unreliable" : "31097"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5826",
+                    "unreliable" : "31098"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5827",
+                    "unreliable" : "31099"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5828",
+                    "unreliable" : "31100"
+                },
+                {
+                    "service" : "0x1244",
+                    "instance" : "0x5829",
+                    "unreliable" : "31101"
+                },
+                {
+                    "service" : "0x1245",
+                    "instance" : "0x5689",
+                    "unreliable" : "31001"
+                },
+                {
+                    "service" : "0x1246",
+                    "instance" : "0x568a",
+                    "unreliable" : "31001"
+                },
+                {
+                    "service" : "0x1247",
+                    "instance" : "0x568b",
+                    "unreliable" : "31001"
+                },
+                {
+                    "service" : "0x1234",
+                    "instance" : "0x03e8",
+                    "unreliable" : "30499"
+                },
+                {
+                    "service" : "0x1235",
+                    "instance" : "0x07d0",
+                    "unreliable" : "30500"
+                },
+                {
+                    "service" : "0x1235",
+                    "instance" : "0x07d1",
+                    "unreliable" : "30501"
+                },
+                {
+                    "service" : "0x1236",
+                    "instance" : "0x0bb8",
+                    "unreliable" : "30600"
+                },
+                {
+                    "service" : "0x1237",
+                    "instance" : "0x0bb9",
+                    "unreliable" : "30601"
+                },
+                {
+                    "service" : "0x1238",
+                    "instance" : "0x0bba",
+                    "unreliable" : "30602",
+                    "events" :
+                    [
+                        {
+                            "event" : "0x80ec",
+                            "is_field" : "true"
+                        }
+                    ],
+                    "eventgroups" :
+                    [
+                        {
+                            "eventgroup" : "0x4556",
+                            "events" :
+                            [
+                                "0x80ec"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "service" : "0x1239",
+                    "instance" : "0x0bbb",
+                    "unreliable" : "30603",
+                    "events" :
+                    [
+                        {
+                            "event" : "0x80ed",
+                            "is_field" : "true"
+                        }
+                    ],
+                    "eventgroups" :
+                    [
+                        {
+                            "eventgroup" : "0x4557",
+                            "events" :
+                            [
+                                "0x80ed"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "service" : "0x1248",
+                    "instance" : "0x1",
+                    "unreliable" : "31000"
+                },
+                {
+                    "service" : "0x1250",
+                    "instance" : "0x5880",
+                    "unreliable" : "0x7723"
+                },
+                {
+                    "service" : "0x15b3",
+                    "instance" : "0x3e8",
+                    "unreliable" : "0x775b"
+                },
+                {
+                    "service" : "0x15b4",
+                    "instance" : "0x3e9",
+                    "unreliable" : "0x775c"
+                },
+                {
+                    "service" : "0x15b5",
+                    "instance" : "0x3ea",
+                    "unreliable" : "0x775d"
+                }
+            ]
+        }
+    ],
+    "security" :
+    {
+        "check_credentials" : "true",
+        "policies" :
+        [
+            {
+                "client" : { "first" : "0x0001", "last" : "0xFFFF" },
+                "credentials" : { "uid" : "1000", "gid" : "1000" },
+                "deny" :
+                {
+                }
+            }
+        ]
+    },
+    "routing" : "vsomeipd",
+    "service-discovery" :
+    {
+        "enable" : "true",
+        "multicast" : "224.244.224.245",
+        "port" : "30490",
+        "protocol" : "udp"
+    }
+}

@@ -92,7 +92,7 @@ class FInterfaceSomeIPDeploymentGenerator extends FTypeCollectionSomeIPDeploymen
                 «a.generateDeploymentDeclaration(m, _interface, _accessor)»
             «ENDFOR»
             «FOR a : m.outArgs»
-                «a.generateDeploymentDeclaration(m, _interface, _accessor)»
+            	«a.generateDeploymentDeclaration(m, _interface, _accessor)»
             «ENDFOR»
         «ENDFOR»
 
@@ -157,20 +157,20 @@ class FInterfaceSomeIPDeploymentGenerator extends FTypeCollectionSomeIPDeploymen
     /////////////////////////////////////
     def protected dispatch String generateDeploymentDeclaration(FAttribute _attribute, FInterface _interface, PropertyAccessor _accessor) {
         if (_accessor.hasSpecificDeployment(_attribute) || (_attribute.array && _accessor.hasDeployment(_attribute))) {
-            return "extern " + _attribute.getDeploymentType(_interface, true) + " " + _attribute.name + "Deployment;"
+            return "COMMONAPI_EXPORT extern " + _attribute.getDeploymentType(_interface, true) + " " + _attribute.name + "Deployment;"
         }
         return ""
     }
 
     def protected String generateDeploymentDeclaration(FArgument _argument, FMethod _method, FInterface _interface, PropertyAccessor _accessor) {
         if (_accessor.hasSpecificDeployment(_argument) || (_argument.array && _accessor.hasDeployment(_argument))) {
-            return "extern " + _argument.getDeploymentType(_interface, true) + " " + _method.name + "_" + _argument.name + "Deployment;"
+            return "COMMONAPI_EXPORT extern " + _argument.getDeploymentType(_interface, true) + " " + _method.name + "_" + _argument.name + "Deployment;"
         }
     }
 
     def protected String generateDeploymentDeclaration(FArgument _argument, FBroadcast _broadcast, FInterface _interface, PropertyAccessor _accessor) {
         if (_accessor.hasSpecificDeployment(_argument) || (_argument.array && _accessor.hasDeployment(_argument))) {
-            return "extern " + _argument.getDeploymentType(_interface, true) + " " + _broadcast.name + "_" + _argument.name + "Deployment;"
+            return "COMMONAPI_EXPORT extern " + _argument.getDeploymentType(_interface, true) + " " + _broadcast.name + "_" + _argument.name + "Deployment;"
         }
     }
 

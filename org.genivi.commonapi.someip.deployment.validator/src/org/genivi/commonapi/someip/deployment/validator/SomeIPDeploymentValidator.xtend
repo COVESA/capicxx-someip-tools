@@ -8,13 +8,16 @@ import org.eclipse.emf.common.util.Diagnostic
 import org.eclipse.emf.common.util.DiagnosticChain
 import org.eclipse.xtext.validation.FeatureBasedDiagnostic
 import org.franca.core.franca.FInterface
+import org.franca.core.franca.FModel
 import org.franca.deploymodel.dsl.fDeploy.FDAttribute
 import org.franca.deploymodel.dsl.fDeploy.FDBroadcast
 import org.franca.deploymodel.dsl.fDeploy.FDInteger
 import org.franca.deploymodel.dsl.fDeploy.FDInterface
+import org.franca.deploymodel.dsl.fDeploy.FDInterfaceInstance
 import org.franca.deploymodel.dsl.fDeploy.FDMethod
 import org.franca.deploymodel.dsl.fDeploy.FDModel
 import org.franca.deploymodel.dsl.fDeploy.FDProperty
+import org.franca.deploymodel.dsl.fDeploy.FDProvider
 import org.franca.deploymodel.dsl.fDeploy.FDValue
 
 import static org.franca.deploymodel.dsl.fDeploy.FDeployPackage.Literals.*
@@ -22,6 +25,7 @@ import static org.franca.deploymodel.dsl.fDeploy.FDeployPackage.Literals.*
 class SomeIPDeploymentValidator
 {
     private static String DEPLOYMENT_SPECIFICATION_FILENAME_SUFFIX = "_deployment_spec.fdepl"
+    private static String SOMEIP_SPECIFICATION_TYPE = "someip.deployment"
 
     var DiagnosticChain diagnostics
     var allMethodIds = new HashMap<FDInterface, HashMap<Integer, ArrayList<FDProperty>>>
@@ -32,6 +36,7 @@ class SomeIPDeploymentValidator
     var eventIdDiagnostics = new HashSet<FDProperty>
     var missingInterfaceDeployment = new HashSet<FInterface>
     var fdInterfaces = new ArrayList<FDInterface>
+    var fdInterfaceInstances = new ArrayList<FDInterfaceInstance>
 
     def validate(Collection<FDModel> fdepls, DiagnosticChain diagnostics)
     {
@@ -41,7 +46,16 @@ class SomeIPDeploymentValidator
         {
             var deplFileName = fdepl.eResource.URI.lastSegment
             if (!deplFileName.endsWith(DEPLOYMENT_SPECIFICATION_FILENAME_SUFFIX))
-                fdInterfaces.addAll(fdepl.deployments.filter(typeof(FDInterface)))
+            {
+                for ( fdInterface : fdepl.deployments.filter(typeof(FDInterface))) {
+                    if(fdInterface.spec.name != null && fdInterface.spec.name.contains(SOMEIP_SPECIFICATION_TYPE))
+                        fdInterfaces.add(fdInterface)
+                }
+                for ( fdProvider : fdepl.deployments.filter(typeof(FDProvider))) {
+                    if(fdProvider.spec.name != null && fdProvider.spec.name.contains(SOMEIP_SPECIFICATION_TYPE))
+                        fdInterfaceInstances.addAll(fdProvider.instances)
+                }
+            }
         }
 
         for (fdInterface : fdInterfaces)
@@ -49,6 +63,61 @@ class SomeIPDeploymentValidator
 
         for (fdInterface : fdInterfaces)
             validateIds(fdInterface)
+
+        for (fdInterface : fdInterfaces)
+            validateCompleteInterfaceDeployments(fdInterface)
+
+        validateProviderInstanceDeployments(fdepls)
+    }
+
+    private def validateProviderInstanceDeployments(Collection<FDModel> fdepls)
+    {
+        fdInterfaceInstances.forEach[interfaceInstance|
+            if (fdInterfaces.findFirst[target != null && interfaceInstance.target != null && target.equals(interfaceInstance.target)] == null)
+            {
+                var diag = new FeatureBasedDiagnostic(Diagnostic.WARNING,
+                    "No deployment for interface \"" + getFullName(interfaceInstance.target) + "\".",
+                    interfaceInstance, null, -1, null, null)
+                diagnostics.add(diag)
+            }
+        ]
+    }
+
+    private def validateCompleteInterfaceDeployments(FDInterface fdInterface)
+    {
+        val FInterface fInterface = fdInterface.target
+        if (fInterface != null)
+        {
+            fInterface.attributes.forEach[fAttr|
+                if (fdInterface.attributes.findFirst[fdAttr|fAttr.equals(fdAttr.target)] == null)
+                {
+                    var diag = new FeatureBasedDiagnostic(Diagnostic.WARNING,
+                        "No deployment for attribute \"" + fAttr.name + "\".",
+                        fAttr, null, -1, null, null)
+                    diagnostics.add(diag)
+                }
+            ]
+
+            fInterface.broadcasts.forEach[fBroadcast|
+                if (fdInterface.broadcasts.findFirst[fdBroadcast|fBroadcast.equals(fdBroadcast.target)] == null)
+                {
+                    var diag = new FeatureBasedDiagnostic(Diagnostic.WARNING,
+                        "No deployment for broadcast \"" + fBroadcast.name + "\".",
+                        fBroadcast, null, -1, null, null)
+                    diagnostics.add(diag)
+                }
+            ]
+
+            fInterface.methods.forEach[fMethod|
+                if (fdInterface.methods.findFirst[fdMethod|fMethod.equals(fdMethod.target)] == null)
+                {
+                    var diag = new FeatureBasedDiagnostic(Diagnostic.WARNING,
+                        "No deployment for method \"" + fMethod.name + "\".",
+                        fMethod, null, -1, null, null)
+                    diagnostics.add(diag)
+                }
+            ]
+        }
     }
 
     private def validateInterface(FDInterface fdInterface)
@@ -655,5 +724,12 @@ class SomeIPDeploymentValidator
         if (!(prop.value.single instanceof FDInteger))
             return null
         return (prop.value.single as FDInteger).value
+    }
+
+    private def String getFullName(FInterface intf)
+    {
+        if (intf == null)
+            return ""
+        return (intf.eContainer as FModel).name + "." + intf.name
     }
 }

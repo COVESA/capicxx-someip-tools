@@ -4,7 +4,7 @@ PROJECT(libsomeipglue)
 
 SET( ${PROJECT_NAME}_MAJOR_VERSION 3 )
 SET( ${PROJECT_NAME}_MINOR_VERSION 1 )
-SET( ${PROJECT_NAME}_PATCH_LEVEL 9 )
+SET( ${PROJECT_NAME}_PATCH_LEVEL 10 )
 
 message("Project name: ${PROJECT_NAME}")
 
@@ -140,8 +140,6 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/fidl/conf/ti_stability_sp.fdepl.in
     "${CMAKE_CURRENT_SOURCE_DIR}/fidl/ti_stability_sp.fdepl" @ONLY)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/fidl/conf/ti_threading.fdepl.in
     "${CMAKE_CURRENT_SOURCE_DIR}/fidl/ti_threading.fdepl" @ONLY)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/fidl/conf/mp_selective.fdepl.in
-    "${CMAKE_CURRENT_SOURCE_DIR}/fidl/mp_selective.fdepl" @ONLY)
 
 file(GLOB FDEPL_FILES "fidl/*.fdepl")
 message("FDEPL_FILES: ${FDEPL_FILES}")
@@ -204,7 +202,6 @@ file(GLOB GLUE_SRCS
     "src-gen/v1/commonapi/runtime/*SomeIP*.cpp"
     "src-gen/v1/commonapi/threading/*SomeIP*.cpp"
     "src-gen/v1/commonapi/stability/sp/*SomeIP*.cpp"
-    "src-gen/v1/commonapi/multiprocess/bselective/*SomeIP*.cpp"
     ${DERIVED_TYPE_SRC}
     ${POLYMORPHIC_TYPE_SRC}
 )

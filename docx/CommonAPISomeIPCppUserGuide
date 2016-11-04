@@ -169,13 +169,17 @@ This kind of section determines how CommonAPI addresses are translated into SOME
 
 - +service+
 - +instance+
+- +major+
+- +minor+
 
 Example:
 
 ----
-[local:de.ABC:de.app1]
+[local:de.ABC:v1_1:de.app1]
 service=0x1234
 instance=0x5678
+major=1
+minor=2
 ----
 
 ==== Deployment

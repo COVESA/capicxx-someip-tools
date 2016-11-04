@@ -65,6 +65,7 @@ specification org.genivi.commonapi.someip.deployment extends org.genivi.commonap
         SomeIpEventGroups:           Integer[]                       (optional);
 
         SomeIpAttributeEndianess:    {le, be}                        (default: be);
+        SomeIpAttributeCRCWidth:     {zero, one, four}               (default: zero);
     }
 
     for methods {
@@ -78,6 +79,7 @@ specification org.genivi.commonapi.someip.deployment extends org.genivi.commonap
         SomeIpErrorCoding:           {Header}                        (default: Header);
 
         SomeIpMethodEndianess:       {le, be}                        (default: be);
+        SomeIpMethodCRCWidth:        {zero, one, four}               (default: zero);
     }
 
     for broadcasts {
@@ -88,6 +90,7 @@ specification org.genivi.commonapi.someip.deployment extends org.genivi.commonap
         SomeIpEventGroups:           Integer[]                       (optional);
 
         SomeIpBroadcastEndianess:    {le, be}                        (default: be);
+        SomeIpBroadcastCRCWidth:     {zero, one, four}               (default: zero);
     }
 
     for arrays {
