@@ -11,6 +11,14 @@ define org.genivi.commonapi.someip.deployment for interface commonapi.advanced.p
             SomeIpEventGroups = { 33007 }
     }
 
+    attribute a_dub {
+            SomeIpGetterID = 3002 
+            SomeIpSetterID = 3003
+            SomeIpNotifierID = 33009
+            SomeIpEventGroups = { 33008 }
+    }
+
+
 
     method testMethod {
         SomeIpMethodID = 515

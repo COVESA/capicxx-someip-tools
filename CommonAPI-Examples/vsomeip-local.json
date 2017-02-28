@@ -64,6 +64,18 @@
                     "events" : [ "0x777", "0x779" ] 
                 }
             ]
+        },
+        {
+            "service" : "0x1235",
+            "instance" : "0x5678",
+            "reliable" : { "port" : "30509", "enable-magic-cookies" : "false" },
+            "unreliable" : "31001"
+        },
+        {
+            "service" : "0x1236",
+            "instance" : "0x5678",
+            "reliable" : { "port" : "30509", "enable-magic-cookies" : "false" },
+            "unreliable" : "31002"
         }
     ],
     "routing" : "service-sample",

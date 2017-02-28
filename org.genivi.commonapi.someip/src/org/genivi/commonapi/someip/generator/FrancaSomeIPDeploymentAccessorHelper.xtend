@@ -1128,6 +1128,10 @@ class FrancaSomeIPDeploymentAccessorHelper {
             }
         }
 
+        if (_struct.base != null) {
+            return hasDeployment(_accessor, _struct.base);
+        }
+
         return false
     }
 

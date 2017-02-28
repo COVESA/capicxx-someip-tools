@@ -55,8 +55,8 @@ endif()
 message("CommonAPI_CONSIDERED_CONFIGS: ${CommonAPI_CONSIDERED_CONFIGS}")
 message("COMMONAPI_INCLUDE_DIRS: ${COMMONAPI_INCLUDE_DIRS}")
 
-find_package (CommonAPI-SomeIP 3.1.10 REQUIRED)
-find_package (vsomeip 2.5.0 REQUIRED)
+find_package (CommonAPI-SomeIP 3.1.11 REQUIRED)
+find_package (vsomeip 2.5.3 REQUIRED)
 
 include_directories (
     ${COMMONAPI_INCLUDE_DIRS}
@@ -316,3 +316,86 @@ target_link_libraries (
     CommonAPI
     ${DL_LIBRARY}
 )
+
+# path A
+set(PRJ_SRC_GEN_COMMONAPI_PATH_A src-gen/v1/commonapi/examples/A)
+set(PRJ_SRC_GEN_COMMONAPI_SOMEIP_PATH_A src-gen/v1/commonapi/examples/A)
+# path B
+set(PRJ_SRC_GEN_COMMONAPI_PATH_B src-gen/v1/commonapi/examples/B)
+set(PRJ_SRC_GEN_COMMONAPI_SOMEIP_PATH_B src-gen/v1/commonapi/examples/B)
+# path C
+set(PRJ_SRC_GEN_COMMONAPI_PATH_C src-gen/v2/commonapi/examples/C)
+set(PRJ_SRC_GEN_COMMONAPI_SOMEIP_PATH_C src-gen/v2/commonapi/examples/C)
+
+# name A
+set(PRJ_NAME_CLIENT_A MergedInterfaceClientA)
+set(PRJ_NAME_SERVICE_A MergedInterfaceServiceA)
+# name B
+set(PRJ_NAME_CLIENT_B MergedInterfaceClientB)
+set(PRJ_NAME_SERVICE_B MergedInterfaceServiceB)
+# name C
+set(PRJ_NAME_CLIENT_C MergedInterfaceClientC)
+set(PRJ_NAME_SERVICE_C MergedInterfaceServiceC)
+
+# Application A
+FILE(GLOB PRJ_PROXY_GEN_SRCS_A ${PRJ_SRC_GEN_COMMONAPI_PATH_A}/*Proxy.cpp)
+FILE(GLOB PRJ_STUB_GEN_SRCS_A ${PRJ_SRC_GEN_COMMONAPI_PATH_A}/*Stub*.cpp)
+FILE(GLOB PRJ_STUB_IMPL_SRCS_A ${PRJ_SRC_COMMONAPI_PATH_A}/*Stub*.cpp)
+# Application B
+FILE(GLOB PRJ_PROXY_GEN_SRCS_B ${PRJ_SRC_GEN_COMMONAPI_PATH_B}/*Proxy.cpp)
+FILE(GLOB PRJ_STUB_GEN_SRCS_B ${PRJ_SRC_GEN_COMMONAPI_PATH_B}/*Stub*.cpp)
+FILE(GLOB PRJ_STUB_IMPL_SRCS_B ${PRJ_SRC_COMMONAPI_PATH_B}/*Stub*.cpp)
+# Application C
+FILE(GLOB PRJ_PROXY_GEN_SRCS_C ${PRJ_SRC_GEN_COMMONAPI_PATH_C}/*Proxy.cpp)
+FILE(GLOB PRJ_STUB_GEN_SRCS_C ${PRJ_SRC_GEN_COMMONAPI_PATH_C}/*Stub*.cpp)
+FILE(GLOB PRJ_STUB_IMPL_SRCS_C ${PRJ_SRC_COMMONAPI_PATH_C}/*Stub*.cpp)
+
+# sources A
+set(PRJ_CLIENT_SRCS_A src/A/${PRJ_NAME_CLIENT_A}.cpp ${PRJ_PROXY_GEN_SRCS_A})
+set(PRJ_SERVICE_SRCS_A src/A/${PRJ_NAME_SERVICE_A}.cpp src/A/MergedInterfaceStubImplA.cpp ${PRJ_STUB_GEN_SRCS_A} ${PRJ_STUB_IMPL_SRCS_A})
+#sources B
+set(PRJ_CLIENT_SRCS_B src/B/${PRJ_NAME_CLIENT_B}.cpp ${PRJ_PROXY_GEN_SRCS_B})
+set(PRJ_SERVICE_SRCS_B src/B/${PRJ_NAME_SERVICE_B}.cpp src/B/MergedInterfaceStubImplB.cpp ${PRJ_STUB_GEN_SRCS_B} ${PRJ_STUB_IMPL_SRCS_B})
+# sources C
+set(PRJ_CLIENT_SRCS_C src/C/${PRJ_NAME_CLIENT_C}.cpp ${PRJ_PROXY_GEN_SRCS_C})
+set(PRJ_SERVICE_SRCS_C src/C/${PRJ_NAME_SERVICE_C}.cpp src/C/MergedInterfaceStubImplC.cpp ${PRJ_STUB_GEN_SRCS_C} ${PRJ_STUB_IMPL_SRCS_C})
+
+# SOME/IP library A
+FILE(GLOB PRJ_SOMEIP_LIB_SRCS_A ${PRJ_SRC_GEN_COMMONAPI_SOMEIP_PATH_A}/*cpp)
+# SOME/IP library B
+FILE(GLOB PRJ_SOMEIP_LIB_SRCS_B ${PRJ_SRC_GEN_COMMONAPI_SOMEIP_PATH_B}/*cpp)
+# SOME/IP library C
+FILE(GLOB PRJ_SOMEIP_LIB_SRCS_C ${PRJ_SRC_GEN_COMMONAPI_SOMEIP_PATH_C}/*cpp)
+
+set(LINK_LIBRARIES -Wl,--as-needed CommonAPI CommonAPI-SomeIP)
+
+# Build Client A
+add_executable(${PRJ_NAME_CLIENT_A} ${PRJ_CLIENT_SRCS_A})
+target_link_libraries(${PRJ_NAME_CLIENT_A} ${LINK_LIBRARIES})
+# Build Client B
+add_executable(${PRJ_NAME_CLIENT_B} ${PRJ_CLIENT_SRCS_B})
+target_link_libraries(${PRJ_NAME_CLIENT_B} ${LINK_LIBRARIES})
+# Build Client C
+add_executable(${PRJ_NAME_CLIENT_C} ${PRJ_CLIENT_SRCS_C})
+target_link_libraries(${PRJ_NAME_CLIENT_C} ${LINK_LIBRARIES})
+
+# Build service A
+add_executable(${PRJ_NAME_SERVICE_A} ${PRJ_SERVICE_SRCS_A})
+target_link_libraries(${PRJ_NAME_SERVICE_A} ${LINK_LIBRARIES})
+# Build service B
+add_executable(${PRJ_NAME_SERVICE_B} ${PRJ_SERVICE_SRCS_B})
+target_link_libraries(${PRJ_NAME_SERVICE_B} ${LINK_LIBRARIES})
+# Build service C
+add_executable(${PRJ_NAME_SERVICE_C} ${PRJ_SERVICE_SRCS_C})
+target_link_libraries(${PRJ_NAME_SERVICE_C} ${LINK_LIBRARIES})
+
+# Build SOME/IP library A
+add_library (MergedInterface-A-someip SHARED ${PRJ_SOMEIP_LIB_SRCS_A})
+target_link_libraries(MergedInterface-A-someip CommonAPI-SomeIP)
+# Build SOME/IP library B
+add_library (MergedInterface-B-someip SHARED ${PRJ_SOMEIP_LIB_SRCS_B})
+target_link_libraries(MergedInterface-B-someip CommonAPI-SomeIP)
+# Build SOME/IP library C
+add_library (MergedInterface-C-someip SHARED ${PRJ_SOMEIP_LIB_SRCS_C})
+target_link_libraries(MergedInterface-C-someip CommonAPI-SomeIP)
+

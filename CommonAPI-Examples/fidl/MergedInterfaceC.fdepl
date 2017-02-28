@@ -1,0 +1,66 @@
+/* Copyright (C) 2015 Bayerische Motoren Werke Aktiengesellschaft (BMW AG)
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+import "platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-SOMEIP_deployment_spec.fdepl"
+import "MergedInterfaceC.fidl"
+
+define org.genivi.commonapi.someip.deployment for interface commonapi.examples.C.MergedInterfaceC {
+    SomeIpServiceID = 4662
+    
+    attribute x1 {
+        SomeIpGetterID = 5000
+        SomeIpSetterID = 5001
+        SomeIpNotifierID = 55010        
+        SomeIpEventGroups = { 55010 }
+        
+        SomeIpGetterReliable = true
+        SomeIpSetterReliable = true
+        SomeIpNotifierReliable = true
+    }
+
+    attribute x2 {
+        SomeIpGetterID = 600
+        SomeIpSetterID = 601
+        SomeIpNotifierID = 6610      
+        SomeIpEventGroups = { 6610 }
+        
+        SomeIpGetterReliable = true
+        SomeIpSetterReliable = true
+        SomeIpNotifierReliable = true
+    }
+
+    attribute x3 {
+        SomeIpGetterID = 700
+        SomeIpSetterID = 701
+        SomeIpNotifierID = 7710        
+        SomeIpEventGroups = { 7710 }
+        
+        SomeIpGetterReliable = true
+        SomeIpSetterReliable = true
+        SomeIpNotifierReliable = true
+    }
+
+    attribute x4 {
+        SomeIpGetterID = 800
+        SomeIpSetterID = 801
+        SomeIpNotifierID = 8810        
+        SomeIpEventGroups = { 8810 }
+        
+        SomeIpGetterReliable = true
+        SomeIpSetterReliable = true
+        SomeIpNotifierReliable = true
+    }
+}
+
+
+define org.genivi.commonapi.someip.deployment for provider Service {
+    instance commonapi.examples.C.MergedInterfaceC {
+        InstanceId = "commonapi.examples.C.MergedInterfaceC"      
+        SomeIpInstanceID = 22136
+        SomeIpUnicastAddress = "192.168.0.2"
+        SomeIpReliableUnicastPort = 30499
+        SomeIpUnreliableUnicastPort = 30500
+    }
+}

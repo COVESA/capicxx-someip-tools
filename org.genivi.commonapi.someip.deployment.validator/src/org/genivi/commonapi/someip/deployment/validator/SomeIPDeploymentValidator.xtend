@@ -9,6 +9,7 @@ import org.eclipse.emf.common.util.DiagnosticChain
 import org.eclipse.xtext.validation.FeatureBasedDiagnostic
 import org.franca.core.franca.FInterface
 import org.franca.core.franca.FModel
+import org.franca.deploymodel.dsl.fDeploy.FDArray
 import org.franca.deploymodel.dsl.fDeploy.FDAttribute
 import org.franca.deploymodel.dsl.fDeploy.FDBroadcast
 import org.franca.deploymodel.dsl.fDeploy.FDInteger
@@ -18,9 +19,11 @@ import org.franca.deploymodel.dsl.fDeploy.FDMethod
 import org.franca.deploymodel.dsl.fDeploy.FDModel
 import org.franca.deploymodel.dsl.fDeploy.FDProperty
 import org.franca.deploymodel.dsl.fDeploy.FDProvider
+import org.franca.deploymodel.dsl.fDeploy.FDTypes
 import org.franca.deploymodel.dsl.fDeploy.FDValue
 
 import static org.franca.deploymodel.dsl.fDeploy.FDeployPackage.Literals.*
+import org.franca.deploymodel.dsl.fDeploy.FDElement
 
 class SomeIPDeploymentValidator
 {
@@ -37,6 +40,7 @@ class SomeIPDeploymentValidator
     var missingInterfaceDeployment = new HashSet<FInterface>
     var fdInterfaces = new ArrayList<FDInterface>
     var fdInterfaceInstances = new ArrayList<FDInterfaceInstance>
+    var fdTypeCollections = new ArrayList<FDTypes>
 
     def validate(Collection<FDModel> fdepls, DiagnosticChain diagnostics)
     {
@@ -47,13 +51,20 @@ class SomeIPDeploymentValidator
             var deplFileName = fdepl.eResource.URI.lastSegment
             if (!deplFileName.endsWith(DEPLOYMENT_SPECIFICATION_FILENAME_SUFFIX))
             {
-                for ( fdInterface : fdepl.deployments.filter(typeof(FDInterface))) {
-                    if(fdInterface.spec.name != null && fdInterface.spec.name.contains(SOMEIP_SPECIFICATION_TYPE))
+                for (fdInterface : fdepl.deployments.filter(typeof(FDInterface)))
+                {
+                    if (fdInterface.spec.name != null && fdInterface.spec.name.contains(SOMEIP_SPECIFICATION_TYPE))
                         fdInterfaces.add(fdInterface)
                 }
-                for ( fdProvider : fdepl.deployments.filter(typeof(FDProvider))) {
-                    if(fdProvider.spec.name != null && fdProvider.spec.name.contains(SOMEIP_SPECIFICATION_TYPE))
+                for (fdProvider : fdepl.deployments.filter(typeof(FDProvider)))
+                {
+                    if (fdProvider.spec.name != null && fdProvider.spec.name.contains(SOMEIP_SPECIFICATION_TYPE))
                         fdInterfaceInstances.addAll(fdProvider.instances)
+                }
+                for (fdTypes : fdepl.deployments.filter(typeof(FDTypes)))
+                {
+                    if (fdTypes.spec.name != null && fdTypes.spec.name.contains(SOMEIP_SPECIFICATION_TYPE))
+                        fdTypeCollections.addAll(fdTypes)
                 }
             }
         }
@@ -67,10 +78,124 @@ class SomeIPDeploymentValidator
         for (fdInterface : fdInterfaces)
             validateCompleteInterfaceDeployments(fdInterface)
 
-        validateProviderInstanceDeployments(fdepls)
+        validateProviderInstanceDeployments()
+
+        validateArrayDeployments()
     }
 
-    private def validateProviderInstanceDeployments(Collection<FDModel> fdepls)
+    private def validateArrayDeployments()
+    {
+        val fdArrayDeployments = new ArrayList<FDElement>
+
+        // Type collections
+        for (typeCollection : fdTypeCollections)
+            fdArrayDeployments.addAll(typeCollection.types.filter(typeof(FDArray)))
+
+        for (fdInterface : fdInterfaces)
+        {
+            // Interface local types
+            fdArrayDeployments.addAll(fdInterface.types.filter(typeof(FDArray)))
+
+            // Interface attributes
+            fdArrayDeployments.addAll(fdInterface.attributes.filter[it.target != null && it.target.array])
+
+            // Interface method's input and output arguments
+            fdInterface.methods.forEach[m|
+                if (m.inArguments != null)
+                    fdArrayDeployments.addAll(m.inArguments.arguments.filter[it.target != null && it.target.array])
+                if (m.outArguments != null)
+                    fdArrayDeployments.addAll(m.outArguments.arguments.filter[it.target != null && it.target.array])
+            ]
+
+            // Interface broadcast's output arguments
+            fdInterface.broadcasts.forEach[bc|
+                if (bc.outArguments != null)
+                    fdArrayDeployments.addAll(bc.outArguments.arguments.filter[it.target != null && it.target.array])
+            ]
+        }
+
+        for (fdArrayDeployment : fdArrayDeployments)
+        {
+            validateArrayDeployment(fdArrayDeployment,
+                "SomeIpArrayMinLength",
+                "SomeIpArrayMaxLength",
+                "SomeIpArrayLengthWidth")
+
+            validateArrayDeployment(fdArrayDeployment,
+                "SomeIpAttrArrayMinLength",
+                "SomeIpAttrArrayMaxLength",
+                "SomeIpAttrArrayLengthWidth")
+
+            validateArrayDeployment(fdArrayDeployment,
+                "SomeIpArgArrayMinLength",
+                "SomeIpArgArrayMaxLength",
+                "SomeIpArgArrayLengthWidth")
+
+            validateArrayDeployment(fdArrayDeployment,
+                "SomeIpStructArrayMinLength",
+                "SomeIpStructArrayMaxLength",
+                "SomeIpStructArrayLengthWidth")
+
+            validateArrayDeployment(fdArrayDeployment,
+                "SomeIpUnionArrayMinLength",
+                "SomeIpUnionArrayMaxLength",
+                "SomeIpUnionArrayLengthWidth")
+        }
+    }
+
+    private def validateArrayDeployment(FDElement fdArray, String minLengthName, String maxLengthName, String lengthWidthName)
+    {
+        var propSomeIpArrayMinLength = fdArray.properties.findFirst[it.decl.name == minLengthName]
+        var propSomeIpArrayMaxLength = fdArray.properties.findFirst[it.decl.name == maxLengthName]
+        var propSomeIpArrayLengthWidth = fdArray.properties.findFirst[it.decl.name == lengthWidthName]
+
+        var someIpArrayMinLength = getInteger(propSomeIpArrayMinLength)
+        var someIpArrayMaxLength = getInteger(propSomeIpArrayMaxLength)
+        var someIpArrayLengthWidth = getInteger(propSomeIpArrayLengthWidth)
+
+        if (someIpArrayMinLength != null && someIpArrayMaxLength != null && someIpArrayMinLength == someIpArrayMaxLength && someIpArrayMinLength != 0)
+        {
+            // * If SomeIpArrayLengthWidth == 1, 2 or 4 bytes, SomeIpArrayMinLength and SomeIpArrayMaxLength are ignored.
+            //
+            if (someIpArrayLengthWidth == null)
+            {
+                var diag = new FeatureBasedDiagnostic(Diagnostic.WARNING,
+                    "Array deployment with '" + minLengthName + "' = '" + maxLengthName + "' is missing a '" + lengthWidthName + " = 0' property.",
+                    propSomeIpArrayMinLength, null, -1, null, null)
+                diagnostics.add(diag)
+            }
+            else if (someIpArrayLengthWidth != 0)
+            {
+                var diag = new FeatureBasedDiagnostic(Diagnostic.WARNING,
+                    "Array deployment with '" + minLengthName + "' = '" + maxLengthName + "' does not specify '" + lengthWidthName + " = 0'.",
+                    propSomeIpArrayLengthWidth, null, -1, null, null)
+                diagnostics.add(diag)
+            }
+        }
+        else if (someIpArrayLengthWidth != null && someIpArrayLengthWidth == 0)
+        {
+            // * If SomeIpArrayLengthWidth == 0, the array has SomeIpArrayMaxLength elements.
+            //
+            if (someIpArrayMaxLength == null || someIpArrayMaxLength == 0)
+            {
+                var diag = new FeatureBasedDiagnostic(Diagnostic.WARNING,
+                    "Array deployment specifies a fixed length array type, but is missing a nonzero array length specification '" + maxLengthName + "'.",
+                    propSomeIpArrayLengthWidth, null, -1, null, null)
+                diagnostics.add(diag)
+            }
+            else if (someIpArrayMinLength != null && someIpArrayMaxLength != null && someIpArrayMinLength > someIpArrayMaxLength)
+            {
+                var diag = new FeatureBasedDiagnostic(Diagnostic.WARNING,
+                    "Array deployment contains a minimum array length '" + minLengthName + "' that exceeds the maximum array length '" + maxLengthName + ".",
+                    propSomeIpArrayMinLength, null, -1, null, null)
+                diagnostics.add(diag)
+            }
+        }
+
+
+    }
+
+    private def validateProviderInstanceDeployments()
     {
         fdInterfaceInstances.forEach[interfaceInstance|
             if (fdInterfaces.findFirst[target != null && interfaceInstance.target != null && target.equals(interfaceInstance.target)] == null)
@@ -718,6 +843,11 @@ class SomeIPDeploymentValidator
     }
 
     private def getId(FDProperty prop)
+    {
+        return getInteger(prop)
+    }
+
+    private def getInteger(FDProperty prop)
     {
         if (prop == null || prop.value == null)
             return null

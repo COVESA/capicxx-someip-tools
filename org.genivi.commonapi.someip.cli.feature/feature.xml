@@ -2,7 +2,7 @@
 <feature
       id="org.genivi.commonapi.someip.cli.feature"
       label="CommonAPI Some/IP CLI Generator Feature"
-      version="3.1.10.qualifier"
+      version="3.1.11.qualifier"
       provider-name="BMW AG">
 
    <description url="http://www.example.com/description">

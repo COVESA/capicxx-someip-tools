@@ -67,7 +67,7 @@ class FInterfaceSomeIPStubAdapterGenerator {
         #include <CommonAPI/SomeIP/StubAdapter.hpp>
         #include <CommonAPI/SomeIP/Factory.hpp>
         #include <CommonAPI/SomeIP/Types.hpp>
-        #include <CommonAPI/SomeIP/Config.hpp>
+        #include <CommonAPI/SomeIP/Constants.hpp>
 
         #undef COMMONAPI_INTERNAL_COMPILATION
 
@@ -295,8 +295,12 @@ class FInterfaceSomeIPStubAdapterGenerator {
 
                     if(_receivers == NULL) {
                         std::lock_guard < std::mutex > itsLock(«broadcast.className»Mutex_);
-                        actualReceiverList = «broadcast.stubAdapterClassSubscriberListPropertyName»;
+                        if («broadcast.stubAdapterClassSubscriberListPropertyName» != NULL)
+                            actualReceiverList = std::make_shared<CommonAPI::ClientIdList>(*«broadcast.stubAdapterClassSubscriberListPropertyName»);
                     }
+
+                    if(actualReceiverList == NULL)
+                        return;
 
                     for (auto clientIdIterator = actualReceiverList->cbegin();
                                clientIdIterator != actualReceiverList->cend();

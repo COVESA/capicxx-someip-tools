@@ -28,6 +28,13 @@ define org.genivi.commonapi.someip.deployment for interface commonapi.communicat
         SomeIpGetterID = 3006
     }
 
+    attribute testD {
+        SomeIpGetterID = 3007
+        SomeIpSetterID = 3008
+        SomeIpNotifierID = 33002
+        SomeIpEventGroups = { 33000 }
+    }
+
     method testMethod {
         SomeIpMethodID = 515
         SomeIpReliable = true
