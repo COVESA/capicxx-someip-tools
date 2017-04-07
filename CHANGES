@@ -1,5 +1,10 @@
 Changes
 =======
+v3.1.11.1
+- Support deployment for anonymous arrays
+
+v3.1.11
+- Fixed segfault when unsubscribing inside subscription handler
 
 v3.1.10
 - Upgrade to JDK-1.8.

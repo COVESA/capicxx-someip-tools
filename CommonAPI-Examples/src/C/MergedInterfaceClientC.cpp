@@ -27,7 +27,7 @@ int main() {
     std::shared_ptr < CommonAPI::Runtime > runtime = CommonAPI::Runtime::get();
 
     std::string domain = "local";
-    std::string instance = "commonapi.examples.C.AttributesC";
+    std::string instance = "commonapi.examples.C.MergedInterfaceC";
     std::string connection = "client-sample";
 
     auto myProxy = runtime->buildProxyWithDefaultAttributeExtension<MergedInterfaceCProxy, CommonAPI::Extensions::AttributeCacheExtension>(domain, instance, connection);

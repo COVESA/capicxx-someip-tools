@@ -376,12 +376,18 @@ class FTypeCollectionSomeIPDeploymentGenerator {
     def protected dispatch String generateDeploymentDefinition(FField _field, FTypeCollection _tc, PropertyAccessor _accessor) {
        if (_accessor.hasSpecificDeployment(_field) ||
            (_field.array && _accessor.hasDeployment(_field))) {
-            var String definition = _field.getDeploymentType(_tc, true) + " " + _field.getRelativeName() + "Deployment("
-            if (_field.array) {
-                definition += getArrayElementTypeDeploymentParameter(_field.type, _field, _accessor) + ", "
+            var String definition = "";
+            if (_field.array && _accessor.hasNonArrayDeployment(_field)) {
+                definition += _field.type.getDeploymentType(_tc, false) + " " + _field.getRelativeName() + "ElementDeployment("
+                definition += getDeploymentParameter(_field.type, _field, _accessor)
+                definition += ");\n";
+            }             
+            definition += _field.getDeploymentType(_tc, true) + " " + _field.getRelativeName() + "Deployment("
+            if (_field.array && _accessor.hasNonArrayDeployment(_field)) {
+                definition += "&" + _field.getRelativeName() + "ElementDeployment, "
                 definition += getArrayDeploymentParameter(_field.type, _field, _accessor)
             } else {
-                definition += getDeploymentParameter(_field.type, _field, _accessor)
+                definition += getDeploymentParameter(_field, _field, _accessor)
             }
             definition += ");\n"
             return definition

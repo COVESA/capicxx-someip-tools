@@ -1,5 +1,4 @@
-// Copyright (C) 2014, 2015 BMW Group
-// Author: Lutz Bichler (lutz.bichler@bmw.de)
+// Copyright (C) 2014-2017 BMW Group
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -380,7 +379,7 @@ class FrancaSomeIPDeploymentAccessorHelper {
         }
 
         if (_obj instanceof FField) {
-            var Integer lengthWidth = _accessor.getSomeIpStructLengthWidth(_obj)
+            var Integer lengthWidth = _accessor.getSomeIpStructStructLengthWidth(_obj)
             if (lengthWidth == null)
                 lengthWidth = _accessor.getSomeIpUnionStructLengthWidth(_obj)
             return lengthWidth
@@ -1241,4 +1240,98 @@ class FrancaSomeIPDeploymentAccessorHelper {
         }
         return false
     }
+    
+    def boolean hasNonArrayDeployment(PropertyAccessor _accessor,
+                                      FTypedElement _attribute) {
+        if (_attribute.type.derived != null 
+            && _attribute.type.derived instanceof FMapType) {
+            if (hasSomeIpMapMinLength(_accessor, _attribute)) {
+                return true
+            }
+            if (hasSomeIpMapMaxLength (_accessor, _attribute)) {
+                return true
+            }
+            if (hasSomeIpMapLengthWidth (_accessor, _attribute)) {
+                return true
+            }
+        }
+        
+        if (_attribute.type.predefined != null
+            && _attribute.type.predefined == FBasicTypeId.BYTE_BUFFER) {
+            if (hasSomeIpByteBufferMinLength(_accessor, _attribute)) {
+                return true
+            }
+            if (hasSomeIpByteBufferMaxLength(_accessor, _attribute)) {
+                return true
+            }
+        }
+                
+        if (_attribute.type.predefined != null
+            && _attribute.type.predefined == FBasicTypeId.STRING) {
+            if (hasSomeIpStringLength (_accessor, _attribute)) {
+                return true
+            }
+            if (hasSomeIpStringLengthWidth (_accessor, _attribute)) {
+                return true
+            }
+            if (hasSomeIpStringEncoding (_accessor, _attribute)) {
+                return true
+            }
+        }
+                
+        if (_attribute.type.derived != null
+            && _attribute.type.derived instanceof FStructType) {
+            if (hasSomeIpStructLengthWidth (_accessor, _attribute)) {
+                return true
+            }
+        }
+        
+        if (_attribute.type.derived != null
+            && _attribute.type.derived instanceof FUnionType) {
+            if (hasSomeIpUnionLengthWidth (_accessor, _attribute)) {
+                return true
+            }
+            if (hasSomeIpUnionTypeWidth (_accessor, _attribute)) {
+                return true
+            }
+            if (hasSomeIpUnionDefaultOrder (_accessor, _attribute)) {
+                return true
+            }
+            if (hasSomeIpUnionMaxLength (_accessor, _attribute)) {
+                return true
+            }
+        }
+                
+        if (_attribute.type.derived != null
+            && _attribute.type.derived instanceof FEnumerationType) {
+            if (hasSomeIpEnumWidth(_accessor, _attribute)) {
+                return true
+            }
+            if (hasSomeIpEnumBitWidth(_accessor, _attribute)) {
+                return true
+            }
+            if (hasSomeIpEnumInvalidValue (_accessor, _attribute)) {
+                return true
+            }
+        }
+        
+        if (_attribute.type.predefined != null
+            && (_attribute.type.predefined == FBasicTypeId.INT8 
+                || _attribute.type.predefined == FBasicTypeId.INT16
+                || _attribute.type.predefined == FBasicTypeId.INT32
+                || _attribute.type.predefined == FBasicTypeId.INT64
+                || _attribute.type.predefined == FBasicTypeId.UINT8
+                || _attribute.type.predefined == FBasicTypeId.UINT16
+                || _attribute.type.predefined == FBasicTypeId.UINT32
+                || _attribute.type.predefined == FBasicTypeId.UINT64)) {
+            if (hasSomeIpIntegerBitWidth (_accessor, _attribute)) {
+                return true
+            }
+            if (hasSomeIpIntegerInvalidValue (_accessor, _attribute)) {
+                return true
+            }
+        }
+            
+        return false
+    }    
 }

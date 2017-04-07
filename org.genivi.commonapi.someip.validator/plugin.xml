@@ -14,7 +14,7 @@
                 <page
                       class="org.genivi.commonapi.someip.validator.preference.ValidatorSomeIPPreferencesPage"
                       id="org.genivi.commonapi.someip.validator.preference"
-                      name="Validator Some/IP">
+                      name="CommonAPI-Some/IP Validator">
                 </page>
              </extension>
 </plugin>

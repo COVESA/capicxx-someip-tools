@@ -35,6 +35,7 @@ SET(COMMONAPI_CMAKE_INSTALL_PATH "na" CACHE STRING "CommonAPI install path of th
 SET(COMMONAPI_SOMEIP_CMAKE_INSTALL_PATH "na" CACHE STRING "CommonAPI-SomeIP install path of the cmake files")
 SET(COMMONAPI_SOMEIP_TOOL_GENERATOR "na" CACHE STRING "CommonAPI-SomeIP-Tools generator install path")
 SET(COMMONAPI_TEST_FIDL_PATH "na" CACHE STRING "Path to directory with test fidl/fdepl files for code generation")
+SET(COMMONAPI_SRC_GEN_DEST "src-gen" CACHE STRING "Path to the destination directory of the generated sources")
 
 if("${COMMONAPI_TOOL_GENERATOR}" STREQUAL "")
     message(FATAL_ERROR "The file path for the commonapi_generator needs to be specified! Use '-DCOMMONAPI_TOOL_GENERATOR' to do so.")
@@ -51,6 +52,8 @@ else()
 endif()
 
 message("Build type: ${CMAKE_BUILD_TYPE}")
+
+message("The path to the destination directory of the generated sources is set to: ${COMMONAPI_SRC_GEN_DEST}")
 
 ##############################################################################
 # add COMMONAPI install path to cmake find root path
@@ -86,7 +89,7 @@ message("COMMONAPI_SOMEIP_INCLUDE_DIRS: ${COMMONAPI_SOMEIP_INCLUDE_DIRS}")
 file(GLOB FIDL_FILES "${COMMONAPI_TEST_FIDL_PATH}/*.fidl")
 message("FIDL_FILES: ${FIDL_FILES}")
 execute_process(
-    COMMAND ${COMMONAPI_TOOL_GENERATOR} --dest src-gen --skel ${FIDL_FILES}
+    COMMAND ${COMMONAPI_TOOL_GENERATOR} --dest ${COMMONAPI_SRC_GEN_DEST} --skel ${FIDL_FILES}
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
@@ -144,7 +147,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/fidl/conf/ti_threading.fdepl.in
 file(GLOB FDEPL_FILES "fidl/*.fdepl")
 message("FDEPL_FILES: ${FDEPL_FILES}")
 execute_process(
-    COMMAND ${COMMONAPI_SOMEIP_TOOL_GENERATOR} --dest src-gen ${FDEPL_FILES}
+    COMMAND ${COMMONAPI_SOMEIP_TOOL_GENERATOR} --dest ${COMMONAPI_SRC_GEN_DEST} ${FDEPL_FILES}
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
@@ -174,34 +177,34 @@ message("Compiler options: ${CMAKE_CXX_FLAGS}")
 
 include_directories(
     src
-    src-gen
+    ${COMMONAPI_SRC_GEN_DEST}
     ${COMMONAPI_INCLUDE_DIRS}
     ${VSOMEIP_INCLUDE_DIRS}
     ${COMMONAPI_SOMEIP_INCLUDE_DIRS}
 )
 
 if (MSVC)
-set (DERIVED_TYPE_SRC "src-gen/v1/commonapi/datatypes/derived/TestInterface.cpp")
-set (POLYMORPHIC_TYPE_SRC "src-gen/v1/commonapi/advanced/polymorph/TestInterface.cpp")
+set (DERIVED_TYPE_SRC "${COMMONAPI_SRC_GEN_DEST}/v1/commonapi/datatypes/derived/TestInterface.cpp")
+set (POLYMORPHIC_TYPE_SRC "${COMMONAPI_SRC_GEN_DEST}/v1/commonapi/advanced/polymorph/TestInterface.cpp")
 endif ()
 
 # source files
 file(GLOB GLUE_SRCS
-    "src-gen/v1/commonapi/communication/*SomeIP*.cpp"
-    "src-gen/v1/commonapi/advanced/bselective/*SomeIP*.cpp"
-    "src-gen/v1/commonapi/advanced/managed/*SomeIP*.cpp"
-    "src-gen/v1/commonapi/advanced/extended/*SomeIP*.cpp"
-    "src-gen/v1/commonapi/advanced/polymorph/*SomeIP*.cpp"
-    "src-gen/v1/commonapi/datatypes/primitive/*SomeIP*.cpp"
-    "src-gen/v1/commonapi/datatypes/advanced/*SomeIP*.cpp"
-    "src-gen/v1/commonapi/datatypes/combined/*SomeIP*.cpp"
-    "src-gen/v1/commonapi/datatypes/deployment/*SomeIP*.cpp"
-    "src-gen/v1/commonapi/datatypes/derived/*SomeIP*.cpp"
-    "src-gen/v1/commonapi/performance/primitive/*SomeIP*.cpp"
-    "src-gen/v1/commonapi/performance/complex/*SomeIP*.cpp"
-    "src-gen/v1/commonapi/runtime/*SomeIP*.cpp"
-    "src-gen/v1/commonapi/threading/*SomeIP*.cpp"
-    "src-gen/v1/commonapi/stability/sp/*SomeIP*.cpp"
+    "${COMMONAPI_SRC_GEN_DEST}/v1/commonapi/communication/*SomeIP*.cpp"
+    "${COMMONAPI_SRC_GEN_DEST}/v1/commonapi/advanced/bselective/*SomeIP*.cpp"
+    "${COMMONAPI_SRC_GEN_DEST}/v1/commonapi/advanced/managed/*SomeIP*.cpp"
+    "${COMMONAPI_SRC_GEN_DEST}/v1/commonapi/advanced/extended/*SomeIP*.cpp"
+    "${COMMONAPI_SRC_GEN_DEST}/v1/commonapi/advanced/polymorph/*SomeIP*.cpp"
+    "${COMMONAPI_SRC_GEN_DEST}/v1/commonapi/datatypes/primitive/*SomeIP*.cpp"
+    "${COMMONAPI_SRC_GEN_DEST}/v1/commonapi/datatypes/advanced/*SomeIP*.cpp"
+    "${COMMONAPI_SRC_GEN_DEST}/v1/commonapi/datatypes/combined/*SomeIP*.cpp"
+    "${COMMONAPI_SRC_GEN_DEST}/v1/commonapi/datatypes/deployment/*SomeIP*.cpp"
+    "${COMMONAPI_SRC_GEN_DEST}/v1/commonapi/datatypes/derived/*SomeIP*.cpp"
+    "${COMMONAPI_SRC_GEN_DEST}/v1/commonapi/performance/primitive/*SomeIP*.cpp"
+    "${COMMONAPI_SRC_GEN_DEST}/v1/commonapi/performance/complex/*SomeIP*.cpp"
+    "${COMMONAPI_SRC_GEN_DEST}/v1/commonapi/runtime/*SomeIP*.cpp"
+    "${COMMONAPI_SRC_GEN_DEST}/v1/commonapi/threading/*SomeIP*.cpp"
+    "${COMMONAPI_SRC_GEN_DEST}/v1/commonapi/stability/sp/*SomeIP*.cpp"
     ${DERIVED_TYPE_SRC}
     ${POLYMORPHIC_TYPE_SRC}
 )

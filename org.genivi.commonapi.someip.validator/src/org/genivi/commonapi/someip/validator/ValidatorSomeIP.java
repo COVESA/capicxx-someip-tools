@@ -20,7 +20,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -141,10 +140,9 @@ public class ValidatorSomeIP implements IFrancaExternalValidator
                 }
 
 
-                HashMap<FInterface, EList<FInterface>> managedInterfaces = new HashMap<FInterface, EList<FInterface>>();
+                cwd = filePath.removeLastSegments(1).toString();
                 for (FInterface fInterface : model.getInterfaces())
                 {
-                    managedInterfaces.put(fInterface, fInterface.getManagedInterfaces());
                     validateImportedTypeCollections(model, messageAcceptor, filePath.lastSegment(), cwd, fInterface);
                 }
             }
@@ -169,6 +167,7 @@ public class ValidatorSomeIP implements IFrancaExternalValidator
         }
     }
 
+    // put all imports (with absolute path) of this model to a map
     private void initImportList(FModel model, String cwd, String filePath)
     {
         HashSet<String> importedFiles = new HashSet<String>();
@@ -276,32 +275,33 @@ public class ValidatorSomeIP implements IFrancaExternalValidator
     private void validateTypeCollectionName(FModel model, ValidationMessageAcceptor messageAcceptor, IPath filePath,
             FTypeCollection fTypeCollection)
     {
-        if (fTypeCollection.getName() == null)
-            return;
-
-        if (fTypeCollection.getName().contains("."))
+        String typeCollectionName = fTypeCollection.getName();
+        if (typeCollectionName != null)
         {
-            acceptError("Name may not contain '.'", fTypeCollection, FrancaPackage.Literals.FMODEL_ELEMENT__NAME, -1, messageAcceptor);
-        }
-
-        // since Franca 0.8.10 is released, this check is unnecessary
-        if (!isFrancaVersionGreaterThan(0, 8, 9))
-        {
-            if (fastAllInfo.get(fTypeCollection.getName()).get(model.getName()).size() > 1)
+            if (typeCollectionName.contains("."))
             {
-                for (String s : fastAllInfo.get(fTypeCollection.getName()).get(model.getName()))
+                acceptError("Name may not contain '.'", fTypeCollection, FrancaPackage.Literals.FMODEL_ELEMENT__NAME, -1, messageAcceptor);
+            }
+
+            // since Franca 0.8.10 is released, this check is unnecessary
+            if (!isFrancaVersionGreaterThan(0, 8, 9))
+            {
+                if (fastAllInfo.get(typeCollectionName).get(model.getName()).size() > 1)
                 {
-                    if (!s.equals(filePath.toString()))
+                    for (String s : fastAllInfo.get(typeCollectionName).get(model.getName()))
                     {
-                        if (importList.containsKey(s))
+                        if (!s.equals(filePath.toString()))
                         {
-                            acceptError("Imported file " + s + " has interface or typeCollection with the same name and same package!",
-                                    fTypeCollection, FrancaPackage.Literals.FMODEL_ELEMENT__NAME, -1, messageAcceptor);
-                        }
-                        else
-                        {
-                            acceptWarning("Interface or typeCollection in file " + s + " has the same name and same package!",
-                                    fTypeCollection, FrancaPackage.Literals.FMODEL_ELEMENT__NAME, -1, messageAcceptor);
+                            if (importList.containsKey(s))
+                            {
+                                acceptError("Imported file " + s + " has interface or typeCollection with the same name and same package!",
+                                        fTypeCollection, FrancaPackage.Literals.FMODEL_ELEMENT__NAME, -1, messageAcceptor);
+                            }
+                            else
+                            {
+                                acceptWarning("Interface or typeCollection in file " + s + " has the same name and same package!",
+                                        fTypeCollection, FrancaPackage.Literals.FMODEL_ELEMENT__NAME, -1, messageAcceptor);
+                            }
                         }
                     }
                 }
@@ -347,19 +347,23 @@ public class ValidatorSomeIP implements IFrancaExternalValidator
                 {
                     if (entryValue.packageName.startsWith(model.getName() + "." + fTypeCollection.getName()))
                     {
-                        if (importList.get(cwd + "/" + fileName).contains(entry.getKey()))
+                        HashSet<String> importPaths = importList.get(cwd + "/" + fileName);
+                        if (importPaths != null)
                         {
-                            acceptError(
-                                    "Imported file's package " + entryValue.packageName + " may not start with package "
-                                            + model.getName() + " + " + type + fTypeCollection.getName(), fTypeCollection,
-                                    FrancaPackage.Literals.FMODEL_ELEMENT__NAME, -1, messageAcceptor);
-                        }
-                        else
-                        {
-                            acceptWarning(
-                                    entry.getKey() + ". File's package " + entryValue.packageName + " starts with package "
-                                            + model.getName() + " + " + type + fTypeCollection.getName(), fTypeCollection, null, -1,
-                                    messageAcceptor);
+                            if (importPaths.contains(entry.getKey()))
+                            {
+                                acceptError(
+                                        "Imported file's package " + entryValue.packageName + " may not start with package "
+                                                + model.getName() + " + " + type + " " + fTypeCollection.getName(), fTypeCollection,
+                                        FrancaPackage.Literals.FMODEL_ELEMENT__NAME, -1, messageAcceptor);
+                            }
+                            else
+                            {
+                                acceptWarning(
+                                        "File's package " + entryValue.packageName + " starts with package "
+                                                + model.getName() + " + " + type + " " + fTypeCollection.getName(), fTypeCollection, null, -1,
+                                        messageAcceptor);
+                            }
                         }
                     }
                 }

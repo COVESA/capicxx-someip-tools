@@ -29,9 +29,9 @@ public class ValidatorSomeIPPreferencesPage extends FieldEditorPreferencePage im
     @Override
     public void createFieldEditors()
     {
-        addField(new BooleanFieldEditor(PreferenceConstantsSomeIP.P_ENABLE_SOMEIP_VALIDATOR, "validator enabled", getFieldEditorParent()));
+        addField(new BooleanFieldEditor(PreferenceConstantsSomeIP.P_ENABLE_SOMEIP_VALIDATOR, "Enable CommonAPI-Some/IP specific validation of Franca IDL files", getFieldEditorParent()));
         addField(new BooleanFieldEditor(ENABLED_WORKSPACE_CHECK,
-                "enable the whole workspace check (Note: Validations takes up to two minutes if enabled)", getFieldEditorParent()));
+                "Enable whole workspace check", getFieldEditorParent()));
     }
 
     @Override
@@ -39,7 +39,6 @@ public class ValidatorSomeIPPreferencesPage extends FieldEditorPreferencePage im
     {
         IPreferenceStore prefStore = CommonApiSomeIPUiPlugin.getValidatorPreferences();
         setPreferenceStore(prefStore);
-        setDescription("Disable or enable the Some/IP validator!");
     }
 
 }

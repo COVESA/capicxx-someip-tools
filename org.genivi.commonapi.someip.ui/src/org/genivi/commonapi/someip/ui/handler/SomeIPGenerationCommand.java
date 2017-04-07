@@ -20,7 +20,6 @@ import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.xtext.builder.EclipseResourceFileSystemAccess2;
 import org.franca.deploymodel.dsl.fDeploy.FDModel;
-import org.genivi.commonapi.core.preferences.PreferenceConstants;
 import org.genivi.commonapi.core.ui.handler.GenerationCommand;
 import org.genivi.commonapi.someip.deployment.validator.SomeIPDeploymentValidator;
 import org.genivi.commonapi.someip.preferences.FPreferencesSomeIP;
@@ -53,8 +52,8 @@ public class SomeIPGenerationCommand extends GenerationCommand {
 	@Override
 	protected void setupOutputDirectories(EclipseResourceFileSystemAccess2 fileSystemAccess) {
 		fileSystemAccess.setOutputConfigurations(FPreferencesSomeIP.getInstance().getOutputpathConfiguration());
-	}		
-	
+	}
+
 	/**
 	 * Set the properties for the code generation from the resource properties (set with the property page, via the context menu).
 	 * Take default values from the eclipse preference page.
@@ -112,7 +111,7 @@ public class SomeIPGenerationCommand extends GenerationCommand {
 			licenseHeader = store.getString(PreferenceConstantsSomeIP.P_LICENSE_SOMEIP);
 		}
 		if(generateCommon == null) {
-			generateCommon = store.getString(PreferenceConstantsSomeIP.P_GENERATE_COMMON_SOMEIP);	
+			generateCommon = store.getString(PreferenceConstantsSomeIP.P_GENERATE_COMMON_SOMEIP);
 		}
 		if(generateProxy == null) {
 			generateProxy = store.getString(PreferenceConstantsSomeIP.P_GENERATEPROXY_SOMEIP);
