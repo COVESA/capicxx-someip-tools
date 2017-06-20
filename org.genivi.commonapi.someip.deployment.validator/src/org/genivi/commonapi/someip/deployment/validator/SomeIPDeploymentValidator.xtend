@@ -6,12 +6,24 @@ import java.util.HashMap
 import java.util.HashSet
 import org.eclipse.emf.common.util.Diagnostic
 import org.eclipse.emf.common.util.DiagnosticChain
+import org.eclipse.emf.common.util.URI
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.resource.Resource
+import org.eclipse.emf.ecore.resource.ResourceSet
 import org.eclipse.xtext.validation.FeatureBasedDiagnostic
+import org.franca.core.franca.FArrayType
 import org.franca.core.franca.FInterface
 import org.franca.core.franca.FModel
+import org.franca.core.franca.FType
+import org.franca.core.franca.FTypeDef
+import org.franca.core.franca.FTypeRef
+import org.franca.core.franca.FTypedElement
+import org.franca.deploymodel.dsl.fDeploy.FDArgument
 import org.franca.deploymodel.dsl.fDeploy.FDArray
 import org.franca.deploymodel.dsl.fDeploy.FDAttribute
 import org.franca.deploymodel.dsl.fDeploy.FDBroadcast
+import org.franca.deploymodel.dsl.fDeploy.FDCompound
+import org.franca.deploymodel.dsl.fDeploy.FDElement
 import org.franca.deploymodel.dsl.fDeploy.FDInteger
 import org.franca.deploymodel.dsl.fDeploy.FDInterface
 import org.franca.deploymodel.dsl.fDeploy.FDInterfaceInstance
@@ -19,16 +31,20 @@ import org.franca.deploymodel.dsl.fDeploy.FDMethod
 import org.franca.deploymodel.dsl.fDeploy.FDModel
 import org.franca.deploymodel.dsl.fDeploy.FDProperty
 import org.franca.deploymodel.dsl.fDeploy.FDProvider
+import org.franca.deploymodel.dsl.fDeploy.FDStruct
+import org.franca.deploymodel.dsl.fDeploy.FDTypeDef
 import org.franca.deploymodel.dsl.fDeploy.FDTypes
+import org.franca.deploymodel.dsl.fDeploy.FDUnion
 import org.franca.deploymodel.dsl.fDeploy.FDValue
 
 import static org.franca.deploymodel.dsl.fDeploy.FDeployPackage.Literals.*
-import org.franca.deploymodel.dsl.fDeploy.FDElement
 
 class SomeIPDeploymentValidator
 {
-    private static String DEPLOYMENT_SPECIFICATION_FILENAME_SUFFIX = "_deployment_spec.fdepl"
-    private static String SOMEIP_SPECIFICATION_TYPE = "someip.deployment"
+    private static String FIDL_FILE_EXTENSION_SUFFIX                = ".fidl";
+    private static String FDEPL_FILE_EXTENSION_SUFFIX               = ".fdepl";
+    private static String DEPLOYMENT_SPECIFICATION_FILENAME_SUFFIX  = "_deployment_spec.fdepl"
+    private static String SOMEIP_SPECIFICATION_TYPE                 = "someip.deployment"
 
     var DiagnosticChain diagnostics
     var allMethodIds = new HashMap<FDInterface, HashMap<Integer, ArrayList<FDProperty>>>
@@ -41,6 +57,7 @@ class SomeIPDeploymentValidator
     var fdInterfaces = new ArrayList<FDInterface>
     var fdInterfaceInstances = new ArrayList<FDInterfaceInstance>
     var fdTypeCollections = new ArrayList<FDTypes>
+    var allFDepls = new ArrayList<FDModel> // all FDModels but without "_deployment_spec.fdepl" files
 
     def validate(Collection<FDModel> fdepls, DiagnosticChain diagnostics)
     {
@@ -51,6 +68,7 @@ class SomeIPDeploymentValidator
             var deplFileName = fdepl.eResource.URI.lastSegment
             if (!deplFileName.endsWith(DEPLOYMENT_SPECIFICATION_FILENAME_SUFFIX))
             {
+                allFDepls.add(fdepl)
                 for (fdInterface : fdepl.deployments.filter(typeof(FDInterface)))
                 {
                     if (fdInterface.spec.name != null && fdInterface.spec.name.contains(SOMEIP_SPECIFICATION_TYPE))
@@ -81,66 +99,320 @@ class SomeIPDeploymentValidator
         validateProviderInstanceDeployments()
 
         validateArrayDeployments()
+        validateDeploymentProperties()
+
+        validateImports(allFDepls)
     }
 
     private def validateArrayDeployments()
     {
-        val fdArrayDeployments = new ArrayList<FDElement>
+        val fdArrays = new ArrayList<FDElement>
 
         // Type collections
         for (typeCollection : fdTypeCollections)
-            fdArrayDeployments.addAll(typeCollection.types.filter(typeof(FDArray)))
+            fdArrays.addAll(typeCollection.types.filter(typeof(FDArray)))
 
+        // Interface local types
+        for (fdInterface : fdInterfaces)
+            fdArrays.addAll(fdInterface.types.filter(typeof(FDArray)))
+
+        fdArrays.forEach[fd|
+            validateArrayDeployment(fd,
+                "SomeIpArrayMinLength",
+                "SomeIpArrayMaxLength",
+                "SomeIpArrayLengthWidth")
+        ]
+
+        // Interface attributes
         for (fdInterface : fdInterfaces)
         {
-            // Interface local types
-            fdArrayDeployments.addAll(fdInterface.types.filter(typeof(FDArray)))
+            fdInterface.attributes.filter[isArray(it.target)].forEach[fd|
+                validateArrayDeployment(fd,
+                    "SomeIpAttrArrayMinLength",
+                    "SomeIpAttrArrayMaxLength",
+                    "SomeIpAttrArrayLengthWidth")
+            ]
+        }
 
-            // Interface attributes
-            fdArrayDeployments.addAll(fdInterface.attributes.filter[it.target != null && it.target.array])
-
+        // Interface Function Arguments
+        val fdArguments = new ArrayList<FDArgument>
+        for (fdInterface : fdInterfaces)
+        {
             // Interface method's input and output arguments
             fdInterface.methods.forEach[m|
                 if (m.inArguments != null)
-                    fdArrayDeployments.addAll(m.inArguments.arguments.filter[it.target != null && it.target.array])
+                    fdArguments.addAll(m.inArguments.arguments.filter[isArray(it.target)])
                 if (m.outArguments != null)
-                    fdArrayDeployments.addAll(m.outArguments.arguments.filter[it.target != null && it.target.array])
+                    fdArguments.addAll(m.outArguments.arguments.filter[isArray(it.target)])
             ]
 
             // Interface broadcast's output arguments
             fdInterface.broadcasts.forEach[bc|
                 if (bc.outArguments != null)
-                    fdArrayDeployments.addAll(bc.outArguments.arguments.filter[it.target != null && it.target.array])
+                    fdArguments.addAll(bc.outArguments.arguments.filter[isArray(it.target)])
             ]
         }
 
-        for (fdArrayDeployment : fdArrayDeployments)
-        {
-            validateArrayDeployment(fdArrayDeployment,
-                "SomeIpArrayMinLength",
-                "SomeIpArrayMaxLength",
-                "SomeIpArrayLengthWidth")
-
-            validateArrayDeployment(fdArrayDeployment,
-                "SomeIpAttrArrayMinLength",
-                "SomeIpAttrArrayMaxLength",
-                "SomeIpAttrArrayLengthWidth")
-
-            validateArrayDeployment(fdArrayDeployment,
+        fdArguments.forEach[fd|
+            validateArrayDeployment(fd,
                 "SomeIpArgArrayMinLength",
                 "SomeIpArgArrayMaxLength",
                 "SomeIpArgArrayLengthWidth")
+        ]
 
-            validateArrayDeployment(fdArrayDeployment,
-                "SomeIpStructArrayMinLength",
-                "SomeIpStructArrayMaxLength",
-                "SomeIpStructArrayLengthWidth")
+        validateCompoundMemberArrayDeployments
+    }
 
-            validateArrayDeployment(fdArrayDeployment,
-                "SomeIpUnionArrayMinLength",
-                "SomeIpUnionArrayMaxLength",
-                "SomeIpUnionArrayLengthWidth")
+    private def validateCompoundMemberArrayDeployments()
+    {
+        val fdCompounds = new ArrayList<FDElement>
+
+        // Type collections
+        for (typeCollection : fdTypeCollections)
+            fdCompounds.addAll(typeCollection.types.filter(typeof(FDCompound)))
+
+        // Interface local types
+        for (fdInterface : fdInterfaces)
+            fdCompounds.addAll(fdInterface.types.filter(typeof(FDCompound)))
+
+        for (fdCompound : fdCompounds)
+        {
+            if (fdCompound instanceof FDStruct)
+            {
+                fdCompound.fields.forEach[
+                    if (isArray(it.target))
+                    {
+                        validateArrayDeployment(it,
+                            "SomeIpStructArrayMinLength",
+                            "SomeIpStructArrayMaxLength",
+                            "SomeIpStructArrayLengthWidth")
+                    }
+                ]
+            }
+            else if (fdCompound instanceof FDUnion)
+            {
+                fdCompound.fields.forEach[
+                    if (isArray(it.target))
+                    {
+                        validateArrayDeployment(it,
+                            "SomeIpUnionArrayMinLength",
+                            "SomeIpUnionArrayMaxLength",
+                            "SomeIpUnionArrayLengthWidth")
+                    }
+                ]
+            }
         }
+    }
+
+    private def validateDeploymentProperties()
+    {
+        val fdTypeDeployments = new ArrayList<FDTypeDef>
+
+        // Type collections
+        for (typeCollection : fdTypeCollections)
+            fdTypeDeployments.addAll(typeCollection.types)
+
+        // Interface local types
+        for (fdInterface : fdInterfaces)
+            fdTypeDeployments.addAll(fdInterface.types)
+
+        for (fdType : fdTypeDeployments)
+        {
+            if (fdType instanceof FDStruct)
+            {
+                fdType.fields.forEach[field|
+                    if (!isArray(field.target))
+                    {
+                        field.properties.forEach[prop|
+                            val propName = prop.decl.name
+                            if (propName != null && propName.startsWith("SomeIpStructArray"))
+                            {
+                                var diag = new FeatureBasedDiagnostic(Diagnostic.WARNING,
+                                    "Array deployment used for none array type '" + field.target.name + "'",
+                                    prop, null, -1, null, null)
+                                diagnostics.add(diag)
+                            }
+                        ]
+                    }
+                    else
+                    {
+                        field.properties.forEach[prop|
+                            val propName = prop.decl.name
+                            if (propName != null && propName.startsWith("SomeIpArray"))
+                            {
+                                var diag = new FeatureBasedDiagnostic(Diagnostic.WARNING,
+                                    "Improper array deployment used for 'struct' field '" + field.target.name + "'. Use 'SomeIpStructArray' deployment properties instead.",
+                                    prop, null, -1, null, null)
+                                diagnostics.add(diag)
+                            }
+                        ]
+                    }
+                ]
+            }
+            else if (fdType instanceof FDUnion)
+            {
+                fdType.fields.forEach[field|
+                    if (!isArray(field.target))
+                    {
+                        field.properties.forEach[prop|
+                            val propName = prop.decl.name
+                            if (propName != null && propName.startsWith("SomeIpUnionArray"))
+                            {
+                                var diag = new FeatureBasedDiagnostic(Diagnostic.WARNING,
+                                    "Array deployment used for none array type '" + field.target.name + "'",
+                                    prop, null, -1, null, null)
+                                diagnostics.add(diag)
+                            }
+                        ]
+                    }
+                    else
+                    {
+                        field.properties.forEach[prop|
+                            val propName = prop.decl.name
+                            if (propName != null && propName.startsWith("SomeIpArray"))
+                            {
+                                var diag = new FeatureBasedDiagnostic(Diagnostic.WARNING,
+                                    "Improper array deployment used for 'union' field '" + field.target.name + "'. Use 'SomeIpUnionArray' deployment properties instead.",
+                                    prop, null, -1, null, null)
+                                diagnostics.add(diag)
+                            }
+                        ]
+                    }
+                ]
+            }
+            else
+            {
+                if (!(fdType instanceof FDArray))
+                {
+                    fdType.properties.forEach[prop|
+                        // This warning actually will never trigger, because the general Franca/FDepl validation
+                        // already disallows to specify 'SomeIpArray' deployment properties for none array types.
+                        // However, for safety reasons this warning is though checked here as well, in case
+                        // this code is invoked without a prior general validation.
+                        //
+                        val propName = prop.decl.name
+                        if (propName != null && propName.startsWith("SomeIpArray"))
+                        {
+                            var diag = new FeatureBasedDiagnostic(Diagnostic.WARNING,
+                                "Array deployment used for none array type.",
+                                prop, null, -1, null, null)
+                            diagnostics.add(diag)
+                        }
+                    ]
+                }
+            }
+        }
+
+        // Interface attributes
+        for (fdInterface : fdInterfaces)
+        {
+            fdInterface.attributes.forEach[fdAttr|
+                if (!isArray(fdAttr.target))
+                {
+                    fdAttr.properties.forEach[prop|
+                        val propName = prop.decl.name
+                        if (propName != null && propName.startsWith("SomeIpAttrArray"))
+                        {
+                            var diag = new FeatureBasedDiagnostic(Diagnostic.WARNING,
+                                "Array deployment used for none array type '" + fdAttr.target.name + "'",
+                                prop, null, -1, null, null)
+                            diagnostics.add(diag)
+                        }
+                    ]
+                }
+                else
+                {
+                    fdAttr.properties.forEach[prop|
+                        val propName = prop.decl.name
+                        if (propName != null && propName.startsWith("SomeIpArray"))
+                        {
+                            var diag = new FeatureBasedDiagnostic(Diagnostic.WARNING,
+                                "Improper array deployment used for attribute '" + fdAttr.target.name + "'. Use 'SomeIpAttrArray' deployment properties instead.",
+                                prop, null, -1, null, null)
+                            diagnostics.add(diag)
+                        }
+                    ]
+                }
+            ]
+        }
+
+
+        // Arguments
+        val fdArguments = new ArrayList<FDArgument>
+        for (fdInterface : fdInterfaces)
+        {
+            // Interface method's input and output arguments
+            fdInterface.methods.forEach[m|
+                if (m.inArguments != null)
+                    fdArguments.addAll(m.inArguments.arguments.filter[it.target != null])
+                if (m.outArguments != null)
+                    fdArguments.addAll(m.outArguments.arguments.filter[it.target != null])
+            ]
+
+            // Interface broadcast's output arguments
+            fdInterface.broadcasts.forEach[bc|
+                if (bc.outArguments != null)
+                    fdArguments.addAll(bc.outArguments.arguments.filter[it.target != null])
+            ]
+        }
+
+        fdArguments.forEach[fdArg|
+            fdArg.properties.forEach[prop|
+                if (!isArray(fdArg.target))
+                {
+                    val propName = prop.decl.name
+                    if (propName != null && propName.startsWith("SomeIpArgArray"))
+                    {
+                        var diag = new FeatureBasedDiagnostic(Diagnostic.WARNING,
+                            "Array deployment used for none array type '" + fdArg.target.name + "'",
+                            prop, null, -1, null, null)
+                        diagnostics.add(diag)
+                    }
+                }
+                else
+                {
+                    val propName = prop.decl.name
+                    if (propName != null && propName.startsWith("SomeIpArray"))
+                    {
+                        var diag = new FeatureBasedDiagnostic(Diagnostic.WARNING,
+                            "Improper array deployment used for argument '" + fdArg.target.name + "'. Use 'SomeIpArgArray' deployment properties instead.",
+                            prop, null, -1, null, null)
+                        diagnostics.add(diag)
+                    }
+                }
+            ]
+        ]
+    }
+
+    private def isArray(FTypedElement elm)
+    {
+        if (elm == null)
+            return false
+        if (elm.array)
+            return true
+        if (elm.type != null)
+        {
+            if (elm.type.derived != null)
+                return isArray(elm.type.derived)
+        }
+        return false
+    }
+
+    private def boolean isArray(FType typ)
+    {
+        if (typ instanceof FTypeRef)
+            return isArray(typ.derived)
+        if (typ instanceof FTypeDef)
+        {
+            if (typ.actualType != null)
+                return isArray(typ.actualType.derived)
+        }
+        else
+        {
+            if (typ instanceof FArrayType)
+                return true
+        }
+        return false
     }
 
     private def validateArrayDeployment(FDElement fdArray, String minLengthName, String maxLengthName, String lengthWidthName)
@@ -861,5 +1133,193 @@ class SomeIPDeploymentValidator
         if (intf == null)
             return ""
         return (intf.eContainer as FModel).name + "." + intf.name
+    }
+
+    private def validateImports(Collection<FDModel> fdepls)
+    {
+        fdepls.forEach[it.checkMissingDeploymentImports]
+    }
+
+    private def checkMissingDeploymentImports(FDModel fdModel)
+    {
+        /*
+         * recursive flag
+         *  true    - recursively get the list of imported FDEPLs for the current FDEPL file
+         *          - recursively get the list of imported FIDLs for the current FDEPL file
+         *          - for each FIDL found (in any of the files), check if there is an expected FDEPL imported (in any of the files)
+         *
+         *  false   - get the list of imported FDEPLs only from the current FDEPL file
+         *          - get the list of imported FIDLs from the current FDEPL file and from the imports of the imported FIDLs (but not recursively)
+         *          - for each FIDL found, check if there is an expected FDEPL imported in the current FDEPL file
+         */
+        var recursive = false
+
+        if (!recursive)
+        {
+            // this version of the check does not make sense for the FDEPLs which contain 'provider' only. respectively
+            // the check make sense only for files which deploy an interface or a type collection.
+            if (fdModel.deployments.findFirst[(it instanceof FDInterface) || (it instanceof FDTypes)] == null)
+                return
+        }
+
+        var fdeplUris = getImportedFDepls(fdModel, recursive)
+        var fidlUris = getImportedFidls(fdModel, recursive)
+
+        for (fidl : fidlUris)
+        {
+            val correspondingFdeplImportSpec = fidl.toString.replaceFidlWithFDeplExtension
+
+            // skip the FIDL which corresponds to the FDEPL which we are validating right now
+            if (!fdModel.eResource.URI.toString.equals(correspondingFdeplImportSpec))
+            {
+                if (fdeplUris.findFirst[it.toString.equals(correspondingFdeplImportSpec)] == null)
+                {
+                    val fidlPath = getDisplayPath(fidl)
+                    var diag = new FeatureBasedDiagnostic(Diagnostic.WARNING,
+                        "Deployment references \"" + fidlPath + "\" without referencing expected deployment file \"" + fidlPath.replaceFidlWithFDeplExtension + "\".",
+                        fdModel, null, -1, null, null)
+                    diagnostics.add(diag)
+                }
+            }
+        }
+    }
+
+    private def Collection<URI> getImportedFDepls(FDModel fdModel, boolean recursive)
+    {
+        val uris = new ArrayList<URI>
+        for (import : fdModel.imports)
+        {
+            // Process only FDEPL files
+            if (import.importURI.endsWith(FDEPL_FILE_EXTENSION_SUFFIX))
+            {
+                // Skip Deployment Specification files
+                if (!import.importURI.endsWith(DEPLOYMENT_SPECIFICATION_FILENAME_SUFFIX))
+                {
+                    var importUri = getAbsoluteUri(fdModel, import.importURI)
+                    if (!uris.contains(importUri))
+                    {
+                        var fdImportedModel = getFDModel(importUri)
+                        if (fdImportedModel != null)
+                        {
+                            uris.add(importUri)
+                            if (recursive)
+                            {
+                                getImportedFDepls(fdImportedModel, recursive).forEach[
+                                    if (!uris.contains(it))
+                                        uris.add(it)
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return uris
+    }
+
+    private def FDModel getFDModel(URI importUri)
+    {
+        return allFDepls.findFirst[eResource.URI == importUri]
+    }
+
+    private def FModel getFModel(URI importUri, ResourceSet resourceSet)
+    {
+        var fidls = new ArrayList<FModel>
+        for (Resource resource : resourceSet.resources)
+        {
+            for (EObject eObject : resource.getContents())
+            {
+                if (eObject instanceof FModel)
+                    fidls.add(eObject)
+            }
+        }
+        return fidls.findFirst[it.eResource.URI.equals(importUri)]
+    }
+
+    private def URI getAbsoluteUri(FDModel fdModel, String importURIStr)
+    {
+        return getAbsoluteUri(fdModel.eResource, importURIStr)
+    }
+
+    private def URI getAbsoluteUri(FModel fModel, String importURIStr)
+    {
+        return getAbsoluteUri(fModel.eResource, importURIStr)
+    }
+
+    private def URI getAbsoluteUri(Resource resource, String importURIStr)
+    {
+        var importUri = URI.createURI(importURIStr)
+        return importUri.resolve(resource.URI)
+    }
+
+    private def Collection<URI> getImportedFidls(FDModel fdModel, boolean recursive)
+    {
+        val uris = new ArrayList<URI>
+        for (import : fdModel.imports)
+        {
+            if (import.importURI.endsWith(FIDL_FILE_EXTENSION_SUFFIX))
+            {
+                var importUri = getAbsoluteUri(fdModel, import.importURI)
+                if (!uris.contains(importUri))
+                {
+                    var fImportedModel = getFModel(importUri, fdModel.eResource.resourceSet)
+                    if (fImportedModel != null)
+                    {
+                        uris.add(importUri)
+
+                        getImportedFidls(fImportedModel, recursive).forEach[
+                            if (!uris.contains(it))
+                                uris.add(it)
+                        ]
+                    }
+                }
+            }
+        }
+        return uris
+    }
+
+    private def Collection<URI> getImportedFidls(FModel fModel, boolean recursive)
+    {
+        val uris = new ArrayList<URI>
+        for (import : fModel.imports)
+        {
+            if (import.importURI.endsWith(FIDL_FILE_EXTENSION_SUFFIX))
+            {
+                var importUri = getAbsoluteUri(fModel, import.importURI)
+                if (!uris.contains(importUri))
+                {
+                    var fImportedModel = getFModel(importUri, fModel.eResource.resourceSet)
+                    if (fImportedModel != null)
+                    {
+                        uris.add(importUri)
+                        if (recursive)
+                        {
+                            getImportedFidls(fImportedModel, recursive).forEach[
+                                if (!uris.contains(it))
+                                    uris.add(it)
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+        return uris
+    }
+
+    private def replaceFidlWithFDeplExtension(String filePath)
+    {
+        return filePath.replaceFirst("\\" + FIDL_FILE_EXTENSION_SUFFIX + "$", FDEPL_FILE_EXTENSION_SUFFIX)
+    }
+
+    private def String getDisplayPath(URI uri)
+    {
+        var String displayPath = null;
+        if (uri.isPlatformResource())
+            displayPath = uri.toPlatformString(true);
+        if (displayPath == null)
+            displayPath = uri.toFileString();
+        if (displayPath == null)
+            displayPath = uri.toString();
+        return displayPath;
     }
 }

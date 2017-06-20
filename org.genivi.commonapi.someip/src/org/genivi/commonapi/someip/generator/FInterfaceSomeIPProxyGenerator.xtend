@@ -88,6 +88,7 @@ class FInterfaceSomeIPProxyGenerator {
 
         #include <string>
 
+        # if defined(_MSC_VER)
         #  if _MSC_VER >= 1300
         /*
          * Diamond inheritance is used for the CommonAPI::Proxy base class.
@@ -97,16 +98,7 @@ class FInterfaceSomeIPProxyGenerator {
          */
         #    pragma warning( disable : 4250 )
         #  endif
-
-        #  if _MSC_VER >= 1300
-        /*
-         * Diamond inheritance is used for the CommonAPI::Proxy base class.
-         * The Microsoft compiler put warning (C4250) using a desired c++ feature: "Delegating to a sister class"
-         * A powerful technique that arises from using virtual inheritance is to delegate a method from a class in another class
-         * by using a common abstract base class. This is also called cross delegation.
-         */
-        #    pragma warning( disable : 4250 )
-        #  endif
+        # endif
 
         «_interface.generateVersionNamespaceBegin»
         «_interface.model.generateNamespaceBeginDeclaration»
@@ -155,7 +147,7 @@ class FInterfaceSomeIPProxyGenerator {
                             SomeIP«attribute.someipClassVariableName»Attribute(«_interface.someipProxyClassName» &_proxy,
                                 _A ... arguments) : «attribute.someipClassName(_interface, _accessor)»(
                                                         _proxy, arguments...) {}
-                «IF !attribute.isReadonly »
+                    «IF !attribute.isReadonly »
                         void setValue(const «attribute.getTypeName(_interface, true)»& requestValue,
                                       CommonAPI::CallStatus& callStatus,
                                       «attribute.getTypeName(_interface, true)»& responseValue,

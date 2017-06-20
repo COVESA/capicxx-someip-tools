@@ -15,7 +15,6 @@ import org.franca.core.franca.FAttribute
 import org.franca.core.franca.FBroadcast
 import org.franca.core.franca.FInterface
 import org.franca.core.franca.FMethod
-import org.franca.core.franca.FModelElement
 import org.franca.deploymodel.core.FDeployedProvider
 import org.franca.deploymodel.dsl.fDeploy.FDProvider
 import org.genivi.commonapi.core.generator.FTypeGenerator
@@ -612,24 +611,6 @@ class FInterfaceSomeIPStubAdapterGenerator {
         «ENDIF»
     '''
 
-    def private generateBroadcastDispatcherDefinitions(FBroadcast fBroadcast, FInterface fInterface) '''
-        template <typename _Stub, typename... _Stubs>
-        CommonAPI::SomeIP::MethodWithReplyAdapterDispatcher<
-            «fInterface.stubClassName»,
-            «fInterface.stubAdapterClassName»,
-            std::tuple<>,
-            std::tuple<bool>
-        > «fInterface.someipStubAdapterClassNameInternal»<_Stub, _Stubs...>::«fBroadcast.dbusStubDispatcherVariableSubscribe»(&«fInterface.stubAdapterClassName + "::" + fBroadcast.subscribeSelectiveMethodName», "b");
-
-        template <typename _Stub, typename... _Stubs>
-        CommonAPI::SomeIP::MethodWithReplyAdapterDispatcher<
-            «fInterface.stubClassName»,
-            «fInterface.stubAdapterClassName»,
-            std::tuple<>,
-            std::tuple<>
-        > «fInterface.someipStubAdapterClassNameInternal»<_Stub, _Stubs...>::«fBroadcast.dbusStubDispatcherVariableUnsubscribe»(&«fInterface.stubAdapterClassName + "::" + fBroadcast.unsubscribeSelectiveMethodName», "");
-    '''
-
    def private getDeployedTypeName(FArgument _arg, FInterface _interface, PropertyAccessor _accessor)'''
             «val String deploymentType = _arg.getDeploymentType(_interface, true)»
             «IF deploymentType != "CommonAPI::EmptyDeployment" && deploymentType != ""» CommonAPI::Deployable< «_arg.getTypeName(_interface, true)», «deploymentType» > «ELSE» «_arg.getTypeName(_interface, true)»«ENDIF»
@@ -639,7 +620,7 @@ class FInterfaceSomeIPStubAdapterGenerator {
     «val String deploymentType = _arg.getDeploymentType(_interface, true)»
     «IF deploymentType != "CommonAPI::EmptyDeployment" && deploymentType != ""» deployed_«_arg.name» «ELSE»_«_arg.name»«ENDIF»
    '''
-    def private getInterfaceHierarchy(FInterface fInterface) {
+    def private String getInterfaceHierarchy(FInterface fInterface) {
         if (fInterface.base == null) {
             fInterface.stubFullClassName
         } else {
@@ -728,11 +709,6 @@ class FInterfaceSomeIPStubAdapterGenerator {
         «fInterface.someipStubAdapterHelperClassName»::addStubDispatcher( { «identifierAsHexString» }, &«memberFunctionName» );
     '''
 
-
-    def private getAbsoluteNamespace(FModelElement fModelElement) {
-        fModelElement.model.name.replace('.', '::')
-    }
-
     def private someipStubAdapterHeaderFile(FInterface fInterface) {
         fInterface.elementName + "SomeIPStubAdapter.hpp"
     }
@@ -787,25 +763,6 @@ class FInterfaceSomeIPStubAdapterGenerator {
 
     def private someipSetStubDispatcherVariable(FAttribute fAttribute) {
         fAttribute.setMethodName + 'StubDispatcher'
-    }
-
-    def private dbusStubDispatcherVariable(FBroadcast fBroadcast) {
-        var returnVal = fBroadcast.elementName.toFirstLower
-
-        if(fBroadcast.selective)
-            returnVal = returnVal + 'Selective'
-
-        returnVal = returnVal + 'StubDispatcher'
-
-        return returnVal
-    }
-
-    def private dbusStubDispatcherVariableSubscribe(FBroadcast fBroadcast) {
-        "subscribe" + fBroadcast.dbusStubDispatcherVariable.toFirstUpper
-    }
-
-    def private dbusStubDispatcherVariableUnsubscribe(FBroadcast fBroadcast) {
-        "unsubscribe" + fBroadcast.dbusStubDispatcherVariable.toFirstUpper
     }
 
     var nextSectionInDispatcherNeedsComma = false;

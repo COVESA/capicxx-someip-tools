@@ -44,6 +44,11 @@ define org.genivi.commonapi.someip.deployment for interface commonapi.communicat
         SomeIpMethodID = 516
         SomeIpReliable = true
     }
+
+    method testDontCare {
+        SomeIpMethodID = 517
+        SomeIpReliable = true
+    }
         
     broadcast bTest {
         SomeIpEventID = 41913
