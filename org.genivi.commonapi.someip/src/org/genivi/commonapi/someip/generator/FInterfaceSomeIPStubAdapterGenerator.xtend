@@ -242,7 +242,7 @@ class FInterfaceSomeIPStubAdapterGenerator {
         CommonAPI::SomeIP::GetAttributeStubDispatcher<
             «_interface.stubFullClassName»,
             CommonAPI::Version
-            > «_interface.someipStubAdapterClassNameInternal»<_Stub, _Stubs...>::get«_interface.elementName»InterfaceVersionStubDispatcher(&«_interface.stubClassName»::getInterfaceVersion, false);
+            > «_interface.someipStubAdapterClassNameInternal»<_Stub, _Stubs...>::get«_interface.elementName»InterfaceVersionStubDispatcher(&«_interface.stubClassName»::lockInterfaceVersionAttribute, &«_interface.stubClassName»::getInterfaceVersion, false);
 
         «FOR attribute : _interface.attributes»
             «generateAttributeDispatcherDefinitions(attribute, _interface, _accessor)»
@@ -531,6 +531,7 @@ class FInterfaceSomeIPStubAdapterGenerator {
                 «typeName»«IF deploymentType != "CommonAPI::EmptyDeployment" && deploymentType != ""»,
                 «deploymentType»«ENDIF»
             > «_interface.someipStubAdapterClassNameInternal»<_Stub, _Stubs...>::«_attribute.someipGetStubDispatcherVariable»(
+                &«_interface.stubClassName»::«_attribute.stubClassLockMethodName»,
                 &«_interface.stubClassName»::«_attribute.stubClassGetMethodName», «_attribute.getEndianess(_accessor)»«IF _accessor.hasDeployment(_attribute)», «_attribute.getDeploymentRef(_attribute.array, null, _interface, _accessor)»«ENDIF»);
             «ENDIF»
             «IF !_attribute.isReadonly»
@@ -540,6 +541,7 @@ class FInterfaceSomeIPStubAdapterGenerator {
                     «typeName»«IF deploymentType != "CommonAPI::EmptyDeployment" && deploymentType != ""»,
                     «deploymentType»«ENDIF»
                 > «_interface.someipStubAdapterClassNameInternal»<_Stub, _Stubs...>::«_attribute.someipSetStubDispatcherVariable»(
+                    &«_interface.stubClassName»::«_attribute.stubClassLockMethodName»,
                     &«_interface.stubClassName»::«_attribute.stubClassGetMethodName»,
                     &«_interface.stubRemoteEventClassName»::«_attribute.stubRemoteEventClassSetMethodName»,
                     &«_interface.stubRemoteEventClassName»::«_attribute.stubRemoteEventClassChangedMethodName»,
