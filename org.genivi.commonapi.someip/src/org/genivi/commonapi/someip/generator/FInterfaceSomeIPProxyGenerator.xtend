@@ -1,8 +1,7 @@
-/* Copyright (C) 2014, 2015 BMW Group
- * Author: Lutz Bichler (lutz.bichler@bmw.de)
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2014-2020 Bayerische Motoren Werke Aktiengesellschaft (BMW AG)
+   This Source Code Form is subject to the terms of the Mozilla Public
+   License, v. 2.0. If a copy of the MPL was not distributed with this
+   file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.genivi.commonapi.someip.generator
 
 import java.util.List
@@ -15,8 +14,9 @@ import org.franca.core.franca.FInterface
 import org.franca.core.franca.FMethod
 import org.franca.core.franca.FModelElement
 import org.franca.core.franca.FVersion
-import org.franca.deploymodel.core.FDeployedProvider
-import org.franca.deploymodel.dsl.fDeploy.FDProvider
+import org.franca.deploymodel.dsl.fDeploy.FDExtensionRoot
+import org.franca.deploymodel.ext.providers.FDeployedProvider
+import org.franca.deploymodel.ext.providers.ProviderUtils
 import org.genivi.commonapi.core.generator.FTypeGenerator
 import org.genivi.commonapi.core.generator.FrancaGeneratorExtensions
 import org.genivi.commonapi.someip.deployment.PropertyAccessor
@@ -26,13 +26,13 @@ import org.genivi.commonapi.someip.preferences.PreferenceConstantsSomeIP
 import org.genivi.commonapi.someip.preferences.FPreferencesSomeIP
 
 class FInterfaceSomeIPProxyGenerator {
-    @Inject private extension FrancaGeneratorExtensions
-    @Inject private extension FrancaSomeIPGeneratorExtensions
+	@Inject extension FrancaGeneratorExtensions
+	@Inject extension FrancaSomeIPGeneratorExtensions
 
     var boolean generateSyncCalls = true
 
     def generateProxy(FInterface fInterface, IFileSystemAccess fileSystemAccess, PropertyAccessor deploymentAccessor,
-        List<FDProvider> providers, IResource modelid) {
+        List<FDExtensionRoot> providers, IResource modelid) {
 
         if(FPreferencesSomeIP::getInstance.getPreference(PreferenceConstantsSomeIP::P_GENERATE_CODE_SOMEIP, "true").equals("true")) {
             generateSyncCalls = FPreferencesSomeIP::getInstance.getPreference(PreferenceConstantsSomeIP::P_GENERATE_SYNC_CALLS_SOMEIP, "true").equals("true")
@@ -57,15 +57,13 @@ class FInterfaceSomeIPProxyGenerator {
         #define «_interface.defineName.toUpperCase»_SOMEIP_PROXY_HPP_
 
         #include <«_interface.proxyBaseHeaderPath»>
-        «IF _interface.base != null»
+        «IF _interface.base !== null»
             #include <«_interface.base.someipProxyHeaderPath»>
         «ENDIF»
         «val DeploymentHeaders = _interface.getDeploymentInputIncludes(_accessor)»
         «DeploymentHeaders.map["#include <" + it + ">"].join("\n")»
 
-        #if !defined (COMMONAPI_INTERNAL_COMPILATION)
-        #define COMMONAPI_INTERNAL_COMPILATION
-        #endif
+        «startInternalCompilation»
 
         #include <CommonAPI/SomeIP/Factory.hpp>
         #include <CommonAPI/SomeIP/Proxy.hpp>
@@ -77,14 +75,13 @@ class FInterfaceSomeIPProxyGenerator {
             #include <CommonAPI/SomeIP/Event.hpp>
             «IF _interface.hasSelectiveBroadcasts»
                 #include <CommonAPI/Types.hpp>
-                #include <CommonAPI/SomeIP/SelectiveEvent.hpp>
             «ENDIF»
         «ENDIF»
         «IF !_interface.managedInterfaces.empty»
             #include <CommonAPI/SomeIP/ProxyManager.hpp>
         «ENDIF»
 
-        #undef COMMONAPI_INTERNAL_COMPILATION
+        «endInternalCompilation»
 
         #include <string>
 
@@ -105,40 +102,42 @@ class FInterfaceSomeIPProxyGenerator {
 
         class «_interface.someipProxyClassName»
             : virtual public «_interface.proxyBaseClassName»,
-            virtual public «IF _interface.base != null»«_interface.base.getTypeCollectionName(_interface)»SomeIPProxy«ELSE»CommonAPI::SomeIP::Proxy«ENDIF» {
+              virtual public «IF _interface.base !== null»«_interface.base.getTypeCollectionName(_interface)»SomeIPProxy«ELSE»CommonAPI::SomeIP::Proxy«ENDIF» {
         public:
             «_interface.someipProxyClassName»(
                 const CommonAPI::SomeIP::Address &_address,
                 const std::shared_ptr<CommonAPI::SomeIP::ProxyConnection> &_connection);
 
-            virtual ~«_interface.someipProxyClassName»() { }
+            virtual ~«_interface.someipProxyClassName»();
 
             «FOR attribute : _interface.attributes»
                 virtual «attribute.generateGetMethodDefinition»;
-            «ENDFOR»
 
+            «ENDFOR»
             «FOR broadcast : _interface.broadcasts»
                 virtual «broadcast.generateGetMethodDefinition»;
-            «ENDFOR»
 
+            «ENDFOR»
             «FOR method : _interface.methods»
             «FTypeGenerator::generateComments(method, false)»
             «IF generateSyncCalls || method.isFireAndForget»
                 virtual «method.generateDefinition(false)»;
+
             «ENDIF»
             «IF !method.isFireAndForget»
                 virtual «method.generateAsyncDefinition(false)»;
+
             «ENDIF»
             «ENDFOR»
-
             «FOR managed : _interface.managedInterfaces»
                 virtual CommonAPI::ProxyManager &«managed.proxyManagerGetterName»();
+                
             «ENDFOR»
-
             virtual void getOwnVersion(uint16_t &_major, uint16_t &_minor) const;
 
-        private:
+            virtual std::future<void> getCompletionFuture();
 
+        private:
             «FOR attribute : _interface.attributes»
                 «IF attribute.supportsTypeValidation»
                     class SomeIP«attribute.someipClassVariableName»Attribute : public «attribute.someipClassName(_interface, _accessor)» {
@@ -176,21 +175,20 @@ class FInterfaceSomeIPProxyGenerator {
                         }
                     «ENDIF»
                     };
-
                     SomeIP«attribute.someipClassVariableName»Attribute «attribute.someipClassVariableName»;
 
                 «ELSE»
                     «attribute.someipClassName(_interface, _accessor)» «attribute.someipClassVariableName»;
                 «ENDIF»
-             «ENDFOR»
-
-             «FOR broadcast : _interface.broadcasts»
-                 «broadcast.someipClassName(_interface, _accessor)» «broadcast.someipClassVariableName»;
-             «ENDFOR»
-
-             «FOR managed : _interface.managedInterfaces»
+            «ENDFOR»
+            «FOR broadcast : _interface.broadcasts»
+                «broadcast.someipClassName(_interface, _accessor)» «broadcast.someipClassVariableName»;
+            «ENDFOR»
+            «FOR managed : _interface.managedInterfaces»
                  CommonAPI::SomeIP::ProxyManager «managed.proxyManagerMemberName»;
-             «ENDFOR»
+            «ENDFOR»
+
+            std::promise<void> completed_;
         };
 
         «_interface.model.generateNamespaceEndDeclaration»
@@ -199,158 +197,166 @@ class FInterfaceSomeIPProxyGenerator {
         #endif // «_interface.defineName»_SOMEIP_PROXY_HPP_
     '''
 
-    def private generateProxySource(FInterface _interface, PropertyAccessor _accessor, List<FDProvider> providers, IResource _modelid) '''
-        «generateCommonApiSomeIPLicenseHeader()»
+    def private generateProxySource(FInterface _interface, PropertyAccessor _accessor, List<FDExtensionRoot> providers, IResource _modelid) '''
+        «generateCommonApiSomeIPLicenseHeader»
         «FTypeGenerator::generateComments(_interface, false)»
         #include <«_interface.someipProxyHeaderPath»>
-
-        #if !defined (COMMONAPI_INTERNAL_COMPILATION)
-        #define COMMONAPI_INTERNAL_COMPILATION
-        #endif
-
+        
+        «startInternalCompilation»
+        
         #include <CommonAPI/SomeIP/AddressTranslator.hpp>
-
-        #undef COMMONAPI_INTERNAL_COMPILATION
-
+        
+        «endInternalCompilation»
+        
         «_interface.generateVersionNamespaceBegin»
         «_interface.model.generateNamespaceBeginDeclaration»
-
+        
         std::shared_ptr<CommonAPI::SomeIP::Proxy> create«_interface.someipProxyClassName»(
             const CommonAPI::SomeIP::Address &_address,
             const std::shared_ptr<CommonAPI::SomeIP::ProxyConnection> &_connection) {
             return std::make_shared< «_interface.someipProxyClassName»>(_address, _connection);
         }
-
+        
         void initialize«_interface.someipProxyClassName»() {
             «FOR p : providers»
                 «val PropertyAccessor providerAccessor = new PropertyAccessor(new FDeployedProvider(p))»
-                «FOR i : p.instances.filter[target == _interface]»
+                «FOR i : ProviderUtils.getInstances(p).filter[target == _interface]»
                     CommonAPI::SomeIP::AddressTranslator::get()->insert(
                         "local:«_interface.fullyQualifiedNameWithVersion»:«providerAccessor.getInstanceId(i)»",
-                        «_interface.getSomeIpServiceID», 0x«Integer.toHexString(
-                            providerAccessor.getSomeIpInstanceID(i))», «_interface.version.major», «_interface.version.minor»);
+                        «_interface.getSomeIpServiceID», 0x«Integer.toHexString(providerAccessor.getSomeIpInstanceID(i))», «_interface.version.major», «_interface.version.minor»);
                 «ENDFOR»
-             «ENDFOR»
-             CommonAPI::SomeIP::Factory::get()->registerProxyCreateMethod(
-                 «_interface.elementName»::getInterface(),
-                 &create«_interface.someipProxyClassName»);
+            «ENDFOR»
+            CommonAPI::SomeIP::Factory::get()->registerProxyCreateMethod(
+                "«_interface.fullyQualifiedNameWithVersion»",
+                &create«_interface.someipProxyClassName»);
         }
-
+        
         INITIALIZER(register«_interface.someipProxyClassName») {
             CommonAPI::SomeIP::Factory::get()->registerInterface(initialize«_interface.someipProxyClassName»);
         }
 
+        «val hasAttribute = _interface.attributes.length > 0»
+        «val hasBroadcast = _interface.broadcasts.length > 0»
+        «val hasManaged = _interface.managedInterfaces.length > 0»
         «_interface.someipProxyClassName»::«_interface.someipProxyClassName»(
             const CommonAPI::SomeIP::Address &_address,
             const std::shared_ptr<CommonAPI::SomeIP::ProxyConnection> &_connection)
-                : CommonAPI::SomeIP::Proxy(_address, _connection «_interface.hasInterfaceSelectiveBroadacsts(_accessor)»)«IF _interface.base != null»,«ENDIF»
-                  «_interface.generateSomeIPBaseInstantiations»
-                  «FOR attribute : _interface.attributes BEFORE ',' SEPARATOR ','»
-                  «attribute.generateVariableInit(_accessor, _interface)»
+                : CommonAPI::SomeIP::Proxy(_address, _connection)«IF _interface.base !== null || hasAttribute || hasBroadcast || hasManaged»,«ENDIF»
+                  «IF _interface.base !== null»«_interface.generateSomeIPBaseInstantiations»«IF hasAttribute || hasBroadcast || hasManaged»,«ENDIF»«ENDIF»
+                  «FOR attribute : _interface.attributes»
+                  «attribute.generateVariableInit(_accessor, _interface)»«IF attribute != _interface.attributes.last || hasBroadcast || hasManaged»,«ENDIF»
                   «ENDFOR»
-                  «FOR broadcast : _interface.broadcasts BEFORE ',' SEPARATOR ','»
-                  «broadcast.someipClassVariableName»(*this, «broadcast.getEventGroups(_accessor).head», «broadcast.getEventIdentifier(_accessor)», false, «broadcast.getEndianess(_accessor)», «broadcast.getDeployments(_interface, _accessor)»)
+                  «FOR broadcast : _interface.broadcasts»
+                  «broadcast.someipClassVariableName»(*this, «broadcast.getEventGroups(_accessor).head», «broadcast.getEventIdentifier(_accessor)»,«IF broadcast.selective» CommonAPI::SomeIP::event_type_e::ET_SELECTIVE_EVENT«ELSE» CommonAPI::SomeIP::event_type_e::ET_EVENT «ENDIF», «broadcast.getReliabilityType(_accessor)», «broadcast.getEndianess(_accessor)», «broadcast.getDeployments(_interface, _accessor)»)«IF broadcast != _interface.broadcasts.last || hasManaged»,«ENDIF»
                   «ENDFOR»
-                  «FOR managed : _interface.managedInterfaces BEFORE ',' SEPARATOR ','»
-                  «managed.proxyManagerMemberName»(*this, "«managed.fullyQualifiedNameWithVersion»", «getSomeIpServiceIDForInterface(providers, managed)»)
+                  «FOR managed : _interface.managedInterfaces»
+                  «managed.proxyManagerMemberName»(*this, "«managed.fullyQualifiedNameWithVersion»", «getSomeIpServiceIDForInterface(providers, managed)»)«IF managed != _interface.managedInterfaces.last»,«ENDIF»
                   «ENDFOR»
-            {
+        {
+        }
+
+        «_interface.someipProxyClassName»::~«_interface.someipProxyClassName»() {
+            completed_.set_value();
+        }
+        
+        «FOR attribute : _interface.attributes»
+            «attribute.generateGetMethodDefinitionWithin(_interface.someipProxyClassName)» {
+                return «attribute.someipClassVariableName»;
+            }
+        «ENDFOR»
+        
+        «FOR broadcast : _interface.broadcasts»
+           «broadcast.generateGetMethodDefinitionWithin(_interface.someipProxyClassName)» {
+               return «broadcast.someipClassVariableName»;
+           }
+        «ENDFOR»
+        
+        «FOR method : _interface.methods»
+            «val timeout = method.getTimeout(_accessor)»
+            «val inParams = method.generateInParams(_accessor)»
+            «val outParams = method.generateOutParams(_accessor, false)»
+            «FTypeGenerator::generateComments(method, false)»
+            «IF generateSyncCalls || method.isFireAndForget»
+            «method.generateDefinitionWithin(_interface.someipProxyClassName, false)» {
+                «method.generateProxyHelperDeployments(_interface, false, _accessor)»
+                «IF method.isFireAndForget»
+                    «method.generateProxyHelperClass(_interface, _accessor)»::callMethod(
+                «ELSE»
+                    «IF timeout != 0»
+                    static CommonAPI::CallInfo info(«timeout»);
+                    «ENDIF»
+                    «method.generateProxyHelperClass(_interface, _accessor)»::callMethodWithReply(
+                «ENDIF»
+                    *this,
+                    «method.getMethodIdentifier(_accessor)»,
+                    «method.isReliable(_accessor)»,
+                    «method.isLittleEndian(_accessor)»,
+                    «IF !method.isFireAndForget»(_info ? _info : «IF timeout != 0»&info«ELSE»&CommonAPI::SomeIP::defaultCallInfo«ENDIF»),«ENDIF»
+                    «IF inParams != ""»«inParams»,«ENDIF»
+                    _internalCallStatus«IF method.hasError»,
+                    deploy_error«ENDIF»«IF outParams != ""»,
+                    «outParams»«ENDIF»);
+                «method.generateOutParamsValue(_accessor)»
             }
 
-            «FOR attribute : _interface.attributes»
-                «attribute.generateGetMethodDefinitionWithin(_interface.someipProxyClassName)» {
-                    return «attribute.someipClassVariableName»;
-                }
-            «ENDFOR»
-
-            «FOR broadcast : _interface.broadcasts»
-                «broadcast.generateGetMethodDefinitionWithin(_interface.someipProxyClassName)» {
-                    return «broadcast.someipClassVariableName»;
-                }
-            «ENDFOR»
-
-            «FOR method : _interface.methods»
-                «val timeout = method.getTimeout(_accessor)»
-                «val inParams = method.generateInParams(_accessor)»
-                «val outParams = method.generateOutParams(_accessor, false)»
-                «FTypeGenerator::generateComments(method, false)»
-                «IF generateSyncCalls || method.isFireAndForget»
-                    «method.generateDefinitionWithin(_interface.someipProxyClassName, false)» {
-                        «method.generateProxyHelperDeployments(_interface, false, _accessor)»
-                        «IF method.isFireAndForget»
-                            «method.generateProxyHelperClass(_interface, _accessor)»::callMethod(
-                        «ELSE»
-                            «IF timeout != 0»
-                                static CommonAPI::CallInfo info(«timeout»);
-                            «ENDIF»
-                            «method.generateProxyHelperClass(_interface, _accessor)»::callMethodWithReply(
-                        «ENDIF»
+            «ENDIF»
+            «IF !method.isFireAndForget»
+                «method.generateAsyncDefinitionWithin(_interface.someipProxyClassName, false)» {
+                    «IF timeout != 0»
+                        static CommonAPI::CallInfo info(«timeout»);
+                    «ENDIF»
+                    «method.generateProxyHelperDeployments(_interface, true, _accessor)»
+                    return «method.generateProxyHelperClass(_interface, _accessor)»::callMethodAsync(
                         *this,
                         «method.getMethodIdentifier(_accessor)»,
                         «method.isReliable(_accessor)»,
                         «method.isLittleEndian(_accessor)»,
-                «IF !method.isFireAndForget»(_info ? _info : «IF timeout != 0»&info«ELSE»&CommonAPI::SomeIP::defaultCallInfo«ENDIF»),«ENDIF»
-                «IF inParams != ""»«inParams»,«ENDIF»
-                _internalCallStatus«IF method.hasError»,
-                deploy_error«ENDIF»«IF outParams != ""»,
-                «outParams»«ENDIF»);
-                «method.generateOutParamsValue(_accessor)»
+                        (_info ? _info : «IF timeout != 0»&info«ELSE»&CommonAPI::SomeIP::defaultCallInfo«ENDIF»),
+                        «IF inParams != ""»«inParams»,«ENDIF»
+                        «method.generateCallback(_interface, _accessor)»);
                 }
-                «ENDIF»
-                «IF !method.isFireAndForget»
-                    «method.generateAsyncDefinitionWithin(_interface.someipProxyClassName, false)» {
-                        «IF timeout != 0»
-                            static CommonAPI::CallInfo info(«timeout»);
-                        «ENDIF»
-                        «method.generateProxyHelperDeployments(_interface, true, _accessor)»
-                        return «method.generateProxyHelperClass(_interface, _accessor)»::callMethodAsync(
-                            *this,
-                            «method.getMethodIdentifier(_accessor)»,
-                            «method.isReliable(_accessor)»,
-                            «method.isLittleEndian(_accessor)»,
-                            (_info ? _info : «IF timeout != 0»&info«ELSE»&CommonAPI::SomeIP::defaultCallInfo«ENDIF»),
-                            «IF inParams != ""»«inParams»,«ENDIF»
-                            «method.generateCallback(_interface, _accessor)»);
-                    }
-                «ENDIF»
-            «ENDFOR»
 
-            «FOR managed : _interface.managedInterfaces»
-                CommonAPI::ProxyManager& «_interface.someipProxyClassName»::«managed.proxyManagerGetterName»() {
-                    return «managed.proxyManagerMemberName»;
-                }
-            «ENDFOR»
-
-
-            void «_interface.someipProxyClassName»::getOwnVersion(uint16_t& ownVersionMajor, uint16_t& ownVersionMinor) const {
+            «ENDIF»
+        «ENDFOR»
+        «FOR managed : _interface.managedInterfaces»
+        CommonAPI::ProxyManager& «_interface.someipProxyClassName»::«managed.proxyManagerGetterName»() {
+            return «managed.proxyManagerMemberName»;
+        }
+        
+        «ENDFOR»
+        void «_interface.someipProxyClassName»::getOwnVersion(uint16_t& ownVersionMajor, uint16_t& ownVersionMinor) const {
             «val FVersion itsVersion = _interface.version»
-            «IF itsVersion != null»
+            «IF itsVersion !== null»
                 ownVersionMajor = «_interface.version.major»;
                 ownVersionMinor = «_interface.version.minor»;
             «ELSE»
                 ownVersionMajor = 0;
                 ownVersionMinor = 0;
             «ENDIF»
-            }
+        }
 
+        std::future<void> «_interface.someipProxyClassName»::getCompletionFuture() {
+            return completed_.get_future();
+        }
+        
         «_interface.model.generateNamespaceEndDeclaration»
         «_interface.generateVersionNamespaceEnd»
     '''
 
-    def private getSomeIpServiceIDForInterface(List<FDProvider> _providers, FInterface _interface) {
-        for (FDProvider p : _providers) {
-            for (instance : p.instances) {
+    def private getSomeIpServiceIDForInterface(List<FDExtensionRoot> _providers, FInterface _interface) {
+        for (FDExtensionRoot p : _providers) {
+            for (instance : ProviderUtils.getInstances(p)) {
                 if (instance.target == _interface) {
-                    var id = _interface.accessor.getSomeIpServiceID(instance.target)
-                    if (id != null) {
+                    var id = _interface.someIpAccessor.getSomeIpServiceID(_interface)
+                    if (id !== null) {
                         return "0x" + Integer.toHexString(id)
                     }
                 }
             }
         }
         // If no providers are available, try to get the service id directly
-        var serviceid = _interface.accessor.getSomeIpServiceID(_interface)
-        if(serviceid != null) {
+        var serviceid = _interface.someIpAccessor.getSomeIpServiceID(_interface)
+        if(serviceid !== null) {
             return "0x" + Integer.toHexString(serviceid)
         }
         return "UNDEFINED_SERVICE_ID"
@@ -381,11 +387,11 @@ class FInterfaceSomeIPProxyGenerator {
         «ENDIF»
         «FOR a : _method.inArgs»
             CommonAPI::Deployable< «a.getTypeName(_method, true)», «a.getDeploymentType(_interface, true)»> deploy_«a.name»(_«a.
-            name», «a.getDeploymentRef(a.array, _method, _interface, _accessor)»);
+            name», «a.getDeploymentRef(a.array, _method, _interface, _accessor.getOverwriteAccessor(a))»);
         «ENDFOR»
         «FOR a : _method.outArgs»
             CommonAPI::Deployable< «a.getTypeName(_method, true)», «a.getDeploymentType(_interface, true)»> deploy_«a.name»(«a.
-            getDeploymentRef(a.array, _method, _interface, _accessor)»);
+            getDeploymentRef(a.array, _method, _interface, _accessor.getOverwriteAccessor(a))»);
         «ENDFOR»
     '''
 
@@ -507,13 +513,16 @@ class FInterfaceSomeIPProxyGenerator {
         }
 
         init += ", " + _attribute.getGetterIdentifier(_accessor) + ", " + _attribute.isGetterReliable(_accessor)
+        if (!_attribute.isNoSubscriptions) {
+            init += ", " + _attribute.getNotifierReliabilityType(_accessor)
+        }
         init += ", " + _attribute.getEndianess(_accessor)
 
         if (!_attribute.isReadonly) {
             init += ", " + _attribute.getSetterIdentifier(_accessor) + ", " + _attribute.isSetterReliable(_accessor)
         }
 
-        val String deployment = _attribute.getDeploymentRef(_attribute.array, null, _interface, _accessor)
+        val String deployment = _attribute.getDeploymentRef(_attribute.array, null, _interface, _accessor.getOverwriteAccessor(_attribute))
         if (deployment != "")
             init += ", " + deployment
 
@@ -525,9 +534,6 @@ class FInterfaceSomeIPProxyGenerator {
     def private someipClassName(FBroadcast _broadcast, FInterface _interface, PropertyAccessor _accessor) {
         var eventDeclaration = "CommonAPI::SomeIP::"
 
-        if (_broadcast.isSelective)
-            eventDeclaration += "Selective"
-
         eventDeclaration += "Event<" + _broadcast.className
         for (a : _broadcast.outArgs) {
             eventDeclaration += ", "
@@ -536,14 +542,5 @@ class FInterfaceSomeIPProxyGenerator {
         eventDeclaration += '>'
 
         return eventDeclaration
-    }
-
-    def private hasInterfaceSelectiveBroadacsts(FInterface _interface, PropertyAccessor _accessor) {
-        for (broadcast : _interface.broadcasts) {
-            if (broadcast.isSelective) {
-                return ", true"
-            }
-        }
-        return ""
     }
 }

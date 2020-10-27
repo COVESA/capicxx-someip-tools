@@ -1,10 +1,7 @@
-/* Copyright (C) 2013 BMW Group
- * Author: Manfred Bathelt (manfred.bathelt@bmw.de)
- * Author: Juergen Gehring (juergen.gehring@bmw.de)
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-
+/* Copyright (C) 2013-2020 Bayerische Motoren Werke Aktiengesellschaft (BMW AG)
+   This Source Code Form is subject to the terms of the Mozilla Public
+   License, v. 2.0. If a copy of the MPL was not distributed with this
+   file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.genivi.commonapi.someip.validator;
 
 import org.franca.core.franca.impl.FModelImpl;
@@ -53,23 +50,26 @@ public class AllInfoMapsBuilder {
 
     private void buildAllInfos(Set<EObject> ressourceSet) {
         for (EObject model : ressourceSet) {
-            ArrayList<String> typeCollectionList = new ArrayList<String>();
-            ArrayList<String> interfaceList = new ArrayList<String>();
             if (model != null) {
-                for (EObject e : model.eContents()) {
-                    if (e instanceof FTypeCollection
-                            && !(e instanceof FInterface)) {
-                        typeCollectionList.add(((FTypeCollection) e).getName());
+                Resource resource = model.eResource();
+                if (resource != null) {
+                    ArrayList<String> typeCollectionList = new ArrayList<String>();
+                    ArrayList<String> interfaceList = new ArrayList<String>();
+                    for (EObject e : model.eContents()) {
+                        if (e instanceof FTypeCollection
+                                && !(e instanceof FInterface)) {
+                            typeCollectionList.add(((FTypeCollection) e).getName());
+                        }
+                        if (e instanceof FInterface) {
+                            interfaceList.add(((FInterface) e).getName());
+                        }
                     }
-                    if (e instanceof FInterface) {
-                        interfaceList.add(((FInterface) e).getName());
-                    }
+                    infoTriple = new Triple<String, ArrayList<String>, ArrayList<String>>(
+                            ((FModelImpl) model).getName(), typeCollectionList,
+                            interfaceList);
+                    allInfo.put(((FModel) model).eResource().getURI().toString(),
+                            infoTriple);
                 }
-                infoTriple = new Triple<String, ArrayList<String>, ArrayList<String>>(
-                        ((FModelImpl) model).getName(), typeCollectionList,
-                        interfaceList);
-                allInfo.put(((FModel) model).eResource().getURI().toString(),
-                        infoTriple);
             }
         }
     }
@@ -130,8 +130,9 @@ public class AllInfoMapsBuilder {
         File folder = new File(path);
         for (File file : folder.listFiles()) {
             if (file.isDirectory()) {
-                if (!(file.getName().equals("bin") || file.equals(".settings")))
-                    buildAllInfo(path + "/" + file.getName());
+                String directoryName = file.getName();
+                if (!(directoryName.equals("bin") || directoryName.equals(".settings")))
+                    buildAllInfo(path + "/" + directoryName);
             }
             if (file.isFile()) {
                 if (file.getName().endsWith(".fidl")) {

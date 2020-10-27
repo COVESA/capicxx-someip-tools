@@ -294,6 +294,45 @@ TEST_F(DeploymentTest, StringEncodingDeployment) {
         }
     }
 }
+
+TEST_F(DeploymentTest, StringWithNULCodepoint) {
+    CommonAPI::SomeIP::Message message;
+    message = CommonAPI::SomeIP::Message::createMethodCall(
+        CommonAPI::SomeIP::Address(0, 0, 0, 0),
+        515,
+        false);
+    {
+        CommonAPI::SomeIP::StringDeployment deplutf8(10, 1, CommonAPI::SomeIP::StringEncoding::UTF8);
+
+        // a valid UTF-8 encoded string
+        std::string outv = std::string("abc\0def\xe2\x82\xac", 10);
+        {
+            CommonAPI::SomeIP::byte_t expected[] = {14, 239, 187, 191, 97, 98, 99, 0, 100, 101, 102, 226, 130, 172, 0};
+            CommonAPI::SomeIP::OutputStream outStream(message, false);
+            outStream.writeValue(outv, &deplutf8);
+            EXPECT_FALSE(outStream.hasError());
+            outStream.flush();
+
+            CommonAPI::SomeIP::byte_t * data = message.getBodyData();
+            CommonAPI::SomeIP::message_length_t length = message.getBodyLength();
+            EXPECT_EQ(length, sizeof expected);
+
+            for (unsigned int i = 0; i < length; i++) {
+                EXPECT_EQ(data[i], expected[i]);
+                // std::cout << (unsigned int)data[i] << ", ";
+            }
+            //std::cout << std::endl;
+
+            CommonAPI::SomeIP::InputStream inStream(message, false);
+
+            std::string inv;
+            inStream.readValue(inv, &deplutf8);
+            EXPECT_FALSE(inStream.hasError());
+            EXPECT_EQ(outv, inv);
+        }
+    }
+}
+
 /**
 * @test Pass an attribute with string value and a deployment.
 */
@@ -315,16 +354,21 @@ TEST_F(DeploymentTest, StringAttributeWithDeployment) {
         // the attribute has a fixed data length of 10,
         // which includes the encoding (3 bytes) and the trailing NUL
         // this leaves room for 6 one-byte-length characters.
+        // We'll send a five-letter string.
+        // This is nowadays okay, if the rest of the data is filled with zeros.
         std::string outv = "01234";
         std::string inv;
 
         testProxy_->getAString_l10_w0Attribute().setValue(outv, callStatus, inv);
-        ASSERT_NE(callStatus, CommonAPI::CallStatus::SUCCESS);
+        ASSERT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
+        outv.append(1, '\0');
+        EXPECT_EQ(outv, inv);
     }
     {
         // the attribute has a fixed data length of 10,
         // which includes the encoding (3 bytes) and the trailing NUL
         // this leaves room for 6 one-byte-length characters.
+        // A longer string is considered an error.
         std::string outv = "0123456";
         std::string inv;
 

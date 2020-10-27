@@ -158,6 +158,27 @@ TEST_F(DeploymentTest, UInt8WithOutputBitLengthDeployment) {
             EXPECT_EQ(data[0], (CommonAPI::SomeIP::byte_t)((1 << i) - 1));
         }
     }
+    // any bit length greater than 8 should be clipped to 8 bits
+    for (uint8_t i = 9; i <= 32; i++) {
+         message = CommonAPI::SomeIP::Message::createMethodCall(
+            CommonAPI::SomeIP::Address(0, 0, 0, 0),
+            515,
+            false);
+        CommonAPI::SomeIP::OutputStream outStream(message, false);
+
+        uint8_t val1 = 0xFF;
+        CommonAPI::SomeIP::IntegerDeployment<int8_t> id(i);
+        outStream.writeValue(val1, &id);
+        outStream.flush();
+
+        CommonAPI::SomeIP::byte_t * data = message.getBodyData();
+        CommonAPI::SomeIP::message_length_t length = message.getBodyLength();
+
+        EXPECT_EQ(length, (CommonAPI::SomeIP::message_length_t)(1));
+        if (length == 1) {
+            EXPECT_EQ(data[0], (CommonAPI::SomeIP::byte_t) 0xFF);
+        }
+    }
 }
 /**
 * @test Check that an Int8 data is clipped according to bit length output deployment.
@@ -184,6 +205,28 @@ TEST_F(DeploymentTest, Int8WithOutputBitLengthDeployment) {
         EXPECT_EQ(length, (CommonAPI::SomeIP::message_length_t)((i + 7) / 8));
         if (length == 1) {
             EXPECT_EQ(data[0], (CommonAPI::SomeIP::byte_t)((1 << i) - 1));
+        }
+    }
+
+    // any bit length greater than 8 should be clipped to 8 bits
+    for (uint8_t i = 9; i <= 32; i++) {
+         message = CommonAPI::SomeIP::Message::createMethodCall(
+            CommonAPI::SomeIP::Address(0, 0, 0, 0),
+            515,
+            false);
+        CommonAPI::SomeIP::OutputStream outStream(message, false);
+
+        int8_t val1 = (int8_t)0xFF;
+        CommonAPI::SomeIP::IntegerDeployment<int8_t> id(i);
+        outStream.writeValue(val1, &id);
+        outStream.flush();
+
+        CommonAPI::SomeIP::byte_t * data = message.getBodyData();
+        CommonAPI::SomeIP::message_length_t length = message.getBodyLength();
+
+        EXPECT_EQ(length, (CommonAPI::SomeIP::message_length_t)(1));
+        if (length == 1) {
+            EXPECT_EQ(data[0], (CommonAPI::SomeIP::byte_t) 0xFF);
         }
     }
 }
@@ -1133,6 +1176,101 @@ TEST_F(DeploymentTest, PackTwoFourBitIntegersToOneByte) {
     EXPECT_EQ(length, (CommonAPI::SomeIP::message_length_t)1);
     EXPECT_EQ(data[0], 0xC4);
 }
+/**
+* @test Check ranged integers with values in the specified range
+*/
+TEST_F(DeploymentTest, RangedIntegersInRange) {
+
+    CommonAPI::CallStatus callStatus;
+    int32_t testInteger;
+    CommonAPI::RangedInteger<0,1> testIntegerResult1;
+    CommonAPI::RangedInteger<-5,5> testIntegerResult2;
+    CommonAPI::RangedInteger<-5000000,5000000> testIntegerResult3;
+
+    testInteger = 0;
+    testProxy_->getAInt0to1Attribute().setValue(testInteger, callStatus, testIntegerResult1);
+    ASSERT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
+    EXPECT_EQ(testIntegerResult1, 0);
+
+    testInteger = 1;
+    testProxy_->getAInt0to1Attribute().setValue(testInteger, callStatus, testIntegerResult1);
+    ASSERT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
+    EXPECT_EQ(testIntegerResult1, 1);
+
+    testInteger = -5;
+    testProxy_->getAIntm5to5Attribute().setValue(testInteger, callStatus, testIntegerResult2);
+    ASSERT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
+    EXPECT_EQ(testIntegerResult2, -5);
+
+    testInteger = 5;
+    testProxy_->getAIntm5to5Attribute().setValue(testInteger, callStatus, testIntegerResult2);
+    ASSERT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
+    EXPECT_EQ(testIntegerResult2, 5);
+
+    testInteger = 5000000;
+    testProxy_->getAIntm5mto5mAttribute().setValue(testInteger, callStatus, testIntegerResult3);
+    ASSERT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
+    EXPECT_EQ(testIntegerResult3, 5000000);
+
+    testInteger = -5000000;
+    testProxy_->getAIntm5mto5mAttribute().setValue(testInteger, callStatus, testIntegerResult3);
+    ASSERT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
+    EXPECT_EQ(testIntegerResult3, -5000000);
+
+}
+
+/**
+* @test Check ranged integers with values outside the specified range
+*/
+TEST_F(DeploymentTest, RangedIntegersOutOfRange) {
+
+    CommonAPI::CallStatus callStatus;
+    int32_t testInteger;
+    CommonAPI::RangedInteger<0,1> testIntegerResult1;
+    CommonAPI::RangedInteger<-5,5> testIntegerResult2;
+    CommonAPI::RangedInteger<-5000000,5000000> testIntegerResult3;
+
+    testInteger = -1;
+    testProxy_->getAInt0to1Attribute().setValue(testInteger, callStatus, testIntegerResult1);
+    ASSERT_NE(callStatus, CommonAPI::CallStatus::SUCCESS);
+
+    testInteger = 2;
+    testProxy_->getAInt0to1Attribute().setValue(testInteger, callStatus, testIntegerResult1);
+    ASSERT_NE(callStatus, CommonAPI::CallStatus::SUCCESS);
+
+    testInteger = -6;
+    testProxy_->getAIntm5to5Attribute().setValue(testInteger, callStatus, testIntegerResult2);
+    ASSERT_NE(callStatus, CommonAPI::CallStatus::SUCCESS);
+
+    testInteger = 6;
+    testProxy_->getAIntm5to5Attribute().setValue(testInteger, callStatus, testIntegerResult2);
+    ASSERT_NE(callStatus, CommonAPI::CallStatus::SUCCESS);
+
+    testInteger = 5000001;
+    testProxy_->getAIntm5mto5mAttribute().setValue(testInteger, callStatus, testIntegerResult3);
+    ASSERT_NE(callStatus, CommonAPI::CallStatus::SUCCESS);
+
+    testInteger = -5000001;
+    testProxy_->getAIntm5mto5mAttribute().setValue(testInteger, callStatus, testIntegerResult3);
+    ASSERT_NE(callStatus, CommonAPI::CallStatus::SUCCESS);
+}
+
+/**
+* @test Check that an attribute with ranged integer data has its value clipped correctly.
+* Disabled until bit clipping works.
+*/
+TEST_F(DeploymentTest, DISABLED_RangedIntegerClipping) {
+
+    CommonAPI::CallStatus callStatus;
+
+    int testValue = 5;
+    CommonAPI::RangedInteger<-5, 5> testResult;
+
+    testProxy_->getAIntm5to5b3Attribute().setValue(testValue, callStatus, testResult);
+    ASSERT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
+
+}
+
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
     ::testing::AddGlobalTestEnvironment(new Environment());

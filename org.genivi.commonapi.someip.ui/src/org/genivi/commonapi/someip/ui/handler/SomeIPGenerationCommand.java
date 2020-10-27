@@ -1,10 +1,7 @@
-/* Copyright (C) 2013 BMW Group
- * Author: Manfred Bathelt (manfred.bathelt@bmw.de)
- * Author: Juergen Gehring (juergen.gehring@bmw.de)
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-
+/* Copyright (C) 2013-2020 Bayerische Motoren Werke Aktiengesellschaft (BMW AG)
+   This Source Code Form is subject to the terms of the Mozilla Public
+   License, v. 2.0. If a copy of the MPL was not distributed with this
+   file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.genivi.commonapi.someip.ui.handler;
 
 import java.util.List;
@@ -20,7 +17,10 @@ import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.xtext.builder.EclipseResourceFileSystemAccess2;
 import org.franca.deploymodel.dsl.fDeploy.FDModel;
+import org.genivi.commonapi.core.preferences.PreferenceConstants;
+import org.genivi.commonapi.core.ui.CommonApiUiPlugin;
 import org.genivi.commonapi.core.ui.handler.GenerationCommand;
+import org.genivi.commonapi.core.verification.DeploymentValidator;
 import org.genivi.commonapi.someip.deployment.validator.SomeIPDeploymentValidator;
 import org.genivi.commonapi.someip.preferences.FPreferencesSomeIP;
 import org.genivi.commonapi.someip.preferences.PreferenceConstantsSomeIP;
@@ -136,22 +136,30 @@ public class SomeIPGenerationCommand extends GenerationCommand {
 		instance.setPreference(PreferenceConstantsSomeIP.P_GENERATE_DEPENDENCIES_SOMEIP, generateDependencies);
 		instance.setPreference(PreferenceConstantsSomeIP.P_GENERATE_SYNC_CALLS_SOMEIP, generateSyncCalls);
 	}
-
     public boolean isDeploymentValidatorEnabled()
     {
         IPreferenceStore prefs = CommonApiSomeIPUiPlugin.getValidatorPreferences();
         return prefs != null && prefs.getBoolean(PreferenceConstantsSomeIP.P_ENABLE_SOMEIP_DEPLOYMENT_VALIDATOR);
     }
-
-	@Override
+    public boolean isCoreDeploymentValidatorEnabled()
+    {
+        IPreferenceStore prefs = CommonApiUiPlugin.getValidatorPreferences();
+        return prefs != null && prefs.getBoolean(PreferenceConstants.P_ENABLE_CORE_DEPLOYMENT_VALIDATOR);
+    }
+    @Override
     protected List<Diagnostic> validateDeployment(List<FDModel> fdepls)
     {
-	    if (!isDeploymentValidatorEnabled())
-	        return null;
-
-        SomeIPDeploymentValidator validator = new SomeIPDeploymentValidator();
         BasicDiagnostic diagnostics = new BasicDiagnostic();
-        validator.validate(fdepls, diagnostics);
+        if (isDeploymentValidatorEnabled())
+        {
+            SomeIPDeploymentValidator validator = new SomeIPDeploymentValidator();
+            validator.validate(fdepls, diagnostics);
+        }
+        if (isCoreDeploymentValidatorEnabled())
+        {
+	        DeploymentValidator coreValidator = new DeploymentValidator();
+	        coreValidator.validate(fdepls, diagnostics);
+        }
         return diagnostics.getChildren();
     }
 }

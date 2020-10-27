@@ -1,8 +1,8 @@
 ### CommonAPI C++ SOME/IP Tools
 
 ##### Copyright
-Copyright (C) 2015,2016 Bayerische Motoren Werke Aktiengesellschaft (BMW AG).
-Copyright (C) 2015,2016 GENIVI Alliance, Inc.
+Copyright (C) 2015-2020 Bayerische Motoren Werke Aktiengesellschaft (BMW AG).
+Copyright (C) 2015-2020 GENIVI Alliance, Inc.
 
 This file is part of GENIVI Project IPC Common API C++.
 Contributions are licensed to the GENIVI Alliance under one or more Contribution License Agreements or MPL 2.0.
@@ -25,4 +25,4 @@ mvn -DCOREPATH=<path to your CommonAPI-Tools dir> -Dtarget.id=org.genivi.commona
 ```
 _COREPATH_ is the directory, that contains the target definition folder: `org.genivi.commonapi.someip.target`.
 
-After the successful build you will find the commond-line generators archived in `org.genivi.commonapi.someip.cli.product/target/products/commonapi-generator.zip` and the update-sites in `org.genivi.commonapi.someip.updatesite/target`.
+After the successful build you will find the commond-line generators archived in `org.genivi.commonapi.someip.cli.product/target/products/commonapi_someip_generator.zip` and the update-sites in `org.genivi.commonapi.someip.updatesite/target`.

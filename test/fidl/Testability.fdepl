@@ -1,0 +1,690 @@
+/*
+ * ##############################
+ * #####                    #####
+ * #####   Generated File   #####
+ * #####                    #####
+ * ##############################
+ *
+ * Fibex origin: FBX411_SP2021_akt_V32_MultiBus_hPAD_EyeQ5_2b_V21_lokal_20190304122505.xml
+ * Franca version: 0.13.1.201807231814
+ */
+import
+"platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-4-SOMEIP_deployment_spec.fdepl"
+import "Testability.fidl"
+import "Common.fdepl"
+import "TestabilityTypes.fdepl"
+
+define org.genivi.commonapi.someip.deployment for interface
+de.bmw.infrastructure.testability.EnhancedTestabilityServiceHigh2 {
+    use de.bmw.environmentalmodel.common.Common
+    SomeIpServiceID = 257
+
+    attribute ETSInterfaceVersion {
+        SomeIpGetterID = 37
+        SomeIpAttributeReliable = false
+        SomeIpNotifierID = 32773
+        SomeIpNotifierMaxRetentionTime = 5
+        SomeIpNotifierDebounceTime = 100
+        SomeIpGetterMaxRetentionTime = 5
+        SomeIpGetterRequestDebounceTime = 100
+        SomeIpNotifierEventGroups = {
+            2, 5
+        }
+    }
+
+    attribute TestFieldUINT8 {
+        SomeIpGetterID = 38
+        SomeIpAttributeReliable = false
+        SomeIpSetterID = 39
+        SomeIpNotifierID = 32774
+        SomeIpNotifierMaxRetentionTime = 5
+        SomeIpNotifierDebounceTime = 100
+        SomeIpGetterMaxRetentionTime = 5
+        SomeIpGetterRequestDebounceTime = 100
+        SomeIpSetterMaxRetentionTime = 5
+        SomeIpSetterRequestDebounceTime = 100
+        SomeIpNotifierEventGroups = {
+            2, 5
+        }
+    }
+
+    attribute TestFieldUINT8Array {
+        SomeIpGetterID = 40
+        SomeIpAttributeReliable = false
+        SomeIpSetterID = 41
+        SomeIpNotifierID = 32775
+        SomeIpNotifierMaxRetentionTime = 5
+        SomeIpNotifierDebounceTime = 100
+        SomeIpGetterMaxRetentionTime = 5
+        SomeIpGetterRequestDebounceTime = 100
+        SomeIpSetterMaxRetentionTime = 5
+        SomeIpSetterRequestDebounceTime = 100
+        SomeIpNotifierEventGroups = {
+            2, 5
+        }
+        SomeIpArrayMaxLength = 5
+        SomeIpArrayMinLength = 0
+    }
+
+    attribute TestFieldUINT8Reliable {
+        SomeIpGetterID = 42
+        SomeIpAttributeReliable = true
+        SomeIpSetterID = 43
+        SomeIpNotifierID = 32776
+        SomeIpNotifierMaxRetentionTime = 5
+        SomeIpNotifierDebounceTime = 100
+        SomeIpGetterMaxRetentionTime = 5
+        SomeIpGetterRequestDebounceTime = 100
+        SomeIpSetterMaxRetentionTime = 5
+        SomeIpSetterRequestDebounceTime = 100
+        SomeIpNotifierEventGroups = {
+            2
+        }
+    }
+
+    method checkByteOrder {
+        SomeIpMethodID = 31
+        SomeIpReliable = false
+        SomeIpMethodMaxRetentionTime = 5
+        SomeIpMethodRequestDebounceTime = 100
+    }
+
+    method clientServiceActivate {
+        SomeIpMethodID = 47
+        SomeIpReliable = false
+        SomeIpMethodMaxRetentionTime = 5
+        SomeIpMethodRequestDebounceTime = 100
+    }
+
+    method clientServiceCallEchoUINT8Array {
+        SomeIpMethodID = 49
+        SomeIpReliable = false
+        SomeIpMethodMaxRetentionTime = 5
+        SomeIpMethodRequestDebounceTime = 100
+        in {
+            inUINT8Array {
+                SomeIpArrayMaxLength = 5
+                SomeIpArrayMinLength = 0
+            }
+        }
+        out {
+            outUINT8Array {
+                SomeIpArrayMaxLength = 5
+                SomeIpArrayMinLength = 0
+            }
+        }
+    }
+
+    method clientServiceDeactivate {
+        SomeIpMethodID = 48
+        SomeIpReliable = false
+        SomeIpMethodMaxRetentionTime = 5
+        SomeIpMethodRequestDebounceTime = 100
+    }
+
+    method clientServiceGetLastValueOfEventTCP {
+        SomeIpMethodID = 59
+        SomeIpReliable = false
+        SomeIpMethodMaxRetentionTime = 5
+        SomeIpMethodRequestDebounceTime = 100
+    }
+
+    method clientServiceGetLastValueOfEventUDPMulticast {
+        SomeIpMethodID = 61
+        SomeIpReliable = false
+        SomeIpMethodMaxRetentionTime = 5
+        SomeIpMethodRequestDebounceTime = 100
+    }
+
+    method clientServiceGetLastValueOfEventUDPUnicast {
+        SomeIpMethodID = 60
+        SomeIpReliable = false
+        SomeIpMethodMaxRetentionTime = 5
+        SomeIpMethodRequestDebounceTime = 100
+    }
+
+    method clientServiceSubscribeEventgroup {
+        SomeIpMethodID = 50
+        SomeIpReliable = false
+        SomeIpMethodMaxRetentionTime = 5
+        SomeIpMethodRequestDebounceTime = 100
+    }
+
+    method echoBitfields {
+        SomeIpMethodID = 65
+        SomeIpReliable = false
+        SomeIpMethodMaxRetentionTime = 5
+        SomeIpMethodRequestDebounceTime = 100
+    }
+
+    method echoCommonDatatypes {
+        SomeIpMethodID = 35
+        SomeIpReliable = false
+        SomeIpMethodMaxRetentionTime = 5
+        SomeIpMethodRequestDebounceTime = 100
+    }
+
+    method echoENUM {
+        SomeIpMethodID = 23
+        SomeIpReliable = false
+        SomeIpMethodMaxRetentionTime = 5
+        SomeIpMethodRequestDebounceTime = 100
+    }
+
+    method echoExtendedDatatypes {
+        SomeIpMethodID = 36
+        SomeIpReliable = false
+        SomeIpMethodMaxRetentionTime = 5
+        SomeIpMethodRequestDebounceTime = 100
+        in {
+            inputData {
+                SomeIpArrayMaxLength = 5
+                SomeIpArrayMinLength = 1
+                #union {
+                    SomeIpUnionLengthWidth = 4
+                }
+            }
+        }
+        out {
+            returnData {
+                SomeIpArrayMaxLength = 5
+                SomeIpArrayMinLength = 1
+                #union {
+                    SomeIpUnionLengthWidth = 4
+                }
+            }
+        }
+    }
+
+    method echoExtendedDatatypes16BitLengthAndTypeField {
+        SomeIpMethodID = 57
+        SomeIpReliable = false
+        SomeIpMethodMaxRetentionTime = 5
+        SomeIpMethodRequestDebounceTime = 100
+        in {
+            inputData {
+                SomeIpArrayMaxLength = 5
+                SomeIpArrayMinLength = 1
+                SomeIpArrayLengthWidth = 2
+                #union {
+                    SomeIpUnionLengthWidth = 2
+                }
+            }
+        }
+        out {
+            returnData {
+                SomeIpArrayMaxLength = 5
+                SomeIpArrayMinLength = 1
+                SomeIpArrayLengthWidth = 2
+                #union {
+                    SomeIpUnionLengthWidth = 2
+                }
+            }
+        }
+    }
+
+    method echoExtendedDatatypes8BitLengthAndTypeField {
+        SomeIpMethodID = 56
+        SomeIpReliable = false
+        SomeIpMethodMaxRetentionTime = 5
+        SomeIpMethodRequestDebounceTime = 100
+        in {
+            inputData {
+                SomeIpArrayMaxLength = 5
+                SomeIpArrayMinLength = 1
+                SomeIpArrayLengthWidth = 1
+                #union {
+                    SomeIpUnionLengthWidth = 1
+                }
+            }
+        }
+        out {
+            returnData {
+                SomeIpArrayMaxLength = 5
+                SomeIpArrayMinLength = 1
+                SomeIpArrayLengthWidth = 1
+                #union {
+                    SomeIpUnionLengthWidth = 1
+                }
+            }
+        }
+    }
+
+    method echoFLOAT64 {
+        SomeIpMethodID = 18
+        SomeIpReliable = false
+        SomeIpMethodMaxRetentionTime = 5
+        SomeIpMethodRequestDebounceTime = 100
+    }
+
+    method echoINT64 {
+        SomeIpMethodID = 52
+        SomeIpReliable = false
+        SomeIpMethodMaxRetentionTime = 5
+        SomeIpMethodRequestDebounceTime = 100
+    }
+
+    method echoINT8 {
+        SomeIpMethodID = 14
+        SomeIpReliable = false
+        SomeIpMethodMaxRetentionTime = 5
+        SomeIpMethodRequestDebounceTime = 100
+    }
+
+    method echoStaticUINT8Array {
+        SomeIpMethodID = 54
+        SomeIpReliable = false
+        SomeIpMethodMaxRetentionTime = 5
+        SomeIpMethodRequestDebounceTime = 100
+        in {
+            uINT8Array {
+                SomeIpArrayMaxLength = 5
+                SomeIpArrayMinLength = 5
+                SomeIpArrayLengthWidth = 0
+            }
+        }
+        out {
+            uINT8ArrayReturnValue {
+                SomeIpArrayMaxLength = 5
+                SomeIpArrayMinLength = 5
+                SomeIpArrayLengthWidth = 0
+            }
+        }
+    }
+
+    method echoSTRUCT {
+        SomeIpMethodID = 24
+        SomeIpReliable = false
+        SomeIpMethodMaxRetentionTime = 5
+        SomeIpMethodRequestDebounceTime = 100
+    }
+
+    method echoSTRUCTSimple {
+        SomeIpMethodID = 64
+        SomeIpReliable = false
+        SomeIpMethodMaxRetentionTime = 5
+        SomeIpMethodRequestDebounceTime = 100
+        in {
+            structElement {
+                SomeIpArrayMaxLength = 2
+                SomeIpArrayMinLength = 2
+                SomeIpArrayLengthWidth = 0
+            }
+        }
+        out {
+            structReturnElement {
+                SomeIpArrayMaxLength = 2
+                SomeIpArrayMinLength = 2
+                SomeIpArrayLengthWidth = 0
+            }
+        }
+    }
+
+    method echoTYPEDEF {
+        SomeIpMethodID = 26
+        SomeIpReliable = false
+        SomeIpMethodMaxRetentionTime = 5
+        SomeIpMethodRequestDebounceTime = 100
+    }
+
+    method echoUINT64 {
+        SomeIpMethodID = 51
+        SomeIpReliable = false
+        SomeIpMethodMaxRetentionTime = 5
+        SomeIpMethodRequestDebounceTime = 100
+    }
+
+    method echoUINT8 {
+        SomeIpMethodID = 8
+        SomeIpReliable = false
+        SomeIpMethodMaxRetentionTime = 5
+        SomeIpMethodRequestDebounceTime = 100
+    }
+
+    method echoUINT8Array {
+        SomeIpMethodID = 9
+        SomeIpReliable = false
+        SomeIpMethodMaxRetentionTime = 5
+        SomeIpMethodRequestDebounceTime = 100
+        in {
+            inUINT8Array {
+                SomeIpArrayMaxLength = 5
+                SomeIpArrayMinLength = 0
+            }
+        }
+        out {
+            outUINT8Array {
+                SomeIpArrayMaxLength = 5
+                SomeIpArrayMinLength = 0
+            }
+        }
+    }
+
+    method echoUINT8Array16BitLength {
+        SomeIpMethodID = 63
+        SomeIpReliable = false
+        SomeIpMethodMaxRetentionTime = 5
+        SomeIpMethodRequestDebounceTime = 100
+        in {
+            inUINT8Array {
+                SomeIpArrayMaxLength = 5
+                SomeIpArrayMinLength = 0
+                SomeIpArrayLengthWidth = 2
+            }
+        }
+        out {
+            outUINT8Array {
+                SomeIpArrayMaxLength = 5
+                SomeIpArrayMinLength = 0
+                SomeIpArrayLengthWidth = 2
+            }
+        }
+    }
+
+    method echoUINT8Array2Dim {
+        SomeIpMethodID = 53
+        SomeIpReliable = false
+        SomeIpMethodMaxRetentionTime = 5
+        SomeIpMethodRequestDebounceTime = 100
+        in {
+            uINT8Array {
+                SomeIpArrayMaxLength = 5
+                SomeIpArrayMinLength = 0
+            }
+        }
+        out {
+            uINT8ArrayReturnValue {
+                SomeIpArrayMaxLength = 5
+                SomeIpArrayMinLength = 0
+            }
+        }
+    }
+
+    method echoUINT8Array8BitLength {
+        SomeIpMethodID = 62
+        SomeIpReliable = false
+        SomeIpMethodMaxRetentionTime = 5
+        SomeIpMethodRequestDebounceTime = 100
+        in {
+            inUINT8Array {
+                SomeIpArrayMaxLength = 5
+                SomeIpArrayMinLength = 0
+                SomeIpArrayLengthWidth = 1
+            }
+        }
+        out {
+            outUINT8Array {
+                SomeIpArrayMaxLength = 5
+                SomeIpArrayMinLength = 0
+                SomeIpArrayLengthWidth = 1
+            }
+        }
+    }
+
+    method echoUINT8ArrayMinSize {
+        SomeIpMethodID = 55
+        SomeIpReliable = false
+        SomeIpMethodMaxRetentionTime = 5
+        SomeIpMethodRequestDebounceTime = 100
+        in {
+            uINT8Array {
+                SomeIpArrayMaxLength = 5
+                SomeIpArrayMinLength = 3
+            }
+        }
+        out {
+            uINT8ArrayReturnValue {
+                SomeIpArrayMaxLength = 5
+                SomeIpArrayMinLength = 3
+            }
+        }
+    }
+
+    method echoUINT8RELIABLE {
+        SomeIpMethodID = 10
+        SomeIpReliable = true
+        SomeIpMethodMaxRetentionTime = 5
+        SomeIpMethodRequestDebounceTime = 100
+    }
+
+    method echoUNION {
+        SomeIpMethodID = 25
+        SomeIpReliable = false
+        SomeIpMethodMaxRetentionTime = 5
+        SomeIpMethodRequestDebounceTime = 100
+        in {
+            unionElement {
+                #union {
+                    SomeIpUnionLengthWidth = 4
+                    uInt32MemberArray {
+			            SomeIpArrayMaxLength = 8
+			            SomeIpArrayMinLength = 8
+			            SomeIpArrayLengthWidth = 0
+			        }
+                }
+            }
+        }
+        out {
+            unionReturnElement {
+                #union {
+                    SomeIpUnionLengthWidth = 4
+                }
+            }
+        }
+    }
+
+    method echoUTF16DYNAMIC {
+        SomeIpMethodID = 22
+        SomeIpReliable = false
+        SomeIpMethodMaxRetentionTime = 5
+        SomeIpMethodRequestDebounceTime = 100
+        in {
+            uTF16DynamicLengthString {
+                SomeIpStringEncoding = utf16be
+                SomeIpStringLengthWidth = 4
+            }
+        }
+        out {
+            uTF16DynamicLengthReturnString {
+                SomeIpStringEncoding = utf16be
+                SomeIpStringLengthWidth = 4
+            }
+        }
+    }
+
+    method echoUTF16FIXED {
+        SomeIpMethodID = 20
+        SomeIpReliable = false
+        SomeIpMethodMaxRetentionTime = 5
+        SomeIpMethodRequestDebounceTime = 100
+        in {
+            uTF16FixedLength511String {
+                SomeIpStringEncoding = utf16be
+                SomeIpStringLength = 64
+                SomeIpStringLengthWidth = 0
+            }
+        }
+        out {
+            uTF16FixedLength511ReturnString {
+                SomeIpStringEncoding = utf16be
+                SomeIpStringLength = 64
+                SomeIpStringLengthWidth = 0
+            }
+        }
+    }
+
+    method echoUTF8DYNAMIC {
+        SomeIpMethodID = 21
+        SomeIpReliable = false
+        SomeIpMethodMaxRetentionTime = 5
+        SomeIpMethodRequestDebounceTime = 100
+        in {
+            uTF8DynamicLengthString {
+                SomeIpStringLengthWidth = 4
+            }
+        }
+        out {
+            uTF8DynamicLengthReturnString {
+                SomeIpStringLengthWidth = 4
+            }
+        }
+    }
+
+    method echoUTF8FIXED {
+        SomeIpMethodID = 19
+        SomeIpReliable = false
+        SomeIpMethodMaxRetentionTime = 5
+        SomeIpMethodRequestDebounceTime = 100
+        in {
+            uTF8FixedLength255String {
+                SomeIpStringLength = 64
+                SomeIpStringLengthWidth = 0
+            }
+        }
+        out {
+            uTF8FixedLength255ReturnString {
+                SomeIpStringLength = 64
+                SomeIpStringLengthWidth = 0
+            }
+        }
+    }
+
+    method resetInterface {
+        SomeIpMethodID = 1
+        SomeIpReliable = false
+        SomeIpMethodMaxRetentionTime = 5
+        SomeIpMethodRequestDebounceTime = 100
+    }
+
+    method suspendInterface {
+        SomeIpMethodID = 2
+        SomeIpReliable = false
+        SomeIpMethodMaxRetentionTime = 5
+        SomeIpMethodRequestDebounceTime = 100
+    }
+
+    method triggerEventUINT8 {
+        SomeIpMethodID = 3
+        SomeIpReliable = false
+        SomeIpMethodMaxRetentionTime = 5
+        SomeIpMethodRequestDebounceTime = 100
+    }
+
+    method triggerEventUINT8Array {
+        SomeIpMethodID = 4
+        SomeIpReliable = false
+        SomeIpMethodMaxRetentionTime = 5
+        SomeIpMethodRequestDebounceTime = 100
+    }
+
+    method triggerEventUINT8Multicast {
+        SomeIpMethodID = 58
+        SomeIpReliable = false
+        SomeIpMethodMaxRetentionTime = 5
+        SomeIpMethodRequestDebounceTime = 100
+    }
+
+    method triggerEventUINT8Reliable {
+        SomeIpMethodID = 5
+        SomeIpReliable = true
+        SomeIpMethodMaxRetentionTime = 5
+        SomeIpMethodRequestDebounceTime = 100
+    }
+
+    broadcast TestEventUINT8 {
+        SomeIpEventID = 32769
+        SomeIpReliable = false
+        SomeIpBroadcastMaxRetentionTime = 5
+        SomeIpBroadcastDebounceTime = 100
+        SomeIpEventGroups = {
+            2, 5
+        }
+    }
+
+    broadcast TestEventUINT8Array {
+        SomeIpEventID = 32770
+        SomeIpReliable = false
+        SomeIpBroadcastMaxRetentionTime = 5
+        SomeIpBroadcastDebounceTime = 100
+        SomeIpEventGroups = {
+            2, 5
+        }
+        out {
+            uINT8Array {
+                SomeIpArrayMaxLength = 5
+                SomeIpArrayMinLength = 0
+            }
+        }
+    }
+
+    broadcast TestEventUINT8E2E {
+        SomeIpEventID = 32772
+        SomeIpReliable = false
+        SomeIpBroadcastMaxRetentionTime = 5
+        SomeIpBroadcastDebounceTime = 100
+        SomeIpEventGroups = {
+            2, 5
+        }
+    }
+
+    broadcast TestEventUINT8Multicast {
+        SomeIpEventID = 32779
+        SomeIpReliable = false
+        SomeIpBroadcastMaxRetentionTime = 5
+        SomeIpBroadcastDebounceTime = 100
+        SomeIpEventGroups = {
+            6
+        }
+    }
+
+    broadcast TestEventUINT8Reliable {
+        SomeIpEventID = 32771
+        SomeIpReliable = true
+        SomeIpBroadcastMaxRetentionTime = 5
+        SomeIpBroadcastDebounceTime = 100
+        SomeIpEventGroups = {
+            2
+        }
+    }
+
+}
+
+define org.genivi.commonapi.someip.deployment for interface
+de.bmw.infrastructure.testability.EnhancedTestabilityServiceTP {
+    SomeIpServiceID = 262
+
+    method echoUINT8ArrayLengthTP {
+        SomeIpMethodID = 1
+        SomeIpReliable = false
+        SomeIpMethodMaxRetentionTime = 5
+        SomeIpMethodRequestDebounceTime = 100
+        in {
+            inUINT8Array {
+                SomeIpArrayMaxLength = 3480
+                SomeIpArrayMinLength = 3480
+                SomeIpArrayLengthWidth = 0
+            }
+        }
+        out {
+            outUINT8Array {
+                SomeIpArrayMaxLength = 3480
+                SomeIpArrayMinLength = 3480
+                SomeIpArrayLengthWidth = 0
+            }
+        }
+    }
+    method ^use {
+        SomeIpMethodID = 2
+        in {
+            it {
+                  SomeIpArrayMinLength = 3
+                  SomeIpArrayMaxLength = 17
+                  #struct {
+		             uTF8String {
+		                    SomeIpStringEncoding = utf8
+		             }
+	             }
+            }
+        }
+    }
+}

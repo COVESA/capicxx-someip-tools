@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: GENIVI Common API Some/IP Deployment Validator
+Bundle-Name: GENIVI CommonAPI Some/IP Deployment Validator
 Bundle-SymbolicName: org.genivi.commonapi.someip.deployment.validator;singleton:=true
-Bundle-Version: 3.1.12.qualifier
+Bundle-Version: 3.2.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Vendor: BMW AG
 Export-Package: org.genivi.commonapi.someip.deployment.validator
@@ -10,5 +10,7 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.8.0";visibility:=reex
  org.eclipse.xtext;bundle-version="[2.7.0,3.0.0)";visibility:=reexport,
  org.eclipse.xtext.generator;bundle-version="[2.7.0,3.0.0)";visibility:=reexport,
  org.eclipse.xtext.util;bundle-version="[2.7.0,3.0.0)";visibility:=reexport,
- org.franca.core.dsl;bundle-version="[0.9.1,0.10.0)";visibility:=reexport,
- org.franca.deploymodel.dsl;bundle-version="[0.9.1,0.10.0)";visibility:=reexport
+ org.franca.core.dsl;bundle-version="[0.13.1,0.14.0)";visibility:=reexport,
+ org.franca.deploymodel.dsl;bundle-version="[0.13.1,0.14.0)";visibility:=reexport,
+ org.franca.deploymodel.ext.providers;bundle-version="[0.13.1,0.14.0)"
+Automatic-Module-Name: org.genivi.commonapi.someip.deployment.validator

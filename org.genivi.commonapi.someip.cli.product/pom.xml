@@ -101,6 +101,19 @@
                                     <fileset
                                         dir="${project.build.directory}/products/org.genivi.commonapi.someip.cli.product/linux/gtk/x86_64/" />
                                 </copy>
+
+                                <!--
+                                MacOS X:
+                                The 'macosx/cocoa/x86_64/commonapi-someip-generator.app' directory should get copied to 'all/commonapi-someip-generator-macosx-x86_64.app'. This would
+                                follow the already existing naming style for Linux and Windows. But I cannot verify yet, if a MacOSX application directory can get renamed
+                                safely without also renaming the application name in some of the meta data files (e.g. Contents/Info.plist). Therefore the
+                                'commonapi-someip-generator.app' directory is copied to 'all/commonapi-someip-generator.app' directory.
+                                 -->
+                                <copy
+                                    todir="${project.build.directory}/products/org.genivi.commonapi.someip.cli.product/all/commonapi-someip-generator.app/">
+                                    <fileset
+                                        dir="${project.build.directory}/products/org.genivi.commonapi.someip.cli.product/macosx/cocoa/x86_64/commonapi-someip-generator.app/" />
+                                </copy>
                             </target>
                         </configuration>
                     </execution>
@@ -118,7 +131,7 @@
                                     <zipfileset file="${project.build.directory}/products/org.genivi.commonapi.someip.cli.product/all/commonapi-someip-generator-windows-x86.exe" filemode="755"/>
                                     <zipfileset file="${project.build.directory}/products/org.genivi.commonapi.someip.cli.product/all/commonapi-someip-generator-windows-x86_64.exe" filemode="755"/>
                                 </zip>
-                            </target>          
+                            </target>
                         </configuration>
                         <goals>
                             <goal>run</goal>
@@ -131,7 +144,7 @@
     <parent>
         <groupId>commonapi</groupId>
         <artifactId>org.genivi.commonapi.someip.releng</artifactId>
-        <version>3.1.12-SNAPSHOT</version>
+        <version>3.2.0-SNAPSHOT</version>
         <relativePath>../org.genivi.commonapi.someip.releng</relativePath>
     </parent>
 </project>

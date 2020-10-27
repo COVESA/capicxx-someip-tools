@@ -1,0 +1,92 @@
+import
+"platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-4-SOMEIP_deployment_spec.fdepl"
+import "Testability.fidl"
+import "Testability.fdepl"
+
+define org.genivi.commonapi.someip.deployment for provider as
+de.bmw.infrastructure.testability {
+
+	instance de.bmw.infrastructure.testability.EnhancedTestabilityServiceTP as
+	EnhancedTestabilityServiceTP_99 {
+		SomeIpInstanceID = 99
+		InstanceId = "99"
+		SomeIpUnicastAddress = "160.48.199.99"
+		SomeIpReliableUnicastPort = 30506
+		SomeIpUnreliableUnicastPort = 30506
+		SomeIpMulticastPorts = {
+			30491
+		}
+		SomeIpMulticastAddresses = {
+			"239.192.255.251"
+		}
+	}
+
+	instance de.bmw.infrastructure.testability.EnhancedTestabilityServiceTP as
+	EnhancedTestabilityServiceTP_38 {
+		SomeIpInstanceID = 38
+		InstanceId = "38"
+		SomeIpUnicastAddress = "160.48.199.38"
+		SomeIpReliableUnicastPort = 30506
+		SomeIpUnreliableUnicastPort = 30506
+		SomeIpMulticastPorts = {
+			30491
+		}
+		SomeIpMulticastAddresses = {
+			"239.192.255.251"
+		}
+	}
+
+	instance de.bmw.infrastructure.testability.EnhancedTestabilityServiceHigh2 as
+	EnhancedTestabilityServiceHigh2_99 {
+		SomeIpInstanceID = 99
+		InstanceId = "99"
+		SomeIpUnicastAddress = "160.48.199.99"
+		SomeIpReliableUnicastPort = 30506
+		SomeIpUnreliableUnicastPort = 30506
+		SomeIpMulticastEventGroups = {
+			6
+		}
+		SomeIpMulticastPorts = {
+			30491
+		}
+		SomeIpMulticastAddresses = {
+			"239.192.255.251"
+		}
+	}
+
+	instance de.bmw.infrastructure.testability.EnhancedTestabilityServiceHigh2 as
+	EnhancedTestabilityServiceHigh2_38 {
+		SomeIpInstanceID = 38
+		InstanceId = "38"
+		SomeIpUnicastAddress = "160.48.199.38"
+		SomeIpReliableUnicastPort = 30506
+		SomeIpUnreliableUnicastPort = 30506
+		SomeIpMulticastEventGroups = {
+			6
+		}
+		SomeIpMulticastPorts = {
+			30491
+		}
+		SomeIpMulticastAddresses = {
+			"239.192.255.251"
+		}
+	}
+
+	instance de.bmw.infrastructure.testability.EnhancedTestabilityServiceHigh2 as
+	EnhancedTestabilityServiceHigh2_244 {
+		SomeIpInstanceID = 244
+		InstanceId = "244"
+		SomeIpUnicastAddress = "160.48.199.125"
+		SomeIpReliableUnicastPort = 30501
+		SomeIpUnreliableUnicastPort = 30501
+		SomeIpMulticastEventGroups = {
+			6
+		}
+		SomeIpMulticastPorts = {
+			30491
+		}
+		SomeIpMulticastAddresses = {
+			"239.192.255.251"
+		}
+	}
+}

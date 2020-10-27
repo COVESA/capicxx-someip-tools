@@ -1,0 +1,1574 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+import "platform:/plugin/org.genivi.commonapi.core/deployment/CommonAPI-4_deployment_spec.fdepl"
+import "platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-4-SOMEIP_deployment_spec.fdepl"
+import "@FIDL_FILE_NAME@"
+
+define org.genivi.commonapi.core.deployment for @TYPE_COLLECTION_DEPL_PREFIX@ {
+
+     enumeration tEnum4_16 {
+         EnumBackingType = UInt32
+     }
+     enumeration tEnum4_32 {
+         EnumBackingType = UInt32
+     }
+     enumeration tEnum2_8 {
+         EnumBackingType = UInt16
+     }
+     enumeration tEnum2_16 {
+         EnumBackingType = UInt16
+     }
+     enumeration tEnum1_1 {
+         EnumBackingType = UInt8
+     }
+     enumeration tEnum1_8 {
+         EnumBackingType = UInt8
+     }
+     enumeration tEnum {
+         EnumBackingType = Int32
+     }
+ }
+
+define org.genivi.commonapi.someip.deployment for interface commonapi.someip.deploymenttest.TestInterface {
+    SomeIpServiceID = 4662
+
+    attribute aUint8 {
+        SomeIpGetterID = 3000
+        SomeIpSetterID = 3001
+        SomeIpNotifierID = 33000
+        SomeIpNotifierEventGroups = { 17749 }
+    }
+
+    attribute aInt8 {
+        SomeIpGetterID = 3002
+        SomeIpSetterID = 3003
+        SomeIpNotifierID = 33001
+        SomeIpNotifierEventGroups = { 17749 }
+    }
+
+    attribute aUint16 {
+        SomeIpGetterID = 3004
+        SomeIpSetterID = 3005
+        SomeIpNotifierID = 33002
+        SomeIpNotifierEventGroups = { 17749 }
+    }
+
+    attribute aInt16 {
+        SomeIpGetterID = 3006
+        SomeIpSetterID = 3007
+        SomeIpNotifierID = 33003
+        SomeIpNotifierEventGroups = { 17749 }
+    }
+
+    attribute aUint32 {
+        SomeIpGetterID = 3008
+        SomeIpSetterID = 3009
+        SomeIpNotifierID = 33004
+        SomeIpNotifierEventGroups = { 17749 }
+    }
+
+    attribute aInt32 {
+        SomeIpGetterID = 3010
+        SomeIpSetterID = 3011
+        SomeIpNotifierID = 33005
+        SomeIpNotifierEventGroups = { 17749 }
+    }
+
+    attribute aUint64 {
+        SomeIpGetterID = 3012
+        SomeIpSetterID = 3013
+        SomeIpNotifierID = 33006
+        SomeIpNotifierEventGroups = { 17749 }
+    }
+
+    attribute aInt64 {
+        SomeIpGetterID = 3014
+        SomeIpSetterID = 3015
+        SomeIpNotifierID = 33007
+        SomeIpNotifierEventGroups = { 17749 }
+    }
+
+    attribute aBoolean {
+        SomeIpGetterID = 3016
+        SomeIpSetterID = 3017
+        SomeIpNotifierID = 33008
+        SomeIpNotifierEventGroups = { 17749 }
+    }
+
+    attribute aFloat {
+        SomeIpGetterID = 3018
+        SomeIpSetterID = 3019
+        SomeIpNotifierID = 33009
+        SomeIpNotifierEventGroups = { 17749 }
+    }
+
+    attribute aDouble {
+        SomeIpGetterID = 3020
+        SomeIpSetterID = 3021
+        SomeIpNotifierID = 33010
+        SomeIpNotifierEventGroups = { 17749 }
+    }
+
+    attribute aString {
+        SomeIpGetterID = 3022
+        SomeIpSetterID = 3023
+        SomeIpNotifierID = 33011
+        SomeIpNotifierEventGroups = { 17749 }
+    }
+
+    attribute aByteBuffer {
+        SomeIpGetterID = 3024
+        SomeIpSetterID = 3025
+        SomeIpNotifierID = 33012
+        SomeIpNotifierEventGroups = { 17749 }
+
+        SomeIpByteBufferMaxLength = 10
+        SomeIpByteBufferMinLength = 2
+    }
+
+    attribute aUint8b1 {
+        SomeIpGetterID = 3026
+        SomeIpSetterID = 3027
+        SomeIpNotifierID = 33013
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpIntegerBitWidth = 1
+    }
+    attribute aUint8b2 {
+        SomeIpGetterID = 3028
+        SomeIpSetterID = 3029
+        SomeIpNotifierID = 33014
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpIntegerBitWidth = 2
+    }
+    attribute aUint8b3 {
+        SomeIpGetterID = 3030
+        SomeIpSetterID = 3031
+        SomeIpNotifierID = 33015
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpIntegerBitWidth = 3
+    }
+    attribute aUint8b4 {
+        SomeIpGetterID = 3032
+        SomeIpSetterID = 3033
+        SomeIpNotifierID = 33016
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpIntegerBitWidth = 4
+    }
+    attribute aUint8b5 {
+        SomeIpGetterID = 3034
+        SomeIpSetterID = 3035
+        SomeIpNotifierID = 33017
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpIntegerBitWidth = 5
+    }
+    attribute aUint8b6 {
+        SomeIpGetterID = 3036
+        SomeIpSetterID = 3037
+        SomeIpNotifierID = 33018
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpIntegerBitWidth = 6
+    }
+    attribute aUint8b7 {
+        SomeIpGetterID = 3038
+        SomeIpSetterID = 3039
+        SomeIpNotifierID = 33019
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpIntegerBitWidth = 7
+    }
+    attribute aUint8b8 {
+        SomeIpGetterID = 3040
+        SomeIpSetterID = 3041
+        SomeIpNotifierID = 33020
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpIntegerBitWidth = 8
+    }
+    attribute aUint8b10 {
+        SomeIpGetterID = 30400
+        SomeIpSetterID = 30410
+        SomeIpNotifierID = 34020
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpIntegerBitWidth = 10
+    }
+
+    attribute aInt8b2 {
+        SomeIpGetterID = 3044
+        SomeIpSetterID = 3045
+        SomeIpNotifierID = 33022
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpIntegerBitWidth = 2
+    }
+    attribute aInt8b3 {
+        SomeIpGetterID = 3046
+        SomeIpSetterID = 3047
+        SomeIpNotifierID = 33023
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpIntegerBitWidth = 3
+    }
+    attribute aInt8b4 {
+        SomeIpGetterID = 3048
+        SomeIpSetterID = 3049
+        SomeIpNotifierID = 33024
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpIntegerBitWidth = 4
+    }
+    attribute aInt8b5 {
+        SomeIpGetterID = 3050
+        SomeIpSetterID = 3051
+        SomeIpNotifierID = 33025
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpIntegerBitWidth = 5
+    }
+    attribute aInt8b6 {
+        SomeIpGetterID = 3052
+        SomeIpSetterID = 3053
+        SomeIpNotifierID = 33026
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpIntegerBitWidth = 6
+    }
+    attribute aInt8b7 {
+        SomeIpGetterID = 3054
+        SomeIpSetterID = 3055
+        SomeIpNotifierID = 33027
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpIntegerBitWidth = 7
+    }
+    attribute aInt8b8 {
+        SomeIpGetterID = 3056
+        SomeIpSetterID = 3057
+        SomeIpNotifierID = 33028
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpIntegerBitWidth = 8
+    }
+    attribute aInt8b9 {
+        SomeIpGetterID = 11111
+        SomeIpSetterID = 11112
+        SomeIpNotifierID = 11113
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpIntegerBitWidth = 9
+    }
+    attribute aUint16b1 {
+        SomeIpGetterID = 3058
+        SomeIpSetterID = 3059
+        SomeIpNotifierID = 33029
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpIntegerBitWidth = 1
+    }
+
+    attribute aUint16b16 {
+        SomeIpGetterID = 3060
+        SomeIpSetterID = 3061
+        SomeIpNotifierID = 33030
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpIntegerBitWidth = 16
+    }
+
+    attribute aUint16b9 {
+        SomeIpGetterID = 3062
+        SomeIpSetterID = 3063
+        SomeIpNotifierID = 33031
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpIntegerBitWidth = 9
+    }
+
+    attribute aUint16b18 {
+        SomeIpGetterID = 30620
+        SomeIpSetterID = 30630
+        SomeIpNotifierID = 43031
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpIntegerBitWidth = 18
+    }
+ 
+    attribute aInt16b2 {
+        SomeIpGetterID = 3064
+        SomeIpSetterID = 3065
+        SomeIpNotifierID = 33032
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpIntegerBitWidth = 2
+    }
+
+    attribute aInt16b7 {
+        SomeIpGetterID = 3066
+        SomeIpSetterID = 3067
+        SomeIpNotifierID = 33033
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpIntegerBitWidth = 7
+    }
+
+    attribute aInt16b16 {
+        SomeIpGetterID = 3068
+        SomeIpSetterID = 3069
+        SomeIpNotifierID = 33034
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpIntegerBitWidth = 16
+    }
+
+    attribute aInt16b25 {
+        SomeIpGetterID = 30680
+        SomeIpSetterID = 30690
+        SomeIpNotifierID = 43034
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpIntegerBitWidth = 25
+    }
+
+    attribute aUint32b1 {
+        SomeIpGetterID = 3070
+        SomeIpSetterID = 3071
+        SomeIpNotifierID = 33035
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpIntegerBitWidth = 1
+    }
+
+    attribute aUint32b32 {
+        SomeIpGetterID = 3072
+        SomeIpSetterID = 3073
+        SomeIpNotifierID = 33036
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpIntegerBitWidth = 32
+    }
+
+    attribute aUint32b12 {
+        SomeIpGetterID = 3074
+        SomeIpSetterID = 3075
+        SomeIpNotifierID = 33037
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpIntegerBitWidth = 12
+    }
+
+    attribute aUint32b40 {
+        SomeIpGetterID = 30740
+        SomeIpSetterID = 30750
+        SomeIpNotifierID = 43037
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpIntegerBitWidth = 40
+    }
+
+    attribute aInt32b2 {
+        SomeIpGetterID = 3076
+        SomeIpSetterID = 3077
+        SomeIpNotifierID = 33038
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpIntegerBitWidth = 2
+    }
+
+    attribute aInt32b29 {
+        SomeIpGetterID = 3078
+        SomeIpSetterID = 3079
+        SomeIpNotifierID = 33039
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpIntegerBitWidth = 29
+    }
+
+    attribute aInt32b32 {
+        SomeIpGetterID = 3080
+        SomeIpSetterID = 3081
+        SomeIpNotifierID = 33040
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpIntegerBitWidth = 32
+    }
+
+    attribute aInt32b64 {
+        SomeIpGetterID = 30800
+        SomeIpSetterID = 30810
+        SomeIpNotifierID = 43040
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpIntegerBitWidth = 64
+    }
+
+    attribute aUint64b1 {
+        SomeIpGetterID = 3082
+        SomeIpSetterID = 3083
+        SomeIpNotifierID = 33041
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpIntegerBitWidth = 1
+    }
+
+    attribute aUint64b64 {
+        SomeIpGetterID = 3084
+        SomeIpSetterID = 3085
+        SomeIpNotifierID = 33042
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpIntegerBitWidth = 64
+    }
+
+    attribute aUint64b44 {
+        SomeIpGetterID = 3086
+        SomeIpSetterID = 3087
+        SomeIpNotifierID = 33043
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpIntegerBitWidth = 44
+    }
+
+    attribute aInt64b2 {
+        SomeIpGetterID = 3088
+        SomeIpSetterID = 3089
+        SomeIpNotifierID = 33044
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpIntegerBitWidth = 2
+    }
+
+    attribute aInt64b62 {
+        SomeIpGetterID = 3090
+        SomeIpSetterID = 3091
+        SomeIpNotifierID = 33045
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpIntegerBitWidth = 62
+    }
+
+    attribute aInt64b64 {
+        SomeIpGetterID = 3092
+        SomeIpSetterID = 3093
+        SomeIpNotifierID = 33046
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpIntegerBitWidth = 64
+    }
+
+    attribute aArrayw0n0x10 {
+        SomeIpGetterID = 3094
+        SomeIpSetterID = 3095
+        SomeIpNotifierID = 33047
+        SomeIpNotifierEventGroups = { 17749 }
+        # {
+            SomeIpArrayMinLength = 0
+            SomeIpArrayMaxLength = 10
+            SomeIpArrayLengthWidth = 0
+        }
+    }
+    attribute aArrayw0n5x20 {
+        SomeIpGetterID = 3096
+        SomeIpSetterID = 3097
+        SomeIpNotifierID = 33048
+        SomeIpNotifierEventGroups = { 17749 }
+        # {
+            SomeIpArrayMinLength = 5
+            SomeIpArrayMaxLength = 20
+            SomeIpArrayLengthWidth = 0
+        }
+    }
+    attribute aArrayw1n0x15 {
+        SomeIpGetterID = 3098
+        SomeIpSetterID = 3099
+        SomeIpNotifierID = 33049
+        SomeIpNotifierEventGroups = { 17749 }
+        # {
+            SomeIpArrayMinLength = 0
+            SomeIpArrayMaxLength = 15
+            SomeIpArrayLengthWidth = 1
+        }
+    }
+    attribute aArrayw1n10x200 {
+        SomeIpGetterID = 3100
+        SomeIpSetterID = 3101
+        SomeIpNotifierID = 33050
+        SomeIpNotifierEventGroups = { 17749 }
+        # {
+            SomeIpArrayMinLength = 10
+            SomeIpArrayMaxLength = 200
+            SomeIpArrayLengthWidth = 1
+        }
+    }
+    attribute aArrayw2n15x2000 {
+        SomeIpGetterID = 3102
+        SomeIpSetterID = 3103
+        SomeIpNotifierID = 33051
+        SomeIpNotifierEventGroups = { 17749 }
+        # {
+            SomeIpArrayMinLength = 15
+            SomeIpArrayMaxLength = 2000
+            SomeIpArrayLengthWidth = 2
+        }
+    }
+    attribute aArrayw4n400x200000 {
+        SomeIpGetterID = 3104
+        SomeIpSetterID = 3105
+        SomeIpNotifierID = 33052
+        SomeIpNotifierEventGroups = { 17749 }
+        # {
+            SomeIpArrayMinLength = 400
+            SomeIpArrayMaxLength = 200000
+            SomeIpArrayLengthWidth = 4
+        }
+    }
+
+    attribute aEnum4_16 {
+        SomeIpGetterID = 3106
+        SomeIpSetterID = 3107
+        SomeIpNotifierID = 33053
+        SomeIpNotifierEventGroups = { 17749 }
+    }
+    attribute aEnum4_32 {
+        SomeIpGetterID = 3108
+        SomeIpSetterID = 3109
+        SomeIpNotifierID = 33054
+        SomeIpNotifierEventGroups = { 17749 }
+    }
+    attribute aEnum2_8 {
+        SomeIpGetterID = 3110
+        SomeIpSetterID = 3111
+        SomeIpNotifierID = 33055
+        SomeIpNotifierEventGroups = { 17749 }
+    }
+    attribute aEnum2_16 {
+        SomeIpGetterID = 3112
+        SomeIpSetterID = 3113
+        SomeIpNotifierID = 33056
+        SomeIpNotifierEventGroups = { 17749 }
+        #enumeration {
+            SomeIpEnumInvalidValue = 12
+        }
+    }
+    attribute aEnum1_8 {
+        SomeIpGetterID = 3114
+        SomeIpSetterID = 3115
+        SomeIpNotifierID = 33057
+        SomeIpNotifierEventGroups = { 17749 }
+    }
+    attribute aEnum1_1 {
+        SomeIpGetterID = 3116
+        SomeIpSetterID = 3117
+        SomeIpNotifierID = 33058
+        SomeIpNotifierEventGroups = { 17749 }
+    }
+
+    attribute aUnion_1 {
+        SomeIpGetterID = 3118
+        SomeIpSetterID = 3119
+        SomeIpNotifierID = 33059
+        SomeIpNotifierEventGroups = { 17749 }
+        #union {
+            SomeIpUnionLengthWidth = 1
+            SomeIpUnionTypeWidth = 2
+            SomeIpUnionDefaultOrder = true
+            SomeIpUnionMaxLength = 20
+        }
+    }
+    attribute aUnion_2 {
+        SomeIpGetterID = 3120
+        SomeIpSetterID = 3121
+        SomeIpNotifierID = 33060
+        SomeIpNotifierEventGroups = { 17749 }
+        #union {
+            SomeIpUnionLengthWidth = 1
+            SomeIpUnionTypeWidth = 4
+            SomeIpUnionDefaultOrder = false
+            SomeIpUnionMaxLength = 20
+        }
+    }
+    attribute aUnion_3 {
+        SomeIpGetterID = 3122
+        SomeIpSetterID = 3123
+        SomeIpNotifierID = 33061
+        SomeIpNotifierEventGroups = { 17749 }
+        #union {
+            SomeIpUnionLengthWidth = 0
+            SomeIpUnionTypeWidth = 2
+            SomeIpUnionDefaultOrder = true
+            SomeIpUnionMaxLength = 11
+        }
+    }
+    attribute aUnion_4 {
+        SomeIpGetterID = 3124
+        SomeIpSetterID = 3125
+        SomeIpNotifierID = 33062
+        SomeIpNotifierEventGroups = { 17749 }
+        #union {
+            SomeIpUnionLengthWidth = 4
+            SomeIpUnionTypeWidth = 1
+            SomeIpUnionDefaultOrder = false
+            SomeIpUnionMaxLength = 200
+        }
+    }
+    attribute aUnion_d1 {
+        SomeIpGetterID = 3126
+        SomeIpSetterID = 3127
+        SomeIpNotifierID = 33063
+        SomeIpNotifierEventGroups = { 17749 }
+    }
+    attribute aUnion_d2 {
+        SomeIpGetterID = 3128
+        SomeIpSetterID = 3129
+        SomeIpNotifierID = 33064
+        SomeIpNotifierEventGroups = { 17749 }
+    }
+    attribute aUnion_d3 {
+        SomeIpGetterID = 3130
+        SomeIpSetterID = 3131
+        SomeIpNotifierID = 33065
+        SomeIpNotifierEventGroups = { 17749 }
+    }
+    attribute aUnion_d4 {
+        SomeIpGetterID = 3132
+        SomeIpSetterID = 3133
+        SomeIpNotifierID = 33066
+        SomeIpNotifierEventGroups = { 17749 }
+    }
+    attribute aUnion_override {
+        SomeIpGetterID = 3134
+        SomeIpSetterID = 3135
+        SomeIpNotifierID = 33067
+        SomeIpNotifierEventGroups = { 17749 }
+        #union {
+            SomeIpUnionLengthWidth = 4
+            SomeIpUnionTypeWidth = 1
+            SomeIpUnionDefaultOrder = false
+            SomeIpUnionMaxLength = 100
+        }
+    }
+
+    attribute aArrayi8 {
+        SomeIpGetterID = 3136
+        SomeIpSetterID = 3137
+        SomeIpNotifierID = 33068
+        SomeIpNotifierEventGroups = { 17749 }
+    }
+    attribute aArrayi16 {
+        SomeIpGetterID = 3138
+        SomeIpSetterID = 3139
+        SomeIpNotifierID = 33069
+        SomeIpNotifierEventGroups = { 17749 }
+    }
+    attribute aArrayi32 {
+        SomeIpGetterID = 3140
+        SomeIpSetterID = 3141
+        SomeIpNotifierID = 33070
+        SomeIpNotifierEventGroups = { 17749 }
+    }
+    attribute aArrayi8_override {
+        SomeIpGetterID = 3142
+        SomeIpSetterID = 3143
+        SomeIpNotifierID = 33071
+        SomeIpNotifierEventGroups = { 17749 }
+        # {
+            SomeIpArrayMinLength = 15
+            SomeIpArrayMaxLength = 2000
+            SomeIpArrayLengthWidth = 0
+        }
+    }
+    attribute aArrayi16_override {
+        SomeIpGetterID = 3144
+        SomeIpSetterID = 3145
+        SomeIpNotifierID = 33072
+        SomeIpNotifierEventGroups = { 17749 }
+        # {
+            SomeIpArrayMinLength = 2
+            SomeIpArrayMaxLength = 2000
+            SomeIpArrayLengthWidth = 4
+        }
+    }
+    attribute aArrayi32_override {
+        SomeIpGetterID = 3146
+        SomeIpSetterID = 3147
+        SomeIpNotifierID = 33073
+        SomeIpNotifierEventGroups = { 17749 }
+        # {
+            SomeIpArrayMinLength = 15
+            SomeIpArrayMaxLength = 200
+            SomeIpArrayLengthWidth = 2
+        }
+    }
+
+    attribute aEnum {
+        SomeIpGetterID = 3148
+        SomeIpSetterID = 3149
+        SomeIpNotifierID = 33074
+        SomeIpNotifierEventGroups = { 17749 }
+        #enumeration {
+            SomeIpEnumWidth = 1
+            SomeIpEnumBitWidth = 4
+        }
+    }
+
+    attribute aEnum_override {
+        SomeIpGetterID = 3150
+        SomeIpSetterID = 3151
+        SomeIpNotifierID = 33075
+        SomeIpNotifierEventGroups = { 17749 }
+        #enumeration {
+            SomeIpEnumWidth = 1
+            SomeIpEnumBitWidth = 4
+        }
+    }
+
+    attribute aStruct_w0 {
+        SomeIpGetterID = 3152
+        SomeIpSetterID = 3153
+        SomeIpNotifierID = 33076
+        SomeIpNotifierEventGroups = { 17749 }
+    }
+    attribute aStruct_w1  {
+        SomeIpGetterID = 3154
+        SomeIpSetterID = 3155
+        SomeIpNotifierID = 33077
+        SomeIpNotifierEventGroups = { 17749 }
+    }
+    attribute aStruct_w2  {
+        SomeIpGetterID = 3156
+        SomeIpSetterID = 3157
+        SomeIpNotifierID = 33078
+        SomeIpNotifierEventGroups = { 17749 }
+    }
+    attribute aStruct_w4  {
+        SomeIpGetterID = 3158
+        SomeIpSetterID = 3159
+        SomeIpNotifierID = 33079
+        SomeIpNotifierEventGroups = { 17749 }
+    }
+    attribute aStruct_wd  {
+        SomeIpGetterID = 3160
+        SomeIpSetterID = 3161
+        SomeIpNotifierID = 33080
+        SomeIpNotifierEventGroups = { 17749 }
+    }
+    attribute aStruct_w0_override {
+        SomeIpGetterID = 3162
+        SomeIpSetterID = 3163
+        SomeIpNotifierID = 33081
+        SomeIpNotifierEventGroups = { 17749 }
+        #struct {
+            SomeIpStructLengthWidth  = 1
+        }
+    }
+    attribute aStruct_wd_attr {
+        SomeIpGetterID = 3164
+        SomeIpSetterID = 3165
+        SomeIpNotifierID = 33082
+        SomeIpNotifierEventGroups = { 17749 }
+        #struct {
+            SomeIpStructLengthWidth  = 2
+        }
+    }
+    attribute aStruct_long {
+        SomeIpGetterID = 3166
+        SomeIpSetterID = 3167
+        SomeIpNotifierID = 33083
+        SomeIpNotifierEventGroups = { 17749 }
+        #struct {
+            SomeIpStructLengthWidth  = 1
+        }
+    }
+
+    attribute aString_l10_w0 {
+        SomeIpGetterID = 3168
+        SomeIpSetterID = 3169
+        SomeIpNotifierID = 33084
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpStringLength = 10
+        SomeIpStringLengthWidth = 0
+    }
+    attribute aString_w1 {
+        SomeIpGetterID = 3170
+        SomeIpSetterID = 3171
+        SomeIpNotifierID = 33085
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpStringLengthWidth = 1
+    }
+    attribute aString_w2 {
+        SomeIpGetterID = 3172
+        SomeIpSetterID = 3173
+        SomeIpNotifierID = 33086
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpStringLengthWidth = 2
+    }
+    attribute aString_w4 {
+        SomeIpGetterID = 3174
+        SomeIpSetterID = 3175
+        SomeIpNotifierID = 33087
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpStringLengthWidth = 4
+    }
+    attribute aString_utf8 {
+        SomeIpGetterID = 3176
+        SomeIpSetterID = 3177
+        SomeIpNotifierID = 33088
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpStringEncoding = utf8
+    }
+    attribute aString_utf16_be {
+        SomeIpGetterID = 3178
+        SomeIpSetterID = 3179
+        SomeIpNotifierID = 33089
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpStringEncoding = utf16be
+    }
+    attribute aString_utf16_le {
+        SomeIpGetterID = 3180
+        SomeIpSetterID = 3181
+        SomeIpNotifierID = 33090
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpStringEncoding = utf16le
+    }
+
+    attribute aStruct_field_type_depls {
+        SomeIpGetterID = 3182
+        SomeIpSetterID = 3183
+        SomeIpNotifierID = 33091
+        SomeIpNotifierEventGroups = { 17749 }
+    }
+
+    attribute aStructExtended {
+        SomeIpGetterID = 3184
+        SomeIpSetterID = 3185
+        SomeIpNotifierID = 33092
+        SomeIpNotifierEventGroups = { 17749 }
+    }
+
+    attribute aMapString {
+        SomeIpGetterID = 3186
+        SomeIpSetterID = 3187
+        SomeIpNotifierID = 33093
+        SomeIpNotifierEventGroups = { 17749 }
+    }
+
+    attribute aMapw0n0x10 {
+        SomeIpGetterID = 3188
+        SomeIpSetterID = 3189
+        SomeIpNotifierID = 33094
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpAttrMapMinLength = 0
+        SomeIpAttrMapMaxLength = 10
+        SomeIpAttrMapLengthWidth = 0
+    }
+    attribute aMapw0n5x20 {
+        SomeIpGetterID = 3190
+        SomeIpSetterID = 3191
+        SomeIpNotifierID = 33095
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpAttrMapMinLength = 5
+        SomeIpAttrMapMaxLength = 20
+        SomeIpAttrMapLengthWidth = 0
+    }
+    attribute aMapw1n0x10 {
+        SomeIpGetterID = 3192
+        SomeIpSetterID = 3193
+        SomeIpNotifierID = 33096
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpAttrMapMinLength = 0
+        SomeIpAttrMapMaxLength = 10
+        SomeIpAttrMapLengthWidth = 1
+    }
+    attribute aMapw1n5x50 {
+        SomeIpGetterID = 3194
+        SomeIpSetterID = 3195
+        SomeIpNotifierID = 33097
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpAttrMapMinLength = 5
+        SomeIpAttrMapMaxLength = 15
+        SomeIpAttrMapLengthWidth = 1
+    }
+    attribute aMapw2n15x2000 {
+        SomeIpGetterID = 3196
+        SomeIpSetterID = 3197
+        SomeIpNotifierID = 33098
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpAttrMapMinLength = 15
+        SomeIpAttrMapMaxLength = 2000
+        SomeIpAttrMapLengthWidth = 2
+    }
+    attribute aMapw4n400x200000 {
+        SomeIpGetterID = 3198
+        SomeIpSetterID = 3199
+        SomeIpNotifierID = 33099
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpAttrMapMinLength = 400
+        SomeIpAttrMapMaxLength = 200000
+        SomeIpAttrMapLengthWidth = 4
+    }
+
+    attribute aBBdefault {
+        SomeIpGetterID = 3200
+        SomeIpSetterID = 3201
+        SomeIpNotifierID = 33100
+        SomeIpNotifierEventGroups = { 17749 }
+    }
+    attribute aBBn0x0 {
+        SomeIpGetterID = 3202
+        SomeIpSetterID = 3203
+        SomeIpNotifierID = 33101
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpByteBufferMinLength = 0
+        SomeIpByteBufferMaxLength = 0
+    }
+    attribute aBBn10x0 {
+        SomeIpGetterID = 3204
+        SomeIpSetterID = 3205
+        SomeIpNotifierID = 33102
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpByteBufferMinLength = 10
+        SomeIpByteBufferMaxLength = 0
+    }
+    attribute aBBn0x10 {
+        SomeIpGetterID = 3206
+        SomeIpSetterID = 3207
+        SomeIpNotifierID = 33103
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpByteBufferMinLength = 0
+        SomeIpByteBufferMaxLength = 10
+    }
+    attribute aBBn5x20 {
+        SomeIpGetterID = 3208
+        SomeIpSetterID = 3209
+        SomeIpNotifierID = 33104
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpByteBufferMinLength = 5
+        SomeIpByteBufferMaxLength = 20
+    }
+    attribute aBBn100000x100000 {
+        SomeIpGetterID = 3210
+        SomeIpSetterID = 3211
+        SomeIpNotifierID = 33105
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpByteBufferMinLength = 100000
+        SomeIpByteBufferMaxLength = 100000
+    }
+
+    attribute aStruct_field_depls {
+        SomeIpGetterID = 3212
+        SomeIpSetterID = 3213
+        SomeIpNotifierID = 33106
+        SomeIpNotifierEventGroups = { 17749 }
+    }
+
+    attribute aUnion_field_depls {
+        SomeIpGetterID = 3214
+        SomeIpSetterID = 3215
+        SomeIpNotifierID = 33107
+        SomeIpNotifierEventGroups = { 17749 }
+    }
+
+    attribute aArray_anonymous {
+        SomeIpGetterID = 3216
+        SomeIpSetterID = 3217
+        SomeIpNotifierID = 33108
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpArrayMinLength = 15
+        SomeIpArrayMaxLength = 2000
+        SomeIpArrayLengthWidth = 0
+    }
+
+    attribute aBBn5x20x0 {
+        SomeIpGetterID = 3218
+        SomeIpSetterID = 3219
+        SomeIpNotifierID = 33109
+        SomeIpNotifierEventGroups = { 17749 }
+
+        SomeIpByteBufferMinLength = 5
+        SomeIpByteBufferMaxLength = 20
+        SomeIpByteBufferLengthWidth = 0
+    }
+
+    attribute aBBn50x200x1 {
+        SomeIpGetterID = 3220
+        SomeIpSetterID = 3221
+        SomeIpNotifierID = 33110
+        SomeIpNotifierEventGroups = { 17749 }
+
+        SomeIpByteBufferMinLength = 50
+        SomeIpByteBufferMaxLength = 200
+        SomeIpByteBufferLengthWidth = 1
+    }
+    attribute aBBn500x2000x2 {
+        SomeIpGetterID = 3222
+        SomeIpSetterID = 3223
+        SomeIpNotifierID = 33111
+        SomeIpNotifierEventGroups = { 17749 }
+
+        SomeIpByteBufferMinLength = 500
+        SomeIpByteBufferMaxLength = 2000
+        SomeIpByteBufferLengthWidth = 2
+    }
+    attribute aBBn1500x2000x4 {
+            SomeIpGetterID = 3224
+            SomeIpSetterID = 3225
+            SomeIpNotifierID = 33112
+            SomeIpNotifierEventGroups = { 17749 }
+
+            SomeIpByteBufferMinLength = 1500
+            SomeIpByteBufferMaxLength = 2000
+            SomeIpByteBufferLengthWidth = 4
+    }
+    attribute aInt0to1 {
+        SomeIpGetterID = 3226
+        SomeIpSetterID = 3227
+        SomeIpNotifierID = 33113
+        SomeIpNotifierEventGroups = { 17749 }
+    }
+    attribute aIntm5to5 {
+        SomeIpGetterID = 3228
+        SomeIpSetterID = 3229
+        SomeIpNotifierID = 33114
+        SomeIpNotifierEventGroups = { 17749 }
+    }
+    attribute aIntm5mto5m {
+        SomeIpGetterID = 3230
+        SomeIpSetterID = 3231
+        SomeIpNotifierID = 33115
+        SomeIpNotifierEventGroups = { 17749 }
+    }
+    attribute aInt0to1b1 {
+        SomeIpGetterID = 3232
+        SomeIpSetterID = 3233
+        SomeIpNotifierID = 33116
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpIntegerBitWidth = 1
+    }
+    attribute aIntm5to5b3 {
+        SomeIpGetterID = 3234
+        SomeIpSetterID = 3235
+        SomeIpNotifierID = 33117
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpIntegerBitWidth = 3
+        SomeIpIntegerInvalidValue = 20
+    }
+    attribute aIntm5mto5mb16 {
+        SomeIpGetterID = 3236
+        SomeIpSetterID = 3237
+        SomeIpNotifierID = 33118
+        SomeIpNotifierEventGroups = { 17749 }
+        SomeIpIntegerBitWidth = 16
+        SomeIpIntegerInvalidValue = 21
+    }
+
+    method mArrayi8_io {
+        SomeIpMethodID = 516
+        SomeIpReliable = true
+        in {
+            inArg {
+                # {
+                    SomeIpArrayMinLength = 5
+                    SomeIpArrayMaxLength = 20
+                    SomeIpArrayLengthWidth = 0
+                }
+            }
+        }
+        out {
+            outArg {
+                # {
+                    SomeIpArrayMinLength = 50
+                    SomeIpArrayMaxLength = 200
+                    SomeIpArrayLengthWidth = 0
+                }
+            }
+        }
+    }
+    method mArrayi8_i {
+        SomeIpMethodID = 517
+        SomeIpReliable = true
+        in {
+            inArg {
+                # {
+                    SomeIpArrayMinLength = 5
+                    SomeIpArrayMaxLength = 10
+                    SomeIpArrayLengthWidth = 0
+                }
+            }
+        }
+    }
+    method mArrayi8_o {
+        SomeIpMethodID = 518
+        SomeIpReliable = true
+        out {
+            outArg {
+                #{
+                    SomeIpArrayMinLength = 50
+                    SomeIpArrayMaxLength = 100
+                    SomeIpArrayLengthWidth = 0
+                }
+            }
+        }
+    }
+
+    method mMap_io {
+        SomeIpMethodID = 519
+        SomeIpReliable = true
+        in {
+            inArg {
+                SomeIpArgMapMinLength = 50
+                SomeIpArgMapMaxLength = 300
+                SomeIpArgMapLengthWidth = 0
+            }
+        }
+        out {
+             outArg {
+                 SomeIpArgMapMinLength = 150
+                 SomeIpArgMapMaxLength = 400
+                 SomeIpArgMapLengthWidth = 0
+             }
+        }
+    }
+
+    method mMap_i {
+        SomeIpMethodID = 520
+        SomeIpReliable = true
+        in {
+             inArg {
+                 SomeIpArgMapMinLength = 10
+                 SomeIpArgMapMaxLength = 20
+                 SomeIpArgMapLengthWidth = 0
+             }
+        }
+    }
+
+    method mMap_o {
+        SomeIpMethodID = 521
+        SomeIpReliable = true
+        out {
+             outArg {
+                 SomeIpArgMapMinLength = 30
+                 SomeIpArgMapMaxLength = 40
+                 SomeIpArgMapLengthWidth = 0
+             }
+        }
+    }
+
+    method mMap_n5_io {
+        SomeIpMethodID = 522
+        SomeIpReliable = true
+        in {
+            inArg {
+                SomeIpArgMapMinLength = 5
+                SomeIpArgMapMaxLength = 30
+                SomeIpArgMapLengthWidth = 2
+            }
+        }
+        out {
+             outArg {
+                 SomeIpArgMapMinLength = 6
+                 SomeIpArgMapMaxLength = 40
+                 SomeIpArgMapLengthWidth = 2
+             }
+        }
+    }
+
+    method mMap_n6_i {
+        SomeIpMethodID = 523
+        SomeIpReliable = true
+        in {
+             inArg {
+                 SomeIpArgMapMinLength = 6
+                 SomeIpArgMapMaxLength = 50
+                 SomeIpArgMapLengthWidth = 2
+             }
+        }
+    }
+
+    method mMap_n7_o {
+        SomeIpMethodID = 524
+        SomeIpReliable = true
+        out {
+             outArg {
+                 SomeIpArgMapMinLength = 7
+                 SomeIpArgMapMaxLength = 60
+                 SomeIpArgMapLengthWidth = 4
+             }
+        }
+    }
+    method mUnion_ioa {
+        SomeIpMethodID = 825
+        SomeIpReliable = true
+        in {
+            inArg {
+                #union {
+                    SomeIpUnionLengthWidth = 0
+                    SomeIpUnionTypeWidth = 1
+                    SomeIpUnionDefaultOrder = false
+                    SomeIpUnionMaxLength = 500
+                }
+            }
+        }
+        out {
+            outArg {
+                #union {
+                    SomeIpUnionLengthWidth = 0
+                    SomeIpUnionTypeWidth = 1
+                    SomeIpUnionDefaultOrder = false
+                    SomeIpUnionMaxLength = 500
+                }
+            }
+        }
+    }
+    method mUnion_io {
+        SomeIpMethodID = 525
+        SomeIpReliable = true
+        in {
+            inArg {
+                #union {
+                    SomeIpUnionLengthWidth = 0
+                    SomeIpUnionDefaultOrder = false
+                    SomeIpUnionMaxLength = 500
+                }
+            }
+        }
+        out {
+            outArg {
+                #union {
+                    SomeIpUnionLengthWidth = 0
+                    SomeIpUnionDefaultOrder = false
+                    SomeIpUnionMaxLength = 500
+                }
+            }
+        }
+    }
+    method mUnion_i {
+        SomeIpMethodID = 526
+        SomeIpReliable = true
+        in {
+            inArg {
+                #union {
+                    SomeIpUnionLengthWidth = 0
+                    SomeIpUnionTypeWidth = 1
+                    SomeIpUnionDefaultOrder = false
+                    SomeIpUnionMaxLength = 500
+                }
+            }
+        }
+    }
+    method mUnion_o {
+        SomeIpMethodID = 527
+        SomeIpReliable = true
+        out {
+            outArg {
+                #union {
+                    SomeIpUnionLengthWidth = 0
+                    SomeIpUnionTypeWidth = 1
+                    SomeIpUnionDefaultOrder = false
+                    SomeIpUnionMaxLength = 500
+                }
+            }
+        }
+    }
+    method mUnion_of {
+        SomeIpMethodID = 528
+        SomeIpReliable = true
+        out {
+            outArg {
+                #union {
+                    SomeIpUnionLengthWidth = 0
+                    SomeIpUnionTypeWidth = 1
+                    SomeIpUnionDefaultOrder = false
+                    SomeIpUnionMaxLength = 500
+                }
+            }
+        }
+    }
+
+    method mStruct_io {
+        SomeIpMethodID = 529
+        SomeIpReliable = true
+        in {
+            inArg {
+                #struct {
+                    SomeIpStructLengthWidth = 1
+                }
+            }
+        }
+        out {
+            outArg {
+                #struct {
+                    SomeIpStructLengthWidth = 1
+                }
+            }
+        }
+    }
+    method mStruct_i {
+        SomeIpMethodID = 530
+        SomeIpReliable = true
+        in {
+            inArg {
+                #struct {
+                    SomeIpStructLengthWidth = 1
+                }
+            }
+        }
+    }
+    method mStruct_o {
+        SomeIpMethodID = 531
+        SomeIpReliable = true
+        out {
+            outArg {
+                #struct {
+                    SomeIpStructLengthWidth = 1
+                }
+            }
+        }
+    }
+    method mStruct_of {
+        SomeIpMethodID = 532
+        SomeIpReliable = true
+        out {
+            outArg {
+                #struct {
+                    SomeIpStructLengthWidth = 1
+                }
+            }
+        }
+    }
+
+    method mArray_anon_io {
+        SomeIpMethodID = 533
+        SomeIpReliable = true
+        in {
+            inArg {
+                SomeIpArrayMinLength = 5
+                SomeIpArrayMaxLength = 20
+                SomeIpArrayLengthWidth = 0
+            }
+        }
+        out {
+            outArg {
+                SomeIpArrayMinLength = 50
+                SomeIpArrayMaxLength = 200
+                SomeIpArrayLengthWidth = 0
+            }
+        }
+    }
+
+    method mBCastTrigger {
+        SomeIpMethodID = 534
+        SomeIpReliable = true
+    }
+
+    broadcast bArrayi8 {
+        SomeIpEventID = 34000
+        SomeIpEventGroups = { 35000 }
+        out {
+            outArg {
+                # {
+                    SomeIpArrayMinLength = 10
+                    SomeIpArrayMaxLength = 500
+                    SomeIpArrayLengthWidth = 2
+                }
+            }
+        }
+    }
+
+    broadcast bStruct {
+        SomeIpEventID = 34001
+        SomeIpEventGroups = { 35000 }
+        out {
+            outArg {
+                #struct {
+                    SomeIpStructLengthWidth = 1
+                }
+            }
+        }
+    }
+
+    broadcast bUnion {
+        SomeIpEventID = 34002
+        SomeIpEventGroups = { 35000 }
+        out {
+            outArg {
+                #union {
+                    SomeIpUnionLengthWidth = 0
+                    SomeIpUnionTypeWidth = 1
+                    SomeIpUnionDefaultOrder = false
+                    SomeIpUnionMaxLength = 500
+                }
+            }
+        }
+    }
+
+    broadcast bMap {
+        SomeIpEventID = 34003
+        SomeIpEventGroups = { 35000 }
+        out {
+             outArg {
+                 SomeIpArgMapMinLength = 7
+                 SomeIpArgMapMaxLength = 60
+                 SomeIpArgMapLengthWidth = 4
+             }
+        }
+    }
+
+    broadcast bArray_anon {
+        SomeIpEventID = 34004
+        SomeIpEventGroups = { 35000 }
+        out {
+            outArg {
+                SomeIpArrayMinLength = 10
+                SomeIpArrayMaxLength = 500
+                SomeIpArrayLengthWidth = 2
+            }
+        }
+    }
+
+@TYPE_COLLECTION_DEPL_BLOCK@
+
+    array i8Array  {
+        SomeIpArrayMinLength = 5
+        SomeIpArrayMaxLength = 200
+        SomeIpArrayLengthWidth = 1
+    }
+    array i16Array  {
+        SomeIpArrayMinLength = 5
+        SomeIpArrayMaxLength = 200
+        SomeIpArrayLengthWidth = 2
+    }
+    array i32Array  {
+        SomeIpArrayMinLength = 5
+        SomeIpArrayMaxLength = 2000
+        SomeIpArrayLengthWidth = 0
+    }
+
+    array i8BigArray  {
+        SomeIpArrayMinLength = 1
+        SomeIpArrayMaxLength = 200000
+        SomeIpArrayLengthWidth = 4
+    }
+
+    enumeration tEnum4_16 {
+        SomeIpEnumWidth = 4
+        SomeIpEnumBitWidth = 16
+        SomeIpEnumInvalidValue = 11
+    }
+
+    enumeration tEnum4_32 {
+        SomeIpEnumWidth = 4
+        SomeIpEnumBitWidth = 32
+        SomeIpEnumInvalidValue = 11
+    }
+
+    enumeration tEnum2_8 {
+        SomeIpEnumWidth = 2
+        SomeIpEnumBitWidth = 8
+        SomeIpEnumInvalidValue = 11
+    }
+
+    enumeration tEnum2_16 {
+        SomeIpEnumWidth = 2
+        SomeIpEnumBitWidth = 16
+        SomeIpEnumInvalidValue = 11
+    }
+    enumeration tEnum1_8 {
+        SomeIpEnumWidth = 1
+        SomeIpEnumBitWidth = 8
+        SomeIpEnumInvalidValue = 11
+    }
+    enumeration tEnum1_1 {
+        SomeIpEnumWidth = 1
+        SomeIpEnumBitWidth = 1
+        SomeIpEnumInvalidValue = 11
+    }
+    union tUnion_d1 {
+        SomeIpUnionLengthWidth = 4
+        SomeIpUnionTypeWidth = 1
+        SomeIpUnionDefaultOrder = false
+        SomeIpUnionMaxLength = 200
+    }
+    union tUnion_d2 {
+        SomeIpUnionLengthWidth = 1
+        SomeIpUnionTypeWidth = 1
+        SomeIpUnionDefaultOrder = true
+        SomeIpUnionMaxLength = 200
+    }
+    union tUnion_d3 {
+        SomeIpUnionLengthWidth = 0
+        SomeIpUnionTypeWidth = 1
+        SomeIpUnionDefaultOrder = false
+        SomeIpUnionMaxLength = 12
+    }
+    union tUnion_d4 {
+        SomeIpUnionLengthWidth = 2
+        SomeIpUnionTypeWidth = 4
+        SomeIpUnionDefaultOrder = false
+        SomeIpUnionMaxLength = 200
+    }
+
+    union tUnion_field_depls {
+        SomeIpUnionLengthWidth = 4
+        arrayMember {
+            # {
+                SomeIpArrayMinLength = 4
+                SomeIpArrayMaxLength = 8
+                SomeIpArrayLengthWidth = 0
+            }
+        }
+
+        unionMember {
+            #union {
+                SomeIpUnionLengthWidth = 2
+                SomeIpUnionTypeWidth = 4
+                SomeIpUnionDefaultOrder = false
+                SomeIpUnionMaxLength = 200
+            }
+        }
+        structMember {
+            #struct {
+                SomeIpStructLengthWidth = 1
+            }
+        }
+        enumMember {
+            #enumeration {
+                SomeIpEnumWidth = 0
+                SomeIpEnumBitWidth = 8
+            }
+        }
+        intMember {
+            SomeIpIntegerBitWidth = 2
+        }
+    }
+
+    struct tStruct_w0 {
+        SomeIpStructLengthWidth = 0
+    }
+    struct tStruct_w1 {
+        SomeIpStructLengthWidth = 1
+    }
+    struct tStruct_w2 {
+        SomeIpStructLengthWidth = 2
+    }
+    struct tStruct_w4 {
+        SomeIpStructLengthWidth = 4
+    }
+    struct tStruct_w2_arg {
+        SomeIpStructLengthWidth = 2
+    }
+
+    struct tStruct_field_depls {
+        SomeIpStructLengthWidth = 4
+        arrayMember {
+            # {
+                SomeIpArrayMinLength = 4
+                SomeIpArrayMaxLength = 8
+                SomeIpArrayLengthWidth = 0
+            }
+        }
+
+        unionMember {
+            #union {
+                SomeIpUnionLengthWidth = 2
+                SomeIpUnionTypeWidth = 4
+                SomeIpUnionDefaultOrder = false
+                SomeIpUnionMaxLength = 200
+            }
+        }
+        structMember {
+            #struct {
+                SomeIpStructLengthWidth = 1
+            }
+        }
+        enumMember {
+            #enumeration {
+                SomeIpEnumWidth = 0
+                SomeIpEnumBitWidth = 8
+                SomeIpEnumInvalidValue = 12
+            }
+        }
+        /* Integer Bit width deployments do not currently work properly.
+        intMember {
+            SomeIpIntegerBitWidth = 2
+            SomeIpIntegerInvalidValue = 12
+        } */
+    }
+}
+
+define org.genivi.commonapi.someip.deployment for provider as Service {
+    instance commonapi.someip.deploymenttest.TestInterface {
+        InstanceId = "commonapi.someip.deploymenttest.TestInterface"
+
+        // 0x5680 -> 22144
+        SomeIpInstanceID = 22144
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 31000
+    }
+}

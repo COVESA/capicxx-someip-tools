@@ -1,0 +1,36 @@
+/*
+ * ##############################
+ * #####                    #####
+ * #####   Generated File   #####
+ * #####                    #####
+ * ##############################
+ * 
+ * Fibex origin: FBX411_SP2021_akt_V32_MultiBus_hPAD_EyeQ5_2b_V21_lokal_20190304122505.xml
+ * Franca version: 0.13.1.201807231814
+ */
+package de.bmw.environmentalmodel.common
+
+<**
+	@details : The name of this type collection will be removed once Franca supports anonymous type collections.
+**>
+typeCollection Common {
+	<**
+		@description : Standard[en]=Error detection code for the e2e protection of the event.
+	**>
+	typedef CommonCRC is UInt32
+
+	<**
+		@description : Standard[en]=used to detect message losses, repetitions and wrong sequences
+	**>
+	typedef CommonCRCCounter is UInt16
+
+	<**
+		@description : Standard[en]=system-wide unique identification number of a message, used for sender authentification and detection of wrongly addressed messages
+	**>
+	typedef CommonCRCID is UInt32
+
+	<**
+		@description : Standard[en]=used to support messages of variable length, length of serialised messages can potentially be different in each cycle
+	**>
+	typedef CommonCRCLength is UInt16
+}

@@ -32,7 +32,7 @@
       <page
             class="org.genivi.commonapi.someip.ui.preferences.CommonAPISomeIPPreferencePage"
             id="org.genivi.commonapi.someip.ui.preferences.CommonAPISomeIPPreferencePage"
-            name="CommonAPI-Some/IP">
+            name="CommonAPI Some/IP">
       </page>
    </extension>
    <extension
@@ -46,7 +46,7 @@
       <page
             class="org.genivi.commonapi.someip.ui.preferences.CommonAPISomeIPPreferencePage"
             id="org.genivi.commonapi.someip.ui.preferences.property.CommonAPISomeIPPreferencePage"
-            name="CommonAPI-Some/IP">
+            name="CommonAPI Some/IP">
               <enabledWhen>
                  <or>
                     <instanceof

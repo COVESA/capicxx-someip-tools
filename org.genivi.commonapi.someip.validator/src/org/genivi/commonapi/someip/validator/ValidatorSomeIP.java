@@ -1,10 +1,7 @@
-/* Copyright (C) 2013 BMW Group
- * Author: Manfred Bathelt (manfred.bathelt@bmw.de)
- * Author: Juergen Gehring (juergen.gehring@bmw.de)
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-
+/* Copyright (C) 2013-2020 Bayerische Motoren Werke Aktiengesellschaft (BMW AG)
+   This Source Code Form is subject to the terms of the Mozilla Public
+   License, v. 2.0. If a copy of the MPL was not distributed with this
+   file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.genivi.commonapi.someip.validator;
 
 import java.io.IOException;
@@ -44,7 +41,6 @@ import org.franca.core.franca.FrancaPackage;
 import org.franca.core.franca.Import;
 import org.genivi.commonapi.core.generator.FTypeCycleDetector;
 import org.genivi.commonapi.core.generator.FrancaGeneratorExtensions;
-import org.genivi.commonapi.core.ui.CommonApiUiPlugin;
 import org.genivi.commonapi.someip.preferences.PreferenceConstantsSomeIP;
 import org.genivi.commonapi.someip.ui.CommonApiSomeIPUiPlugin;
 import org.genivi.commonapi.someip.validator.preference.ValidatorSomeIPPreferencesPage;
@@ -212,7 +208,14 @@ public class ValidatorSomeIP implements IFrancaExternalValidator
             return null;
         }
 
-        return resource.getContents().get(0);
+        try
+		{
+            return resource.getContents().get(0);
+        }
+        catch (Exception e)
+		{
+            return null;
+        }
     }
 
     private static URI normalizeURI(URI path)
@@ -238,21 +241,24 @@ public class ValidatorSomeIP implements IFrancaExternalValidator
                     EObject resource = null;
                     resource = buildResource(importedPath.substring(importedPath.lastIndexOf("/") + 1, importedPath.length()), "file:/"
                             + importedPath.substring(0, importedPath.lastIndexOf("/") + 1));
-                    resourceList.add(resource);
-                    for (EObject imp : resource.eContents())
+                    if (resource != null)
                     {
-                        if (imp instanceof Import)
+                        resourceList.add(resource);
+                        for (EObject imp : resource.eContents())
                         {
-                            Path importImportedPath = new Path(((Import) imp).getImportURI());
-                            if (importImportedPath.isAbsolute())
+                            if (imp instanceof Import)
                             {
-                                importedFIDL.add(importImportedPath.toString().replaceFirst(importImportedPath.getDevice() + "/", ""));
-                            }
-                            else
-                            {
-                                importImportedPath = new Path(importedPath.substring(0, importedPath.lastIndexOf("/")) + "/"
-                                        + ((Import) imp).getImportURI());
-                                importedFIDL.add(importImportedPath.toString());
+                                Path importImportedPath = new Path(((Import) imp).getImportURI());
+                                if (importImportedPath.isAbsolute())
+                                {
+                                    importedFIDL.add(importImportedPath.toString().replaceFirst(importImportedPath.getDevice() + "/", ""));
+                                }
+                                else
+                                {
+                                    importImportedPath = new Path(importedPath.substring(0, importedPath.lastIndexOf("/")) + "/"
+                                            + ((Import) imp).getImportURI());
+                                    importedFIDL.add(importImportedPath.toString());
+                                }
                             }
                         }
                     }
@@ -324,8 +330,12 @@ public class ValidatorSomeIP implements IFrancaExternalValidator
                 {
                     if (fEnumerator.getValue() != null)
                     {
-                        String enumeratorValue = FrancaGeneratorExtensions.getEnumeratorValue(fEnumerator.getValue()).toLowerCase();
-                        validateEnumerationValue(enumeratorValue, messageAcceptor, fEnumerator);
+                        String enumeratorValue = FrancaGeneratorExtensions.getEnumeratorValue(fEnumerator.getValue());
+                        if (enumeratorValue != null)
+                        {
+                            enumeratorValue = enumeratorValue.toLowerCase();
+                            validateEnumerationValue(enumeratorValue, messageAcceptor, fEnumerator);
+                        }
                     }
                 }
             }
@@ -517,7 +527,7 @@ public class ValidatorSomeIP implements IFrancaExternalValidator
 
     private boolean isWholeWorkspaceCheckActive()
     {
-        return CommonApiUiPlugin.getDefault().getPreferenceStore().getBoolean(ValidatorSomeIPPreferencesPage.ENABLED_WORKSPACE_CHECK);
+        return CommonApiSomeIPUiPlugin.getValidatorPreferences().getBoolean(ValidatorSomeIPPreferencesPage.ENABLED_WORKSPACE_CHECK);
     }
 
     private boolean isFrancaVersionGreaterThan(int major, int minor, int micro)

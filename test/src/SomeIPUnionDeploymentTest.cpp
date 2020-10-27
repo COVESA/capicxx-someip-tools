@@ -27,7 +27,7 @@
 #include <CommonAPI/SomeIP/Proxy.hpp>
 #include <CommonAPI/SomeIP/Types.hpp>
 #include "v1/commonapi/someip/deploymenttest/TestInterfaceProxy.hpp"
-#include "v1/commonapi/someip/deploymenttest/TestInterfaceStubDefault.hpp"
+#include "DeploymentTestStub.h"
 
 const std::string domain = "local";
 const std::string testAddress = "commonapi.someip.deploymenttest.TestInterface";
@@ -54,7 +54,7 @@ protected:
         runtime_ = CommonAPI::Runtime::get();
         ASSERT_TRUE((bool)runtime_);
 
-        testStub_ = std::make_shared<v1_0::commonapi::someip::deploymenttest::TestInterfaceStubDefault>();
+        testStub_ = std::make_shared<v1_0::commonapi::someip::deploymenttest::DeploymentTestStub>();
         serviceRegistered_ = runtime_->registerService(domain, testAddress, testStub_, connectionIdService);
         ASSERT_TRUE(serviceRegistered_);
 
@@ -67,7 +67,7 @@ protected:
     }
 
     void TearDown() {
-        ASSERT_TRUE(runtime_->unregisterService(domain, v1_0::commonapi::someip::deploymenttest::TestInterfaceStubDefault::StubInterface::getInterface(), testAddress));
+        ASSERT_TRUE(runtime_->unregisterService(domain, v1_0::commonapi::someip::deploymenttest::DeploymentTestStub::StubInterface::getInterface(), testAddress));
 
         // wait that proxy is not available
         int counter = 0;  // counter for avoiding endless loop
@@ -84,7 +84,7 @@ protected:
     std::shared_ptr<CommonAPI::Runtime> runtime_;
 
     std::shared_ptr<v1_0::commonapi::someip::deploymenttest::TestInterfaceProxy<>> testProxy_;
-    std::shared_ptr<v1_0::commonapi::someip::deploymenttest::TestInterfaceStubDefault> testStub_;
+    std::shared_ptr<v1_0::commonapi::someip::deploymenttest::DeploymentTestStub> testStub_;
 };
 /**
 * @test Verify that the API for union deployments works
@@ -103,7 +103,7 @@ TEST_F(DeploymentTest, UnionWithDeployment) {
         CommonAPI::SomeIP::OutputStream outStream(message, false);
 
         uint8_t value = 1;
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_1 outv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_1 outv;
         outv = value;
         outStream.writeValue(outv, &depl);
         EXPECT_FALSE(outStream.hasError());
@@ -111,7 +111,7 @@ TEST_F(DeploymentTest, UnionWithDeployment) {
 
         CommonAPI::SomeIP::InputStream inStream(message, false);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_1 inv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_1 inv;
         inStream.readValue(inv, &depl);
         EXPECT_FALSE(inStream.hasError());
         EXPECT_EQ(outv, inv);
@@ -124,7 +124,7 @@ TEST_F(DeploymentTest, UnionWithDeployment) {
         CommonAPI::SomeIP::OutputStream outStream(message, false);
 
         uint8_t value = 1;
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_1 outv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_1 outv;
         outv = value;
         outStream.writeValue(outv, &depl);
         EXPECT_FALSE(outStream.hasError());
@@ -132,7 +132,7 @@ TEST_F(DeploymentTest, UnionWithDeployment) {
 
         CommonAPI::SomeIP::InputStream inStream(message, false);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_1 inv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_1 inv;
         inStream.readValue(inv, &depl);
         EXPECT_FALSE(inStream.hasError());
         EXPECT_EQ(outv, inv);
@@ -145,7 +145,7 @@ TEST_F(DeploymentTest, UnionWithDeployment) {
         CommonAPI::SomeIP::OutputStream outStream(message, false);
 
         uint8_t value = 1;
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_1 outv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_1 outv;
         outv = value;
         outStream.writeValue(outv, &depl);
         EXPECT_FALSE(outStream.hasError());
@@ -153,7 +153,7 @@ TEST_F(DeploymentTest, UnionWithDeployment) {
 
         CommonAPI::SomeIP::InputStream inStream(message, false);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_1 inv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_1 inv;
         inStream.readValue(inv, &depl);
         EXPECT_FALSE(inStream.hasError());
         EXPECT_EQ(outv, inv);
@@ -166,7 +166,7 @@ TEST_F(DeploymentTest, UnionWithDeployment) {
         CommonAPI::SomeIP::OutputStream outStream(message, false);
 
         uint8_t value = 1;
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_1 outv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_1 outv;
         outv = value;
         outStream.writeValue(outv, &depl);
         EXPECT_FALSE(outStream.hasError());
@@ -174,7 +174,7 @@ TEST_F(DeploymentTest, UnionWithDeployment) {
 
         CommonAPI::SomeIP::InputStream inStream(message, false);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_1 inv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_1 inv;
         inStream.readValue(inv, &depl);
         EXPECT_FALSE(inStream.hasError());
         EXPECT_EQ(outv, inv);
@@ -187,7 +187,7 @@ TEST_F(DeploymentTest, UnionWithDeployment) {
         CommonAPI::SomeIP::OutputStream outStream(message, false);
 
         uint8_t value = 1;
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_1 outv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_1 outv;
         outv = value;
         outStream.writeValue(outv, &depl);
         EXPECT_FALSE(outStream.hasError());
@@ -195,7 +195,7 @@ TEST_F(DeploymentTest, UnionWithDeployment) {
 
         CommonAPI::SomeIP::InputStream inStream(message, false);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_1 inv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_1 inv;
         inStream.readValue(inv, &depl);
         EXPECT_FALSE(inStream.hasError());
         EXPECT_EQ(outv, inv);
@@ -208,7 +208,7 @@ TEST_F(DeploymentTest, UnionWithDeployment) {
         CommonAPI::SomeIP::OutputStream outStream(message, false);
 
         uint8_t value = 1;
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_1 outv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_1 outv;
         outv = value;
         outStream.writeValue(outv, &depl);
         EXPECT_FALSE(outStream.hasError());
@@ -216,7 +216,7 @@ TEST_F(DeploymentTest, UnionWithDeployment) {
 
         CommonAPI::SomeIP::InputStream inStream(message, false);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_1 inv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_1 inv;
         inStream.readValue(inv, &depl);
         EXPECT_FALSE(inStream.hasError());
         EXPECT_EQ(outv, inv);
@@ -229,7 +229,7 @@ TEST_F(DeploymentTest, UnionWithDeployment) {
         CommonAPI::SomeIP::OutputStream outStream(message, false);
 
         uint8_t value = 1;
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_1 outv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_1 outv;
         outv = value;
         outStream.writeValue(outv, &depl);
         EXPECT_FALSE(outStream.hasError());
@@ -237,7 +237,7 @@ TEST_F(DeploymentTest, UnionWithDeployment) {
 
         CommonAPI::SomeIP::InputStream inStream(message, false);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_1 inv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_1 inv;
         inStream.readValue(inv, &depl);
         EXPECT_FALSE(inStream.hasError());
         EXPECT_EQ(outv, inv);
@@ -250,7 +250,7 @@ TEST_F(DeploymentTest, UnionWithDeployment) {
         CommonAPI::SomeIP::OutputStream outStream(message, false);
 
         int16_t value = 1;
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_1 outv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_1 outv;
         outv = value;
         outStream.writeValue(outv, &depl);
         EXPECT_FALSE(outStream.hasError());
@@ -258,7 +258,7 @@ TEST_F(DeploymentTest, UnionWithDeployment) {
 
         CommonAPI::SomeIP::InputStream inStream(message, false);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_1 inv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_1 inv;
         inStream.readValue(inv, &depl);
         EXPECT_FALSE(inStream.hasError());
         EXPECT_EQ(outv, inv);
@@ -289,7 +289,7 @@ TEST_F(DeploymentTest, UnionWithOutputDeployment) {
         };
 
         std::string value = "123";
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_1 outv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_1 outv;
         outv = value;
         outStream.writeValue(outv, &depl);
         EXPECT_FALSE(outStream.hasError());
@@ -319,7 +319,7 @@ TEST_F(DeploymentTest, UnionWithOutputDeployment) {
         };
 
         std::string value = "123";
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_1 outv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_1 outv;
         outv = value;
         outStream.writeValue(outv, &depl);
         EXPECT_FALSE(outStream.hasError());
@@ -350,7 +350,7 @@ TEST_F(DeploymentTest, UnionWithOutputDeployment) {
         };
 
         std::string value = "123";
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_1 outv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_1 outv;
         outv = value;
         outStream.writeValue(outv, &depl);
         EXPECT_FALSE(outStream.hasError());
@@ -382,7 +382,7 @@ TEST_F(DeploymentTest, UnionWithTooSmallMaxLength) {
         CommonAPI::SomeIP::OutputStream outStream(message, false);
 
         std::string value = "123";
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_1 outv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_1 outv;
         outv = value;
         outStream.writeValue(outv, &depl);
         EXPECT_TRUE(outStream.hasError());
@@ -406,7 +406,7 @@ TEST_F(DeploymentTest, UnionWithTooSmallLengthWidth) {
 
         std::string value (256, 'c');
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_1 outv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_1 outv;
         outv = value;
         outStream.writeValue(outv, &depl);
         EXPECT_TRUE(outStream.hasError());
@@ -418,8 +418,8 @@ TEST_F(DeploymentTest, UnionWithTooSmallLengthWidth) {
 TEST_F(DeploymentTest, UnionAttributeDeployment) {
     CommonAPI::CallStatus callStatus;
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_1 outv;
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_1 inv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_1 outv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_1 inv;
 
         uint8_t v1 = 1;
         outv = v1;
@@ -443,8 +443,8 @@ TEST_F(DeploymentTest, UnionAttributeDeployment) {
         EXPECT_EQ(outv, inv);
     }
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_2 outv;
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_2 inv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_2 outv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_2 inv;
 
         uint8_t v1 = 1;
         outv = v1;
@@ -468,8 +468,8 @@ TEST_F(DeploymentTest, UnionAttributeDeployment) {
         EXPECT_EQ(outv, inv);
     }
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_3 outv;
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_3 inv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_3 outv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_3 inv;
 
         // this will fail because the deployment specifies an 11-byte value length.
         uint8_t v1 = 1;
@@ -495,8 +495,8 @@ TEST_F(DeploymentTest, UnionAttributeDeployment) {
         EXPECT_EQ(outv, inv);
     }
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_4 outv;
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_4 inv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_4 outv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_4 inv;
 
         uint8_t v1 = 1;
         outv = v1;
@@ -526,8 +526,8 @@ TEST_F(DeploymentTest, UnionAttributeDeployment) {
 TEST_F(DeploymentTest, UnionTypeDeployment) {
     CommonAPI::CallStatus callStatus;
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_d1 outv;
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_d1 inv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_d1 outv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_d1 inv;
 
         uint8_t v1 = 1;
         outv = v1;
@@ -551,8 +551,8 @@ TEST_F(DeploymentTest, UnionTypeDeployment) {
         EXPECT_EQ(outv, inv);
     }
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_d2 outv;
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_d2 inv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_d2 outv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_d2 inv;
 
         uint8_t v1 = 1;
         outv = v1;
@@ -576,8 +576,8 @@ TEST_F(DeploymentTest, UnionTypeDeployment) {
         EXPECT_EQ(outv, inv);
     }
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_d3 outv;
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_d3 inv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_d3 outv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_d3 inv;
 
         // this will fail because the deployment specifies an 12-byte value length.
         uint8_t v1 = 1;
@@ -603,8 +603,8 @@ TEST_F(DeploymentTest, UnionTypeDeployment) {
         EXPECT_EQ(outv, inv);
     }
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_d4 outv;
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_d4 inv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_d4 outv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_d4 inv;
 
         uint8_t v1 = 1;
         outv = v1;
@@ -634,8 +634,8 @@ TEST_F(DeploymentTest, UnionTypeDeployment) {
 TEST_F(DeploymentTest, UnionAttributeDeplOverridesTypeDepl) {
     CommonAPI::CallStatus callStatus;
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_d3 outv;
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_d3 inv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_d3 outv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_d3 inv;
 
         uint8_t v1 = 1;
         outv = v1;
@@ -666,15 +666,15 @@ TEST_F(DeploymentTest, UnionAttributeDeplOverridesTypeDepl) {
 TEST_F(DeploymentTest, UnionStructFieldDeploymentOK) {
     CommonAPI::CallStatus callStatus;
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_field_depls outv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_field_depls outv;
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_field structMember;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_field structMember;
         std::vector<uint8_t> a(8);
         std::iota (std::begin(a), std::end(a), 0);
         structMember.setUint8Member(a);
         outv = structMember;
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_field_depls inv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_field_depls inv;
         testProxy_->getAUnion_field_deplsAttribute().setValue(outv, callStatus, inv);
 
         ASSERT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
@@ -687,16 +687,16 @@ TEST_F(DeploymentTest, UnionStructFieldDeploymentOK) {
 TEST_F(DeploymentTest, UnionStructFieldDeploymentFail) {
     CommonAPI::CallStatus callStatus;
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_field_depls outv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_field_depls outv;
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_field structMember;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_field structMember;
         // the following value is too large and should fail when transmitted.
         std::vector<uint8_t> a(257);
         std::iota (std::begin(a), std::end(a), 0);
         structMember.setUint8Member(a);
         outv = structMember;
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_field_depls inv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_field_depls inv;
         testProxy_->getAUnion_field_deplsAttribute().setValue(outv, callStatus, inv);
 
         ASSERT_NE(callStatus, CommonAPI::CallStatus::SUCCESS);
@@ -708,14 +708,14 @@ TEST_F(DeploymentTest, UnionStructFieldDeploymentFail) {
 TEST_F(DeploymentTest, UnionArrayFieldDeploymentOK) {
     CommonAPI::CallStatus callStatus;
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_field_depls outv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_field_depls outv;
 
         // this value is too large, and the value should not be transmitted.
         std::vector<int8_t> arrayMember(8);
         std::iota (std::begin(arrayMember), std::end(arrayMember), 0);
         outv = arrayMember;
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_field_depls inv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_field_depls inv;
         testProxy_->getAUnion_field_deplsAttribute().setValue(outv, callStatus, inv);
 
         ASSERT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
@@ -728,14 +728,14 @@ TEST_F(DeploymentTest, UnionArrayFieldDeploymentOK) {
 TEST_F(DeploymentTest, UnionArrayFieldDeploymentFail) {
     CommonAPI::CallStatus callStatus;
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_field_depls outv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_field_depls outv;
 
         // this value is too large, and the value should not be transmitted.
         std::vector<int8_t> arrayMember(80);
         std::iota (std::begin(arrayMember), std::end(arrayMember), 0);
         outv = arrayMember;
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_field_depls inv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_field_depls inv;
         testProxy_->getAUnion_field_deplsAttribute().setValue(outv, callStatus, inv);
 
         ASSERT_NE(callStatus, CommonAPI::CallStatus::SUCCESS);
@@ -747,14 +747,14 @@ TEST_F(DeploymentTest, UnionArrayFieldDeploymentFail) {
 TEST_F(DeploymentTest, UnionUnionFieldDeploymentOK) {
     CommonAPI::CallStatus callStatus;
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_field_depls outv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_field_depls outv;
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_field unionMember;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_field unionMember;
         std::string str = "str";
         unionMember = str;
         outv = unionMember;
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_field_depls inv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_field_depls inv;
         testProxy_->getAUnion_field_deplsAttribute().setValue(outv, callStatus, inv);
 
         ASSERT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
@@ -767,15 +767,15 @@ TEST_F(DeploymentTest, UnionUnionFieldDeploymentOK) {
 TEST_F(DeploymentTest, UnionUnionFieldDeploymentFail) {
     CommonAPI::CallStatus callStatus;
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_field_depls outv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_field_depls outv;
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_field unionMember;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_field unionMember;
         // this value is too large, and the value should not be transmitted.
         std::string str(70000, 'a');
         unionMember = str;
         outv = unionMember;
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_field_depls inv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_field_depls inv;
         testProxy_->getAUnion_field_deplsAttribute().setValue(outv, callStatus, inv);
 
         ASSERT_NE(callStatus, CommonAPI::CallStatus::SUCCESS);
@@ -788,13 +788,13 @@ TEST_F(DeploymentTest, UnionUnionFieldDeploymentFail) {
 TEST_F(DeploymentTest, DISABLED_UnionIntFieldDeploymentOK) {
     CommonAPI::CallStatus callStatus;
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_field_depls outv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_field_depls outv;
 
         uint16_t intMember;
         intMember = 3;
         outv = intMember;
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_field_depls inv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_field_depls inv;
         testProxy_->getAUnion_field_deplsAttribute().setValue(outv, callStatus, inv);
 
         ASSERT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
@@ -808,17 +808,17 @@ TEST_F(DeploymentTest, DISABLED_UnionIntFieldDeploymentOK) {
 TEST_F(DeploymentTest, DISABLED_UnionIntFieldDeploymentFail) {
     CommonAPI::CallStatus callStatus;
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_field_depls outv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_field_depls outv;
 
         uint16_t intMember;
         intMember = 5; // this value will be truncated during transfer.
         outv = intMember;
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_field_depls inv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_field_depls inv;
         testProxy_->getAUnion_field_deplsAttribute().setValue(outv, callStatus, inv);
 
         ASSERT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_field_depls expected;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_field_depls expected;
         uint16_t inInt = 1;
         expected = inInt;
         ASSERT_EQ(expected, inv);
@@ -830,13 +830,13 @@ TEST_F(DeploymentTest, DISABLED_UnionIntFieldDeploymentFail) {
 TEST_F(DeploymentTest, UnionEnumFieldDeploymentOK) {
     CommonAPI::CallStatus callStatus;
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_field_depls outv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_field_depls outv;
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum enumMember;
-        enumMember = v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum::V1;
+        @TYPE_COLLECTION_FULL_NAME@::tEnum enumMember;
+        enumMember = @TYPE_COLLECTION_FULL_NAME@::tEnum::V1;
         outv = enumMember;
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_field_depls inv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_field_depls inv;
         testProxy_->getAUnion_field_deplsAttribute().setValue(outv, callStatus, inv);
 
         ASSERT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
@@ -849,24 +849,147 @@ TEST_F(DeploymentTest, UnionEnumFieldDeploymentOK) {
 TEST_F(DeploymentTest, UnionEnumFieldDeploymentFail) {
     CommonAPI::CallStatus callStatus;
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_field_depls outv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_field_depls outv;
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum enumMember;
+        @TYPE_COLLECTION_FULL_NAME@::tEnum enumMember;
         // this enum value is too large to fit. It will be truncated during transfer.
-        enumMember = v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum::V3;
+        enumMember = @TYPE_COLLECTION_FULL_NAME@::tEnum::V3;
         outv = enumMember;
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_field_depls inv;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_field_depls inv;
         testProxy_->getAUnion_field_deplsAttribute().setValue(outv, callStatus, inv);
 
         ASSERT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_field_depls expected;
-        enumMember = v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum::VTRUNCATED;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_field_depls expected;
+        enumMember = @TYPE_COLLECTION_FULL_NAME@::tEnum::VTRUNCATED;
         expected = enumMember;
         ASSERT_EQ(expected, inv);
     }
 }
+
+/**
+* @test Use a method with an union as an argument. for both input and output.
+*/
+TEST_F(DeploymentTest, UnionMethodDeployment_IO) {
+    @TYPE_COLLECTION_FULL_NAME@::tUnion_d2 outv;
+    @TYPE_COLLECTION_FULL_NAME@::tUnion_d2 inv;
+
+    std::string str(492, 'a');
+    outv = str;
+
+    CommonAPI::CallStatus callStatus;
+    testProxy_->mUnion_io(outv, callStatus, inv);
+
+    EXPECT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
+    EXPECT_EQ(outv, inv);
+}
+TEST_F(DeploymentTest, UnionMethodDeployment_I) {
+    @TYPE_COLLECTION_FULL_NAME@::tUnion_d2 outv;
+
+    std::string str(492, 'a');
+    outv = str;
+
+    CommonAPI::CallStatus callStatus;
+    testProxy_->mUnion_i(outv, callStatus);
+
+    EXPECT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
+
+}
+TEST_F(DeploymentTest, UnionMethodDeployment_O) {
+    @TYPE_COLLECTION_FULL_NAME@::tUnion_d2 outv;
+    @TYPE_COLLECTION_FULL_NAME@::tUnion_d2 inv;
+
+    std::string str(492, 'a');
+    outv = str;
+
+    CommonAPI::CallStatus callStatus;
+    testProxy_->mUnion_o(callStatus, inv);
+
+    EXPECT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
+    EXPECT_EQ(outv, inv);
+}
+TEST_F(DeploymentTest, UnionMethodDeployment_IO_Fail) {
+    @TYPE_COLLECTION_FULL_NAME@::tUnion_d2 outv;
+    @TYPE_COLLECTION_FULL_NAME@::tUnion_d2 inv;
+
+    std::string str(600, 'a');
+    outv = str;
+
+    CommonAPI::CallStatus callStatus;
+    testProxy_->mUnion_io(outv, callStatus, inv);
+
+    EXPECT_EQ(callStatus, CommonAPI::CallStatus::SERIALIZATION_ERROR);
+}
+TEST_F(DeploymentTest, UnionMethodDeployment_I_Fail) {
+    @TYPE_COLLECTION_FULL_NAME@::tUnion_d2 outv;
+
+    std::string str(600, 'a');
+    outv = str;
+
+    CommonAPI::CallStatus callStatus;
+    testProxy_->mUnion_i(outv, callStatus);
+
+    EXPECT_EQ(callStatus, CommonAPI::CallStatus::SERIALIZATION_ERROR);
+
+}
+TEST_F(DeploymentTest, UnionMethodDeployment_O_Fail) {
+    @TYPE_COLLECTION_FULL_NAME@::tUnion_d2 inv;
+
+    CommonAPI::CallStatus callStatus;
+    testProxy_->mUnion_of(callStatus, inv);
+
+    EXPECT_EQ(callStatus, CommonAPI::CallStatus::REMOTE_ERROR);
+}
+
+/**
+* @test Use a broadcast with a union.
+*/
+TEST_F(DeploymentTest, UnionBroadcastDeployment) {
+
+    CommonAPI::CallStatus callStatus;
+    std::promise<@TYPE_COLLECTION_FULL_NAME@::tUnion_d2> p;
+    auto f = p.get_future();
+
+    // subscribe
+    uint32_t subscription = testProxy_->getBUnionEvent().subscribe([&](
+        const @TYPE_COLLECTION_FULL_NAME@::tUnion_d2 &y
+    ) {
+        p.set_value(y);
+    });
+
+    // trigger the event
+    testProxy_->mBCastTrigger(v1_0::commonapi::someip::deploymenttest::TestInterface::tEnumTriggerType::T_UNION, 492, callStatus);
+    // wait until broadcast has been signaled
+    std::future_status status = f.wait_for(std::chrono::seconds(7));
+    EXPECT_EQ(status, std::future_status::ready);
+    testProxy_->getBUnionEvent().unsubscribe(subscription);
+}
+
+/**
+* @test Use a broadcast with a union. Will fail on purpose.
+*/
+TEST_F(DeploymentTest, UnionBroadcastDeploymentBadValue) {
+
+    CommonAPI::CallStatus callStatus;
+    std::promise<@TYPE_COLLECTION_FULL_NAME@::tUnion_d2> p;
+    auto f = p.get_future();
+
+    // subscribe
+    uint32_t subscription = testProxy_->getBUnionEvent().subscribe([&](
+        const @TYPE_COLLECTION_FULL_NAME@::tUnion_d2 &y
+    ) {
+        p.set_value(y);
+    });
+
+    // trigger the event
+    testProxy_->mBCastTrigger(v1_0::commonapi::someip::deploymenttest::TestInterface::tEnumTriggerType::T_UNION, 600, callStatus);
+    // wait until broadcast has been signaled
+    std::future_status status = f.wait_for(std::chrono::seconds(7));
+    EXPECT_EQ(status, std::future_status::timeout);
+    testProxy_->getBUnionEvent().unsubscribe(subscription);
+}
+
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);

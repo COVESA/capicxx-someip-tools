@@ -6,7 +6,7 @@
                   <validator
                         class="org.genivi.commonapi.someip.validator.ValidatorSomeIP"
                         mode="FAST"
-                        name="ValidatorSomeIP">
+                        name="Franca Some/IP Validator">
                   </validator>
                </extension>
                <extension
@@ -14,7 +14,18 @@
                 <page
                       class="org.genivi.commonapi.someip.validator.preference.ValidatorSomeIPPreferencesPage"
                       id="org.genivi.commonapi.someip.validator.preference"
-                      name="CommonAPI-Some/IP Validator">
+                      name="CommonAPI Some/IP Validator">
                 </page>
              </extension>
+             <!-->
+             <extension
+                point="org.franca.deploymodel.dsl.deploymentValidator">
+                <validator
+                      class="org.genivi.commonapi.someip.validator.DeploymentValidatorSomeIP"
+                      mode="FAST"
+                      name="Franca Some/IP Deployment Validator">
+                </validator>
+               </extension>
+              </!-->
 </plugin>
+

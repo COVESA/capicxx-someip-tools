@@ -808,6 +808,36 @@ TEST_F(DeploymentTest, ArrayAttributeDeplOverridesTypeDeployment) {
     }
 }
 /**
+* @test Use an attribute using an anonymous array.
+*/
+TEST_F(DeploymentTest, ArrayAttributeDeplAnonymous) {
+
+    CommonAPI::CallStatus callStatus;
+    {
+        std::vector<int8_t> inArray;
+        std::vector<int8_t> outArray(2000);
+        std::iota (std::begin(outArray), std::end(outArray), 0);
+        testProxy_->getAArray_anonymousAttribute().setValue(outArray, callStatus, inArray);
+        ASSERT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
+        EXPECT_EQ(outArray, inArray);
+    }
+    {
+        std::vector<int8_t> inArray;
+        std::vector<int8_t> outArray(1999);
+        std::iota (std::begin(outArray), std::end(outArray), 0);
+        testProxy_->getAArray_anonymousAttribute().setValue(outArray, callStatus, inArray);
+        ASSERT_NE(callStatus, CommonAPI::CallStatus::SUCCESS);
+    }
+    {
+        std::vector<int8_t> inArray;
+        std::vector<int8_t> outArray(2001);
+        std::iota (std::begin(outArray), std::end(outArray), 0);
+        testProxy_->getAArray_anonymousAttribute().setValue(outArray, callStatus, inArray);
+        ASSERT_NE(callStatus, CommonAPI::CallStatus::SUCCESS);
+    }
+}
+
+/**
 * @test Use a method with an array as an argument. for both input and output.
 */
 TEST_F(DeploymentTest, ArrayMethodDeployment_IO) {
@@ -821,6 +851,25 @@ TEST_F(DeploymentTest, ArrayMethodDeployment_IO) {
 
     CommonAPI::CallStatus callStatus;
     testProxy_->mArrayi8_io(outArray, callStatus, inArray);
+
+    EXPECT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
+    EXPECT_EQ(expectedArray, inArray);
+}
+
+/**
+* @test Use a method with an anonymous array as an argument. for both input and output.
+*/
+TEST_F(DeploymentTest, ArrayAnonMethodDeployment_IO) {
+    std::vector<int8_t> inArray;
+    std::vector<int8_t> outArray(20);
+    std::vector<int8_t> expectedArray(200);
+
+    // the first byte in the output array tells how many items should be in the incoming array
+    std::iota (std::begin(outArray), std::end(outArray), 200);
+    std::iota (std::begin(expectedArray), std::end(expectedArray), 200);
+
+    CommonAPI::CallStatus callStatus;
+    testProxy_->mArray_anon_io(outArray, callStatus, inArray);
 
     EXPECT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
     EXPECT_EQ(expectedArray, inArray);
@@ -844,7 +893,27 @@ TEST_F(DeploymentTest, ArrayMethodDeployment_IO_BadInput) {
 
     EXPECT_NE(callStatus, CommonAPI::CallStatus::SUCCESS);
     EXPECT_NE(callStatus, CommonAPI::CallStatus::REMOTE_ERROR);
+}
 
+/**
+* @test Us an method with an anonymous array as an argument. for both input and output. The input array is rejected by the deployment.
+*/
+TEST_F(DeploymentTest, ArrayAnonMethodDeployment_IO_BadInput) {
+    std::vector<int8_t> inArray;
+
+    // the deployment insists on 20 elements, so this should fail.
+    std::vector<int8_t> outArray(19);
+    std::vector<int8_t> expectedArray(200);
+
+    // the first byte in the output array tells how many items should be in the incoming array
+    std::iota (std::begin(outArray), std::end(outArray), 200);
+    std::iota (std::begin(expectedArray), std::end(expectedArray), 200);
+
+    CommonAPI::CallStatus callStatus;
+    testProxy_->mArray_anon_io(outArray, callStatus, inArray);
+
+    EXPECT_NE(callStatus, CommonAPI::CallStatus::SUCCESS);
+    EXPECT_NE(callStatus, CommonAPI::CallStatus::REMOTE_ERROR);
 }
 /**
 * @test Use a method with an array as an argument. for both input and output. The output array is rejected by the deployment.
@@ -864,6 +933,28 @@ TEST_F(DeploymentTest, ArrayMethodDeployment_IO_BadOutput) {
 
     CommonAPI::CallStatus callStatus;
     testProxy_->mArrayi8_io(outArray, callStatus, inArray);
+
+    EXPECT_EQ(callStatus, CommonAPI::CallStatus::REMOTE_ERROR);
+
+}
+/**
+* @test Use a method with an anonymous array as an argument. for both input and output. The output array is rejected by the deployment.
+*/
+TEST_F(DeploymentTest, ArrayAnonMethodDeployment_IO_BadOutput) {
+    std::vector<int8_t> inArray;
+
+    // the deployment insists on 20 elements
+    std::vector<int8_t> outArray(20);
+    std::vector<int8_t> expectedArray(199);
+
+    // the first byte in the output array tells how many items should be in the incoming array
+    // the deployment insists on 200 bytes, so this should fail
+    // the failure is on the stub side, so it shows up as a timeout error
+    std::iota (std::begin(outArray), std::end(outArray), 199);
+    std::iota (std::begin(expectedArray), std::end(expectedArray), 199);
+
+    CommonAPI::CallStatus callStatus;
+    testProxy_->mArray_anon_io(outArray, callStatus, inArray);
 
     EXPECT_EQ(callStatus, CommonAPI::CallStatus::REMOTE_ERROR);
 
@@ -920,6 +1011,102 @@ TEST_F(DeploymentTest, ArrayMethodDeployment_I_O_BadOutput) {
     EXPECT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
     testProxy_->mArrayi8_o(callStatus, inArray);
     EXPECT_EQ(callStatus, CommonAPI::CallStatus::REMOTE_ERROR);
+}
+
+/**
+* @test Use a broadcast with an array as an output argument.
+*/
+TEST_F(DeploymentTest, ArrayBroadcastDeployment) {
+
+    CommonAPI::CallStatus callStatus;
+    std::promise<std::vector<int8_t>> p;
+    auto f = p.get_future();
+
+    // subscribe
+    uint32_t subscription = testProxy_->getBArrayi8Event().subscribe([&](
+        const std::vector<int8_t> &y
+    ) {
+        p.set_value(y);
+    });
+
+    // trigger the event
+    testProxy_->mBCastTrigger(v1_0::commonapi::someip::deploymenttest::TestInterface::tEnumTriggerType::T_ARRAY, 100, callStatus);
+    // wait until broadcast has been signaled
+    std::future_status status = f.wait_for(std::chrono::seconds(7));
+    EXPECT_EQ(status, std::future_status::ready);
+    EXPECT_EQ(f.get().size(), 100UL);
+    testProxy_->getBArrayi8Event().unsubscribe(subscription);
+}
+/**
+* @test Use a broadcast with an array. The broadcast tries to send too long a value.
+*/
+TEST_F(DeploymentTest, ArrayBroadcastDeploymentBadValue) {
+
+    CommonAPI::CallStatus callStatus;
+    std::promise<std::vector<int8_t>> p;
+    auto f = p.get_future();
+
+    // subscribe
+    uint32_t subscription = testProxy_->getBArrayi8Event().subscribe([&](
+        const std::vector<int8_t> &y
+    ) {
+        p.set_value(y);
+    });
+
+    // trigger the event
+    testProxy_->mBCastTrigger(v1_0::commonapi::someip::deploymenttest::TestInterface::tEnumTriggerType::T_ARRAY, 600, callStatus);
+    // wait until broadcast has been signaled
+    std::future_status status = f.wait_for(std::chrono::seconds(7));
+    EXPECT_EQ(status, std::future_status::timeout);
+    testProxy_->getBArrayi8Event().unsubscribe(subscription);
+}
+
+/**
+* @test Use a broadcast with an anonymous array as an output argument.
+*/
+TEST_F(DeploymentTest, ArrayAnonBroadcastDeployment) {
+
+    CommonAPI::CallStatus callStatus;
+    std::promise<std::vector<int8_t>> p;
+    auto f = p.get_future();
+
+    // subscribe
+    uint32_t subscription = testProxy_->getBArray_anonEvent().subscribe([&](
+        const std::vector<int8_t> &y
+    ) {
+        p.set_value(y);
+    });
+
+    // trigger the event
+    testProxy_->mBCastTrigger(v1_0::commonapi::someip::deploymenttest::TestInterface::tEnumTriggerType::T_ANON, 100, callStatus);
+    // wait until broadcast has been signaled
+    std::future_status status = f.wait_for(std::chrono::seconds(7));
+    EXPECT_EQ(status, std::future_status::ready);
+    EXPECT_EQ(f.get().size(), 100UL);
+    testProxy_->getBArray_anonEvent().unsubscribe(subscription);
+}
+/**
+* @test Use a broadcast with an anonymous array. The broadcast tries to send too long a value.
+*/
+TEST_F(DeploymentTest, ArrayAnonBroadcastDeploymentBadValue) {
+
+    CommonAPI::CallStatus callStatus;
+    std::promise<std::vector<int8_t>> p;
+    auto f = p.get_future();
+
+    // subscribe
+    uint32_t subscription = testProxy_->getBArray_anonEvent().subscribe([&](
+        const std::vector<int8_t> &y
+    ) {
+        p.set_value(y);
+    });
+
+    // trigger the event
+    testProxy_->mBCastTrigger(v1_0::commonapi::someip::deploymenttest::TestInterface::tEnumTriggerType::T_ANON, 600, callStatus);
+    // wait until broadcast has been signaled
+    std::future_status status = f.wait_for(std::chrono::seconds(7));
+    EXPECT_EQ(status, std::future_status::timeout);
+    testProxy_->getBArray_anonEvent().unsubscribe(subscription);
 }
 
 int main(int argc, char** argv) {

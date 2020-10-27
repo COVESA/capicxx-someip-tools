@@ -1,11 +1,13 @@
 Changes
 =======
 
-v3.1.12.2
-- Fixed dependency to Eclipse Modeling Framework causing compilation error.
-
-v3.1.12.1
-- support 'lock functors' in AttributeDispatcher(s)
+v3.2.0
+- Adapted to CommonAPI 3.2.0
+- Upgrade to Franca 0.13.1
+- Updated xtend to v2.20.0
+- Fix missing generation dependency for arrays
+- Add generation of includes for maps
+- Improve handling of derived enumerations
 
 v3.1.12
 - Improve deployment validator

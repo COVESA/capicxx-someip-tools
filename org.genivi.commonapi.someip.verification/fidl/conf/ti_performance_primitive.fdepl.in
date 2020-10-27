@@ -1,4 +1,4 @@
-import "platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-SOMEIP_deployment_spec.fdepl"
+import "platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-4-SOMEIP_deployment_spec.fdepl"
 import "@COMMONAPI_TEST_FIDL_PATH@/ti_performance_primitive.fidl"
 
 define org.genivi.commonapi.someip.deployment for interface commonapi.performance.primitive.TestInterface {
@@ -10,7 +10,7 @@ define org.genivi.commonapi.someip.deployment for interface commonapi.performanc
     }
 }
 
-define org.genivi.commonapi.someip.deployment for provider Service {
+define org.genivi.commonapi.someip.deployment for provider as Service {
     instance commonapi.performance.primitive.TestInterface {
         InstanceId = "commonapi.performance.primitive.TestInterface"
 

@@ -64,11 +64,11 @@ FIND_PACKAGE(PkgConfig)
 if ("${USE_INSTALLED_COMMONAPI}" STREQUAL "ON")
     FIND_PACKAGE(CommonAPI REQUIRED CONFIG NO_CMAKE_PACKAGE_REGISTRY)
     FIND_PACKAGE(CommonAPI-SomeIP REQUIRED CONFIG NO_CMAKE_PACKAGE_REGISTRY)
-    FIND_PACKAGE(vsomeip REQUIRED CONFIG NO_CMAKE_PACKAGE_REGISTRY)
+    FIND_PACKAGE(vsomeip3 REQUIRED CONFIG NO_CMAKE_PACKAGE_REGISTRY)
 else()
     FIND_PACKAGE(CommonAPI REQUIRED CONFIG NO_SYSTEM_ENVIRONMENT_PATH NO_CMAKE_SYSTEM_PATH)
     FIND_PACKAGE(CommonAPI-SomeIP REQUIRED CONFIG NO_SYSTEM_ENVIRONMENT_PATH NO_CMAKE_SYSTEM_PATH)
-    FIND_PACKAGE(vsomeip REQUIRED CONFIG NO_SYSTEM_ENVIRONMENT_PATH NO_CMAKE_SYSTEM_PATH)
+    FIND_PACKAGE(vsomeip3 REQUIRED CONFIG NO_SYSTEM_ENVIRONMENT_PATH NO_CMAKE_SYSTEM_PATH)
 endif()
 
 message("CommonAPI_CONSIDERED_CONFIGS: ${CommonAPI_CONSIDERED_CONFIGS}")
@@ -79,6 +79,19 @@ message("COMMONAPI_SOMEIP_INCLUDE_DIRS: ${COMMONAPI_SOMEIP_INCLUDE_DIRS}")
 # Boost
 find_package( Boost 1.54 COMPONENTS system thread log REQUIRED )
 include_directories( ${Boost_INCLUDE_DIR} )
+
+if(Boost_FOUND)
+  if(Boost_LIBRARY_DIR)
+    MESSAGE( STATUS "Boost_LIBRARY_DIR not empty using it: ${Boost_LIBRARY_DIR}" )
+  else()
+    if(BOOST_LIBRARYDIR)
+      MESSAGE( STATUS "Boost_LIBRARY_DIR empty but BOOST_LIBRARYDIR is set setting Boost_LIBRARY_DIR to: ${BOOST_LIBRARYDIR}" )
+      set(Boost_LIBRARY_DIR ${BOOST_LIBRARYDIR})
+    endif()
+  endif()
+else()
+  MESSAGE( STATUS "Boost was not found!")
+endif()
 
 link_directories(
     ${Boost_LIBRARY_DIR}
@@ -145,16 +158,12 @@ endif()
 message("Compiler options: ${CMAKE_CXX_FLAGS}")
 
 include_directories(
-    src
-    src/stub
-    ${COMMONAPI_SRC_GEN_DEST}/someip
-    ${COMMONAPI_SRC_GEN_DEST}/core
     ${COMMONAPI_INCLUDE_DIRS}
     ${SOMEIP_INCLUDE_DIRS}
     ${COMMONAPI_SOMEIP_INCLUDE_DIRS}
     ${GLIB_INCLUDE_DIRS}
     ${gtest_SOURCE_DIR}/include
-    ${VSOMEIP_INCLUDE_DIRS}
+    ${VSOMEIP3_INCLUDE_DIRS}
 )
 
 if ("${USE_INSTALLED_SOMEIP}" STREQUAL "OFF")
@@ -166,122 +175,302 @@ endif()
 
 ##############################################################################
 # generate code from fidl
-file(GLOB FDEPL_FILES "fidl/*.fdepl")
-file(GLOB FIDL_FILES "fidl/*.fidl")
 
-execute_process(COMMAND ${COMMONAPI_SOMEIP_TOOL_GENERATOR} -dest ${COMMONAPI_SRC_GEN_DEST}/someip ${FDEPL_FILES}
-                        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+SET(TYPE_COLLECTION_DEPL_PREFIX "interface commonapi.someip.deploymenttest.TestInterface")
+SET(FIDL_FILE_NAME "./deployment_test_ow.fidl")
+SET(TYPE_COLLECTION_PREFIX "")
+SET(TYPE_COLLECTION_BLOCK "")
+SET(TYPE_COLLECTION_DEPL_BLOCK "")
+
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/fidl/conf/deployment_test_ow.fdepl.in
+    "${COMMONAPI_SRC_GEN_DEST}/fidl/deployment_test_ow.fdepl" @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/fidl/conf/deployment_test.fidl.in
+    "${COMMONAPI_SRC_GEN_DEST}/fidl/deployment_test_ow.fidl" @ONLY)
+
+execute_process(COMMAND ${COMMONAPI_SOMEIP_TOOL_GENERATOR} -dest ${COMMONAPI_SRC_GEN_DEST}/ow/someip "${COMMONAPI_SRC_GEN_DEST}/fidl/deployment_test_ow.fdepl"
+                        WORKING_DIRECTORY ${COMMONAPI_SRC_GEN_DEST}/fidl
                         )
-execute_process(COMMAND ${COMMONAPI_TOOL_GENERATOR} -sk Default -dest ${COMMONAPI_SRC_GEN_DEST}/core ${FDEPL_FILES}
-                        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+execute_process(COMMAND ${COMMONAPI_TOOL_GENERATOR} -sk Default -dest ${COMMONAPI_SRC_GEN_DEST}/ow/core "${COMMONAPI_SRC_GEN_DEST}/fidl/deployment_test_ow.fdepl"
+                        WORKING_DIRECTORY ${COMMONAPI_SRC_GEN_DEST}/fidl
+                        )
+
+SET(TYPE_COLLECTION_DEPL_PREFIX "typeCollection commonapi.someip.deploymenttest.TC")
+SET(FIDL_FILE_NAME "./deployment_test_ow_tc.fidl")
+SET(TYPE_COLLECTION_PREFIX "TC.")
+SET(TYPE_COLLECTION_BLOCK "}\ntypeCollection TC {\n  version {major 1 minor 0 }\n")
+SET(TYPE_COLLECTION_DEPL_BLOCK "}\ndefine org.genivi.commonapi.someip.deployment for typeCollection commonapi.someip.deploymenttest.TC {\n")
+
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/fidl/conf/deployment_test_ow.fdepl.in
+    "${COMMONAPI_SRC_GEN_DEST}/fidl/deployment_test_ow_tc.fdepl" @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/fidl/conf/deployment_test.fidl.in
+    "${COMMONAPI_SRC_GEN_DEST}/fidl/deployment_test_ow_tc.fidl" @ONLY)
+
+execute_process(COMMAND ${COMMONAPI_SOMEIP_TOOL_GENERATOR} -dest ${COMMONAPI_SRC_GEN_DEST}/ow_tc/someip "${COMMONAPI_SRC_GEN_DEST}/fidl/deployment_test_ow_tc.fdepl"
+                        WORKING_DIRECTORY ${COMMONAPI_SRC_GEN_DEST}/fidl
+                        )
+execute_process(COMMAND ${COMMONAPI_TOOL_GENERATOR} -sk Default -dest ${COMMONAPI_SRC_GEN_DEST}/ow_tc/core "${COMMONAPI_SRC_GEN_DEST}/fidl/deployment_test_ow_tc.fdepl"
+                        WORKING_DIRECTORY ${COMMONAPI_SRC_GEN_DEST}/fidl
                         )
 ##############################################################################
+# Add code from issue GLIPCI-2226 to see that it really compiles
+##############################################################################
+execute_process(COMMAND ${COMMONAPI_SOMEIP_TOOL_GENERATOR} -dest ${COMMONAPI_SRC_GEN_DEST}/ow/someip "${CMAKE_CURRENT_SOURCE_DIR}/fidl/de.bmw.infrastructure.testability.fdepl"
+                        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/fidl
+                        )
+execute_process(COMMAND ${COMMONAPI_TOOL_GENERATOR} -sk Default -dest ${COMMONAPI_SRC_GEN_DEST}/ow/core "${CMAKE_CURRENT_SOURCE_DIR}/fidl/de.bmw.infrastructure.testability.fdepl"
+                        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/fidl
+                        )
+set(GLIPCI-2226_Sources
+    ${COMMONAPI_SRC_GEN_DEST}/ow/someip/v1/de/bmw/infrastructure/testability/EnhancedTestabilityServiceTPSomeIPStubAdapter.cpp
+    ${COMMONAPI_SRC_GEN_DEST}/ow/someip/v1/de/bmw/infrastructure/testability/EnhancedTestabilityServiceTPSomeIPDeployment.cpp
+    ${COMMONAPI_SRC_GEN_DEST}/ow/someip/v1/de/bmw/infrastructure/testability/EnhancedTestabilityServiceTPSomeIPProxy.cpp
+    ${COMMONAPI_SRC_GEN_DEST}/ow/someip/v2/de/bmw/infrastructure/testability/EnhancedTestabilityServiceHigh2SomeIPProxy.cpp
+    ${COMMONAPI_SRC_GEN_DEST}/ow/someip/v2/de/bmw/infrastructure/testability/EnhancedTestabilityServiceHigh2SomeIPDeployment.cpp
+    ${COMMONAPI_SRC_GEN_DEST}/ow/someip/v2/de/bmw/infrastructure/testability/EnhancedTestabilityServiceHigh2SomeIPStubAdapter.cpp
+    ${COMMONAPI_SRC_GEN_DEST}/ow/someip/de/bmw/environmentalmodel/common/CommonSomeIPDeployment.cpp
+    ${COMMONAPI_SRC_GEN_DEST}/ow/someip/de/bmw/infrastructure/testabilitytypes/TestabilityTypesSomeIPDeployment.cpp)
 
+##############################################################################
 set(VERSION "v1")
 
-set(TestInterfaceSources ${COMMONAPI_SRC_GEN_DEST}/core/${VERSION}/commonapi/someip/deploymenttest/TestInterfaceStubDefault.cpp
-                         src/stub/DeploymentTestStub.cpp)
+set(TestInterfaceSources ${COMMONAPI_SRC_GEN_DEST}/src/stub/DeploymentTestStub.cpp)
 
 set(TestInterfaceSomeIPSources ${TestInterfaceSources}
                              ${COMMONAPI_SRC_GEN_DEST}/someip/${VERSION}/commonapi/someip/deploymenttest/TestInterfaceSomeIPDeployment.cpp
                              ${COMMONAPI_SRC_GEN_DEST}/someip/${VERSION}/commonapi/someip/deploymenttest/TestInterfaceSomeIPProxy.cpp
                              ${COMMONAPI_SRC_GEN_DEST}/someip/${VERSION}/commonapi/someip/deploymenttest/TestInterfaceSomeIPStubAdapter.cpp)
 
+set(TestInterfaceTCSources ${COMMONAPI_SRC_GEN_DEST}/tc/src/stub/DeploymentTestStub.cpp)
+
+
+set(TestInterfaceTCSomeIPSources ${TestInterfaceTCSources}
+                             ${COMMONAPI_SRC_GEN_DEST}/tc/someip/${VERSION}/commonapi/someip/deploymenttest/TestInterfaceSomeIPDeployment.cpp
+                             ${COMMONAPI_SRC_GEN_DEST}/tc/someip/${VERSION}/commonapi/someip/deploymenttest/TestInterfaceSomeIPProxy.cpp
+                             ${COMMONAPI_SRC_GEN_DEST}/tc/someip/${VERSION}/commonapi/someip/deploymenttest/TCSomeIPDeployment.cpp
+                             ${COMMONAPI_SRC_GEN_DEST}/tc/someip/${VERSION}/commonapi/someip/deploymenttest/TestInterfaceSomeIPStubAdapter.cpp)
+
+set(TestInterfaceOWSources ${COMMONAPI_SRC_GEN_DEST}/ow/src/stub/DeploymentTestStub.cpp)
+
+set(TestInterfaceOWSomeIPSources ${TestInterfaceOWSources}
+                             ${COMMONAPI_SRC_GEN_DEST}/ow/someip/${VERSION}/commonapi/someip/deploymenttest/TestInterfaceSomeIPDeployment.cpp
+                             ${COMMONAPI_SRC_GEN_DEST}/ow/someip/${VERSION}/commonapi/someip/deploymenttest/TestInterfaceSomeIPProxy.cpp
+                             ${COMMONAPI_SRC_GEN_DEST}/ow/someip/${VERSION}/commonapi/someip/deploymenttest/TestInterfaceSomeIPStubAdapter.cpp)
+
+set(TestInterfaceOWTCSources ${COMMONAPI_SRC_GEN_DEST}/ow_tc/src/stub/DeploymentTestStub.cpp)
+
+
+set(TestInterfaceOWTCSomeIPSources ${TestInterfaceOWTCSources}
+                             ${COMMONAPI_SRC_GEN_DEST}/ow_tc/someip/${VERSION}/commonapi/someip/deploymenttest/TestInterfaceSomeIPDeployment.cpp
+                             ${COMMONAPI_SRC_GEN_DEST}/ow_tc/someip/${VERSION}/commonapi/someip/deploymenttest/TestInterfaceSomeIPProxy.cpp
+                             ${COMMONAPI_SRC_GEN_DEST}/ow_tc/someip/${VERSION}/commonapi/someip/deploymenttest/TCSomeIPDeployment.cpp
+                             ${COMMONAPI_SRC_GEN_DEST}/ow_tc/someip/${VERSION}/commonapi/someip/deploymenttest/TestInterfaceSomeIPStubAdapter.cpp)
+
+
 set(TEST_LINK_LIBRARIES -Wl,--no-as-needed CommonAPI-SomeIP -Wl,--as-needed CommonAPI ${SOMEIP_LDFLAGS} ${DL_LIBRARY} gtest ${PTHREAD_LIBRARY})
 
+##############################################################################
+# configure & copy source files
+##############################################################################
+SET(TYPE_COLLECTION_BASE_NAME "TestInterface")
+SET(TYPE_COLLECTION_FULL_NAME "v1_0::commonapi::someip::deploymenttest::TestInterface")
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/stub/DeploymentTestStub.cpp
+    "${COMMONAPI_SRC_GEN_DEST}/ow/src/stub/DeploymentTestStub.cpp" @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/stub/DeploymentTestStub.h
+    "${COMMONAPI_SRC_GEN_DEST}/ow/src/stub/DeploymentTestStub.h" @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/SomeIPArrayDeploymentTest.cpp
+    "${COMMONAPI_SRC_GEN_DEST}/ow/src/SomeIPArrayDeploymentTest.cpp" @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/SomeIPByteBufferDeploymentTest.cpp
+    "${COMMONAPI_SRC_GEN_DEST}/ow/src/SomeIPByteBufferDeploymentTest.cpp" @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/SomeIPEnumDeploymentTest.cpp
+    "${COMMONAPI_SRC_GEN_DEST}/ow/src/SomeIPEnumDeploymentTest.cpp" @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/SomeIPIntegerDeploymentTest.cpp
+    "${COMMONAPI_SRC_GEN_DEST}/ow/src/SomeIPIntegerDeploymentTest.cpp" @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/SomeIPMapDeploymentTest.cpp
+    "${COMMONAPI_SRC_GEN_DEST}/ow/src/SomeIPMapDeploymentTest.cpp" @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/SomeIPStringDeploymentTest.cpp
+    "${COMMONAPI_SRC_GEN_DEST}/ow/src/SomeIPStringDeploymentTest.cpp" @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/SomeIPStructDeploymentTest.cpp
+    "${COMMONAPI_SRC_GEN_DEST}/ow/src/SomeIPStructDeploymentTest.cpp" @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/SomeIPUnionDeploymentTest.cpp
+    "${COMMONAPI_SRC_GEN_DEST}/ow/src/SomeIPUnionDeploymentTest.cpp" @ONLY)
+
+SET(TYPE_COLLECTION_BASE_NAME "TC")
+SET(TYPE_COLLECTION_FULL_NAME "v1_0::commonapi::someip::deploymenttest::TC")
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/stub/DeploymentTestStub.cpp
+    "${COMMONAPI_SRC_GEN_DEST}/ow_tc/src/stub/DeploymentTestStub.cpp" @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/stub/DeploymentTestStub.h
+    "${COMMONAPI_SRC_GEN_DEST}/ow_tc/src/stub/DeploymentTestStub.h" @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/SomeIPArrayDeploymentTest.cpp
+    "${COMMONAPI_SRC_GEN_DEST}/ow_tc/src/SomeIPArrayDeploymentTest.cpp" @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/SomeIPByteBufferDeploymentTest.cpp
+    "${COMMONAPI_SRC_GEN_DEST}/ow_tc/src/SomeIPByteBufferDeploymentTest.cpp" @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/SomeIPEnumDeploymentTest.cpp
+    "${COMMONAPI_SRC_GEN_DEST}/ow_tc/src/SomeIPEnumDeploymentTest.cpp" @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/SomeIPIntegerDeploymentTest.cpp
+    "${COMMONAPI_SRC_GEN_DEST}/ow_tc/src/SomeIPIntegerDeploymentTest.cpp" @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/SomeIPMapDeploymentTest.cpp
+    "${COMMONAPI_SRC_GEN_DEST}/ow_tc/src/SomeIPMapDeploymentTest.cpp" @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/SomeIPStringDeploymentTest.cpp
+    "${COMMONAPI_SRC_GEN_DEST}/ow_tc/src/SomeIPStringDeploymentTest.cpp" @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/SomeIPStructDeploymentTest.cpp
+    "${COMMONAPI_SRC_GEN_DEST}/ow_tc/src/SomeIPStructDeploymentTest.cpp" @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/SomeIPUnionDeploymentTest.cpp
+    "${COMMONAPI_SRC_GEN_DEST}/ow_tc/src/SomeIPUnionDeploymentTest.cpp" @ONLY)
 
 ##############################################################################
 # SomeIPIntegerDeploymentTest
 ##############################################################################
+set(TEST_INCLUDE_OW_DIRS ${COMMONAPI_SRC_GEN_DEST}/ow/src ${COMMONAPI_SRC_GEN_DEST}/ow/src/stub ${COMMONAPI_SRC_GEN_DEST}/ow/someip ${COMMONAPI_SRC_GEN_DEST}/ow/core)
+set(TEST_INCLUDE_OWTC_DIRS ${COMMONAPI_SRC_GEN_DEST}/ow_tc/src ${COMMONAPI_SRC_GEN_DEST}/ow_tc/src/stub ${COMMONAPI_SRC_GEN_DEST}/ow_tc/someip ${COMMONAPI_SRC_GEN_DEST}/ow_tc/core)
 
-add_executable(SomeIPIntegerDeploymentTest src/SomeIPIntegerDeploymentTest.cpp
-                               ${TestInterfaceSomeIPSources})
-target_link_libraries(SomeIPIntegerDeploymentTest ${TEST_LINK_LIBRARIES})
+add_executable(SomeIPIntegerDeploymentOWTest ${COMMONAPI_SRC_GEN_DEST}/ow/src/SomeIPIntegerDeploymentTest.cpp
+                               ${TestInterfaceOWSomeIPSources} ${GLIPCI-2226_Sources})
+target_link_libraries(SomeIPIntegerDeploymentOWTest ${TEST_LINK_LIBRARIES})
+target_include_directories(SomeIPIntegerDeploymentOWTest PRIVATE ${TEST_INCLUDE_OW_DIRS})
 
+add_executable(SomeIPIntegerDeploymentOWTCTest ${COMMONAPI_SRC_GEN_DEST}/ow_tc/src/SomeIPIntegerDeploymentTest.cpp
+                               ${TestInterfaceOWTCSomeIPSources})
+target_link_libraries(SomeIPIntegerDeploymentOWTCTest ${TEST_LINK_LIBRARIES})
+target_include_directories(SomeIPIntegerDeploymentOWTCTest PRIVATE ${TEST_INCLUDE_OWTC_DIRS})
 ##############################################################################
 # SomeIPArrayDeploymentTest
 ##############################################################################
 
-add_executable(SomeIPArrayDeploymentTest src/SomeIPArrayDeploymentTest.cpp
-                               ${TestInterfaceSomeIPSources})
-target_link_libraries(SomeIPArrayDeploymentTest ${TEST_LINK_LIBRARIES})
+add_executable(SomeIPArrayDeploymentOWTest ${COMMONAPI_SRC_GEN_DEST}/ow/src/SomeIPArrayDeploymentTest.cpp
+                               ${TestInterfaceOWSomeIPSources})
+target_link_libraries(SomeIPArrayDeploymentOWTest ${TEST_LINK_LIBRARIES})
+target_include_directories(SomeIPArrayDeploymentOWTest PRIVATE ${TEST_INCLUDE_OW_DIRS})
+
+add_executable(SomeIPArrayDeploymentOWTCTest ${COMMONAPI_SRC_GEN_DEST}/ow_tc/src/SomeIPArrayDeploymentTest.cpp
+                               ${TestInterfaceOWTCSomeIPSources})
+target_link_libraries(SomeIPArrayDeploymentOWTCTest ${TEST_LINK_LIBRARIES})
+target_include_directories(SomeIPArrayDeploymentOWTCTest PRIVATE ${TEST_INCLUDE_OWTC_DIRS})
 
 ##############################################################################
 # SomeIPByteBufferDeploymentTest
 ##############################################################################
 
-add_executable(SomeIPByteBufferDeploymentTest src/SomeIPByteBufferDeploymentTest.cpp
-                               ${TestInterfaceSomeIPSources})
-target_link_libraries(SomeIPByteBufferDeploymentTest ${TEST_LINK_LIBRARIES})
+add_executable(SomeIPByteBufferDeploymentOWTest ${COMMONAPI_SRC_GEN_DEST}/ow/src/SomeIPByteBufferDeploymentTest.cpp
+                               ${TestInterfaceOWSomeIPSources})
+target_link_libraries(SomeIPByteBufferDeploymentOWTest ${TEST_LINK_LIBRARIES})
+target_include_directories(SomeIPByteBufferDeploymentOWTest PRIVATE ${TEST_INCLUDE_OW_DIRS})
+
+add_executable(SomeIPByteBufferDeploymentOWTCTest ${COMMONAPI_SRC_GEN_DEST}/ow_tc/src/SomeIPByteBufferDeploymentTest.cpp
+                               ${TestInterfaceOWTCSomeIPSources})
+target_link_libraries(SomeIPByteBufferDeploymentOWTCTest ${TEST_LINK_LIBRARIES})
+target_include_directories(SomeIPByteBufferDeploymentOWTCTest PRIVATE ${TEST_INCLUDE_OWTC_DIRS})
 
 ##############################################################################
 # SomeIPMapDeploymentTest
 ##############################################################################
 
-add_executable(SomeIPMapDeploymentTest src/SomeIPMapDeploymentTest.cpp
-                               ${TestInterfaceSomeIPSources})
-target_link_libraries(SomeIPMapDeploymentTest ${TEST_LINK_LIBRARIES})
+add_executable(SomeIPMapDeploymentOWTest ${COMMONAPI_SRC_GEN_DEST}/ow/src/SomeIPMapDeploymentTest.cpp
+                               ${TestInterfaceOWSomeIPSources})
+target_link_libraries(SomeIPMapDeploymentOWTest ${TEST_LINK_LIBRARIES})
+target_include_directories(SomeIPMapDeploymentOWTest PRIVATE ${TEST_INCLUDE_OW_DIRS})
 
+add_executable(SomeIPMapDeploymentOWTCTest ${COMMONAPI_SRC_GEN_DEST}/ow_tc/src/SomeIPMapDeploymentTest.cpp
+                               ${TestInterfaceOWTCSomeIPSources})
+target_link_libraries(SomeIPMapDeploymentOWTCTest ${TEST_LINK_LIBRARIES})
+target_include_directories(SomeIPMapDeploymentOWTCTest PRIVATE ${TEST_INCLUDE_OWTC_DIRS})
 ##############################################################################
 # SomeIPEnumDeploymentTest
 ##############################################################################
 
-add_executable(SomeIPEnumDeploymentTest src/SomeIPEnumDeploymentTest.cpp
-                               ${TestInterfaceSomeIPSources})
-target_link_libraries(SomeIPEnumDeploymentTest ${TEST_LINK_LIBRARIES})
+add_executable(SomeIPEnumDeploymentOWTest ${COMMONAPI_SRC_GEN_DEST}/ow/src/SomeIPEnumDeploymentTest.cpp
+                               ${TestInterfaceOWSomeIPSources})
+target_link_libraries(SomeIPEnumDeploymentOWTest ${TEST_LINK_LIBRARIES})
+target_include_directories(SomeIPEnumDeploymentOWTest PRIVATE ${TEST_INCLUDE_OW_DIRS})
+
+add_executable(SomeIPEnumDeploymentOWTCTest ${COMMONAPI_SRC_GEN_DEST}/ow_tc/src/SomeIPEnumDeploymentTest.cpp
+                               ${TestInterfaceOWTCSomeIPSources})
+target_link_libraries(SomeIPEnumDeploymentOWTCTest ${TEST_LINK_LIBRARIES})
+target_include_directories(SomeIPEnumDeploymentOWTCTest PRIVATE ${TEST_INCLUDE_OWTC_DIRS})
 
 ##############################################################################
 # SomeIPUnionDeploymentTest
 ##############################################################################
 
-add_executable(SomeIPUnionDeploymentTest src/SomeIPUnionDeploymentTest.cpp
-                               ${TestInterfaceSomeIPSources})
-target_link_libraries(SomeIPUnionDeploymentTest ${TEST_LINK_LIBRARIES})
+add_executable(SomeIPUnionDeploymentOWTest ${COMMONAPI_SRC_GEN_DEST}/ow/src/SomeIPUnionDeploymentTest.cpp
+                               ${TestInterfaceOWSomeIPSources})
+target_link_libraries(SomeIPUnionDeploymentOWTest ${TEST_LINK_LIBRARIES})
+target_include_directories(SomeIPUnionDeploymentOWTest PRIVATE ${TEST_INCLUDE_OW_DIRS})
+
+add_executable(SomeIPUnionDeploymentOWTCTest ${COMMONAPI_SRC_GEN_DEST}/ow_tc/src/SomeIPUnionDeploymentTest.cpp
+                               ${TestInterfaceOWTCSomeIPSources})
+target_link_libraries(SomeIPUnionDeploymentOWTCTest ${TEST_LINK_LIBRARIES})
+target_include_directories(SomeIPUnionDeploymentOWTCTest PRIVATE ${TEST_INCLUDE_OWTC_DIRS})
 
 ##############################################################################
 # SomeIPStructDeploymentTest
 ##############################################################################
 
-add_executable(SomeIPStructDeploymentTest src/SomeIPStructDeploymentTest.cpp
-                               ${TestInterfaceSomeIPSources})
-target_link_libraries(SomeIPStructDeploymentTest ${TEST_LINK_LIBRARIES})
+add_executable(SomeIPStructDeploymentOWTest ${COMMONAPI_SRC_GEN_DEST}/ow/src/SomeIPStructDeploymentTest.cpp
+                               ${TestInterfaceOWSomeIPSources})
+target_link_libraries(SomeIPStructDeploymentOWTest ${TEST_LINK_LIBRARIES})
+target_include_directories(SomeIPStructDeploymentOWTest PRIVATE ${TEST_INCLUDE_OW_DIRS})
+
+add_executable(SomeIPStructDeploymentOWTCTest ${COMMONAPI_SRC_GEN_DEST}/ow_tc/src/SomeIPStructDeploymentTest.cpp
+                               ${TestInterfaceOWTCSomeIPSources})
+target_link_libraries(SomeIPStructDeploymentOWTCTest ${TEST_LINK_LIBRARIES})
+target_include_directories(SomeIPStructDeploymentOWTCTest PRIVATE ${TEST_INCLUDE_OWTC_DIRS})
 
 ##############################################################################
 # SomeIPStringDeploymentTest
 ##############################################################################
 
-add_executable(SomeIPStringDeploymentTest src/SomeIPStringDeploymentTest.cpp
-                               ${TestInterfaceSomeIPSources})
-target_link_libraries(SomeIPStringDeploymentTest ${TEST_LINK_LIBRARIES})
+add_executable(SomeIPStringDeploymentOWTest ${COMMONAPI_SRC_GEN_DEST}/ow/src/SomeIPStringDeploymentTest.cpp
+                               ${TestInterfaceOWSomeIPSources})
+target_link_libraries(SomeIPStringDeploymentOWTest ${TEST_LINK_LIBRARIES})
+target_include_directories(SomeIPStringDeploymentOWTest PRIVATE ${TEST_INCLUDE_OW_DIRS})
 
+add_executable(SomeIPStringDeploymentOWTCTest ${COMMONAPI_SRC_GEN_DEST}/ow_tc/src/SomeIPStringDeploymentTest.cpp
+                               ${TestInterfaceOWTCSomeIPSources})
+target_link_libraries(SomeIPStringDeploymentOWTCTest ${TEST_LINK_LIBRARIES})
+target_include_directories(SomeIPStringDeploymentOWTCTest PRIVATE ${TEST_INCLUDE_OWTC_DIRS})
 ##############################################################################
 # Add for every test a dependency to gtest
 ##############################################################################
 
-add_dependencies(SomeIPIntegerDeploymentTest gtest)
-add_dependencies(SomeIPArrayDeploymentTest gtest)
-add_dependencies(SomeIPEnumDeploymentTest gtest)
-add_dependencies(SomeIPUnionDeploymentTest gtest)
-add_dependencies(SomeIPStructDeploymentTest gtest)
-add_dependencies(SomeIPStringDeploymentTest gtest)
-add_dependencies(SomeIPMapDeploymentTest gtest)
-add_dependencies(SomeIPByteBufferDeploymentTest gtest)
+add_dependencies(SomeIPIntegerDeploymentOWTest gtest)
+add_dependencies(SomeIPArrayDeploymentOWTest gtest)
+add_dependencies(SomeIPEnumDeploymentOWTest gtest)
+add_dependencies(SomeIPUnionDeploymentOWTest gtest)
+add_dependencies(SomeIPStructDeploymentOWTest gtest)
+add_dependencies(SomeIPStringDeploymentOWTest gtest)
+add_dependencies(SomeIPMapDeploymentOWTest gtest)
+add_dependencies(SomeIPByteBufferDeploymentOWTest gtest)
+
+add_dependencies(SomeIPIntegerDeploymentOWTCTest gtest)
+add_dependencies(SomeIPArrayDeploymentOWTCTest gtest)
+add_dependencies(SomeIPEnumDeploymentOWTCTest gtest)
+add_dependencies(SomeIPUnionDeploymentOWTCTest gtest)
+add_dependencies(SomeIPStructDeploymentOWTCTest gtest)
+add_dependencies(SomeIPStringDeploymentOWTCTest gtest)
+add_dependencies(SomeIPMapDeploymentOWTCTest gtest)
+add_dependencies(SomeIPByteBufferDeploymentOWTCTest gtest)
 
 ##############################################################################
 # Add tests to the target build_tests
 ##############################################################################
 
-add_dependencies(build_tests SomeIPIntegerDeploymentTest)
-add_dependencies(build_tests SomeIPArrayDeploymentTest)
-add_dependencies(build_tests SomeIPEnumDeploymentTest)
-add_dependencies(build_tests SomeIPUnionDeploymentTest)
-add_dependencies(build_tests SomeIPStructDeploymentTest)
-add_dependencies(build_tests SomeIPStringDeploymentTest)
-add_dependencies(build_tests SomeIPMapDeploymentTest)
-add_dependencies(build_tests SomeIPByteBufferDeploymentTest)
+add_dependencies(build_tests SomeIPIntegerDeploymentOWTest)
+add_dependencies(build_tests SomeIPArrayDeploymentOWTest)
+add_dependencies(build_tests SomeIPEnumDeploymentOWTest)
+add_dependencies(build_tests SomeIPUnionDeploymentOWTest)
+add_dependencies(build_tests SomeIPStructDeploymentOWTest)
+add_dependencies(build_tests SomeIPStringDeploymentOWTest)
+add_dependencies(build_tests SomeIPMapDeploymentOWTest)
+add_dependencies(build_tests SomeIPByteBufferDeploymentOWTest)
 
-
-
+add_dependencies(build_tests SomeIPIntegerDeploymentOWTCTest)
+add_dependencies(build_tests SomeIPArrayDeploymentOWTCTest)
+add_dependencies(build_tests SomeIPEnumDeploymentOWTCTest)
+add_dependencies(build_tests SomeIPUnionDeploymentOWTCTest)
+add_dependencies(build_tests SomeIPStructDeploymentOWTCTest)
+add_dependencies(build_tests SomeIPStringDeploymentOWTCTest)
+add_dependencies(build_tests SomeIPMapDeploymentOWTCTest)
+add_dependencies(build_tests SomeIPByteBufferDeploymentOWTCTest)
 ##############################################################################
 # configure configuration files
 ##############################################################################
@@ -301,26 +490,50 @@ set(SOMEIP_TEST_ENVIRONMENT
 # Add tests
 ##############################################################################
 
-add_test(NAME SomeIPIntegerDeploymentTest COMMAND SomeIPIntegerDeploymentTest)
-set_property(TEST SomeIPIntegerDeploymentTest APPEND PROPERTY ENVIRONMENT ${SOMEIP_TEST_ENVIRONMENT})
+add_test(NAME SomeIPIntegerDeploymentOWTest COMMAND SomeIPIntegerDeploymentOWTest)
+set_property(TEST SomeIPIntegerDeploymentOWTest APPEND PROPERTY ENVIRONMENT ${SOMEIP_TEST_ENVIRONMENT})
 
-add_test(NAME SomeIPArrayDeploymentTest COMMAND SomeIPArrayDeploymentTest)
-set_property(TEST SomeIPArrayDeploymentTest APPEND PROPERTY ENVIRONMENT ${SOMEIP_TEST_ENVIRONMENT})
+add_test(NAME SomeIPArrayDeploymentOWTest COMMAND SomeIPArrayDeploymentOWTest)
+set_property(TEST SomeIPArrayDeploymentOWTest APPEND PROPERTY ENVIRONMENT ${SOMEIP_TEST_ENVIRONMENT})
 
-add_test(NAME SomeIPByteBufferDeploymentTest COMMAND SomeIPByteBufferDeploymentTest)
-set_property(TEST SomeIPByteBufferDeploymentTest APPEND PROPERTY ENVIRONMENT ${SOMEIP_TEST_ENVIRONMENT})
+add_test(NAME SomeIPByteBufferDeploymentOWTest COMMAND SomeIPByteBufferDeploymentOWTest)
+set_property(TEST SomeIPByteBufferDeploymentOWTest APPEND PROPERTY ENVIRONMENT ${SOMEIP_TEST_ENVIRONMENT})
 
-add_test(NAME SomeIPMapDeploymentTest COMMAND SomeIPMapDeploymentTest)
-set_property(TEST SomeIPMapDeploymentTest APPEND PROPERTY ENVIRONMENT ${SOMEIP_TEST_ENVIRONMENT})
+add_test(NAME SomeIPMapDeploymentOWTest COMMAND SomeIPMapDeploymentOWTest)
+set_property(TEST SomeIPMapDeploymentOWTest APPEND PROPERTY ENVIRONMENT ${SOMEIP_TEST_ENVIRONMENT})
 
-add_test(NAME SomeIPEnumDeploymentTest COMMAND SomeIPEnumDeploymentTest)
-set_property(TEST SomeIPEnumDeploymentTest APPEND PROPERTY ENVIRONMENT ${SOMEIP_TEST_ENVIRONMENT})
+add_test(NAME SomeIPEnumDeploymentOWTest COMMAND SomeIPEnumDeploymentOWTest)
+set_property(TEST SomeIPEnumDeploymentOWTest APPEND PROPERTY ENVIRONMENT ${SOMEIP_TEST_ENVIRONMENT})
 
-add_test(NAME SomeIPUnionDeploymentTest COMMAND SomeIPUnionDeploymentTest)
-set_property(TEST SomeIPUnionDeploymentTest APPEND PROPERTY ENVIRONMENT ${SOMEIP_TEST_ENVIRONMENT})
+add_test(NAME SomeIPUnionDeploymentOWTest COMMAND SomeIPUnionDeploymentOWTest)
+set_property(TEST SomeIPUnionDeploymentOWTest APPEND PROPERTY ENVIRONMENT ${SOMEIP_TEST_ENVIRONMENT})
 
-add_test(NAME SomeIPStructDeploymentTest COMMAND SomeIPStructDeploymentTest)
-set_property(TEST SomeIPStructDeploymentTest APPEND PROPERTY ENVIRONMENT ${SOMEIP_TEST_ENVIRONMENT})
+add_test(NAME SomeIPStructDeploymentOWTest COMMAND SomeIPStructDeploymentOWTest)
+set_property(TEST SomeIPStructDeploymentOWTest APPEND PROPERTY ENVIRONMENT ${SOMEIP_TEST_ENVIRONMENT})
 
-add_test(NAME SomeIPStringDeploymentTest COMMAND SomeIPStringDeploymentTest)
-set_property(TEST SomeIPStringDeploymentTest APPEND PROPERTY ENVIRONMENT ${SOMEIP_TEST_ENVIRONMENT})
+add_test(NAME SomeIPStringDeploymentOWTest COMMAND SomeIPStringDeploymentOWTest)
+set_property(TEST SomeIPStringDeploymentOWTest APPEND PROPERTY ENVIRONMENT ${SOMEIP_TEST_ENVIRONMENT})
+
+add_test(NAME SomeIPIntegerDeploymentOWTCTest COMMAND SomeIPIntegerDeploymentOWTCTest)
+set_property(TEST SomeIPIntegerDeploymentOWTCTest APPEND PROPERTY ENVIRONMENT ${SOMEIP_TEST_ENVIRONMENT})
+
+add_test(NAME SomeIPArrayDeploymentOWTCTest COMMAND SomeIPArrayDeploymentOWTCTest)
+set_property(TEST SomeIPArrayDeploymentOWTCTest APPEND PROPERTY ENVIRONMENT ${SOMEIP_TEST_ENVIRONMENT})
+
+add_test(NAME SomeIPByteBufferDeploymentOWTCTest COMMAND SomeIPByteBufferDeploymentOWTCTest)
+set_property(TEST SomeIPByteBufferDeploymentOWTCTest APPEND PROPERTY ENVIRONMENT ${SOMEIP_TEST_ENVIRONMENT})
+
+add_test(NAME SomeIPMapDeploymentOWTCTest COMMAND SomeIPMapDeploymentOWTCTest)
+set_property(TEST SomeIPMapDeploymentOWTCTest APPEND PROPERTY ENVIRONMENT ${SOMEIP_TEST_ENVIRONMENT})
+
+add_test(NAME SomeIPEnumDeploymentOWTCTest COMMAND SomeIPEnumDeploymentOWTCTest)
+set_property(TEST SomeIPEnumDeploymentOWTCTest APPEND PROPERTY ENVIRONMENT ${SOMEIP_TEST_ENVIRONMENT})
+
+add_test(NAME SomeIPUnionDeploymentOWTCTest COMMAND SomeIPUnionDeploymentOWTCTest)
+set_property(TEST SomeIPUnionDeploymentOWTCTest APPEND PROPERTY ENVIRONMENT ${SOMEIP_TEST_ENVIRONMENT})
+
+add_test(NAME SomeIPStructDeploymentOWTCTest COMMAND SomeIPStructDeploymentOWTCTest)
+set_property(TEST SomeIPStructDeploymentOWTCTest APPEND PROPERTY ENVIRONMENT ${SOMEIP_TEST_ENVIRONMENT})
+
+add_test(NAME SomeIPStringDeploymentOWTCTest COMMAND SomeIPStringDeploymentOWTCTest)
+set_property(TEST SomeIPStringDeploymentOWTCTest APPEND PROPERTY ENVIRONMENT ${SOMEIP_TEST_ENVIRONMENT})

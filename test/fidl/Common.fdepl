@@ -1,0 +1,18 @@
+/*
+ * ##############################
+ * #####                    #####
+ * #####   Generated File   #####
+ * #####                    #####
+ * ##############################
+ * 
+ * Fibex origin: FBX411_SP2021_akt_V32_MultiBus_hPAD_EyeQ5_2b_V21_lokal_20190304122505.xml
+ * Franca version: 0.13.1.201807231814
+ */
+import
+"platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-4-SOMEIP_deployment_spec.fdepl"
+import "Common.fidl"
+
+define org.genivi.commonapi.someip.deployment for typeCollection
+de.bmw.environmentalmodel.common.Common
+as de.bmw.environmentalmodel.common.Common {
+}

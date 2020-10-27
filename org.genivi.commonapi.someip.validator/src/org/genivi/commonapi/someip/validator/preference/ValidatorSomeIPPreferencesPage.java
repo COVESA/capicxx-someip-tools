@@ -1,10 +1,7 @@
-/* Copyright (C) 2013 BMW Group
- * Author: Manfred Bathelt (manfred.bathelt@bmw.de)
- * Author: Juergen Gehring (juergen.gehring@bmw.de)
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-
+/* Copyright (C) 2013-2020 Bayerische Motoren Werke Aktiengesellschaft (BMW AG)
+   This Source Code Form is subject to the terms of the Mozilla Public
+   License, v. 2.0. If a copy of the MPL was not distributed with this
+   file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.genivi.commonapi.someip.validator.preference;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
@@ -29,7 +26,7 @@ public class ValidatorSomeIPPreferencesPage extends FieldEditorPreferencePage im
     @Override
     public void createFieldEditors()
     {
-        addField(new BooleanFieldEditor(PreferenceConstantsSomeIP.P_ENABLE_SOMEIP_VALIDATOR, "Enable CommonAPI-Some/IP specific validation of Franca IDL files", getFieldEditorParent()));
+        addField(new BooleanFieldEditor(PreferenceConstantsSomeIP.P_ENABLE_SOMEIP_VALIDATOR, "Enable CommonAPI Some/IP specific validation of Franca IDL files", getFieldEditorParent()));
         addField(new BooleanFieldEditor(ENABLED_WORKSPACE_CHECK,
                 "Enable whole workspace check", getFieldEditorParent()));
     }

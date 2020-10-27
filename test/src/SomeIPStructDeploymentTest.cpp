@@ -27,7 +27,7 @@
 #include <CommonAPI/SomeIP/Proxy.hpp>
 #include <CommonAPI/SomeIP/Types.hpp>
 #include "v1/commonapi/someip/deploymenttest/TestInterfaceProxy.hpp"
-#include "v1/commonapi/someip/deploymenttest/TestInterfaceStubDefault.hpp"
+#include "DeploymentTestStub.h"
 
 const std::string domain = "local";
 const std::string testAddress = "commonapi.someip.deploymenttest.TestInterface";
@@ -54,7 +54,7 @@ protected:
         runtime_ = CommonAPI::Runtime::get();
         ASSERT_TRUE((bool)runtime_);
 
-        testStub_ = std::make_shared<v1_0::commonapi::someip::deploymenttest::TestInterfaceStubDefault>();
+        testStub_ = std::make_shared<v1_0::commonapi::someip::deploymenttest::DeploymentTestStub>();
         serviceRegistered_ = runtime_->registerService(domain, testAddress, testStub_, connectionIdService);
         ASSERT_TRUE(serviceRegistered_);
 
@@ -67,7 +67,7 @@ protected:
     }
 
     void TearDown() {
-        ASSERT_TRUE(runtime_->unregisterService(domain, v1_0::commonapi::someip::deploymenttest::TestInterfaceStubDefault::StubInterface::getInterface(), testAddress));
+        ASSERT_TRUE(runtime_->unregisterService(domain, v1_0::commonapi::someip::deploymenttest::DeploymentTestStub::StubInterface::getInterface(), testAddress));
 
         // wait that proxy is not available
         int counter = 0;  // counter for avoiding endless loop
@@ -84,7 +84,7 @@ protected:
     std::shared_ptr<CommonAPI::Runtime> runtime_;
 
     std::shared_ptr<v1_0::commonapi::someip::deploymenttest::TestInterfaceProxy<>> testProxy_;
-    std::shared_ptr<v1_0::commonapi::someip::deploymenttest::TestInterfaceStubDefault> testStub_;
+    std::shared_ptr<v1_0::commonapi::someip::deploymenttest::DeploymentTestStub> testStub_;
 };
 /**
 * @test Verify that the API for struct deployments works
@@ -114,7 +114,7 @@ TEST_F(DeploymentTest, StructWithDeployment) {
         false);
     {
         CommonAPI::SomeIP::OutputStream outStream(message, false);
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_w4 outv(true, 100);
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_w4 outv(true, 100);
 
         outStream.writeValue(outv, &ed_0);
         EXPECT_FALSE(outStream.hasError());
@@ -122,7 +122,7 @@ TEST_F(DeploymentTest, StructWithDeployment) {
 
         CommonAPI::SomeIP::InputStream inStream(message, false);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_w4 inv;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_w4 inv;
 
         inStream.readValue(inv, &ed_0);
         EXPECT_FALSE(inStream.hasError());
@@ -130,7 +130,7 @@ TEST_F(DeploymentTest, StructWithDeployment) {
     }
     {
         CommonAPI::SomeIP::OutputStream outStream(message, false);
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_w4 outv(true, 100);
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_w4 outv(true, 100);
 
         outStream.writeValue(outv, &ed_1);
         EXPECT_FALSE(outStream.hasError());
@@ -138,7 +138,7 @@ TEST_F(DeploymentTest, StructWithDeployment) {
 
         CommonAPI::SomeIP::InputStream inStream(message, false);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_w4 inv;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_w4 inv;
 
         inStream.readValue(inv, &ed_1);
         EXPECT_FALSE(inStream.hasError());
@@ -146,7 +146,7 @@ TEST_F(DeploymentTest, StructWithDeployment) {
     }
     {
         CommonAPI::SomeIP::OutputStream outStream(message, false);
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_w4 outv(true, 100);
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_w4 outv(true, 100);
 
         outStream.writeValue(outv, &ed_2);
         EXPECT_FALSE(outStream.hasError());
@@ -154,7 +154,7 @@ TEST_F(DeploymentTest, StructWithDeployment) {
 
         CommonAPI::SomeIP::InputStream inStream(message, false);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_w4 inv;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_w4 inv;
 
         inStream.readValue(inv, &ed_2);
         EXPECT_FALSE(inStream.hasError());
@@ -162,7 +162,7 @@ TEST_F(DeploymentTest, StructWithDeployment) {
     }
     {
         CommonAPI::SomeIP::OutputStream outStream(message, false);
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_w4 outv(true, 100);
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_w4 outv(true, 100);
 
         outStream.writeValue(outv, &ed_4);
         EXPECT_FALSE(outStream.hasError());
@@ -170,7 +170,7 @@ TEST_F(DeploymentTest, StructWithDeployment) {
 
         CommonAPI::SomeIP::InputStream inStream(message, false);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_w4 inv;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_w4 inv;
 
         inStream.readValue(inv, &ed_4);
         EXPECT_FALSE(inStream.hasError());
@@ -200,7 +200,7 @@ TEST_F(DeploymentTest, StructWithOutputDeployment) {
             100 /* 100 */
         };
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_w4 outv(true, 100);
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_w4 outv(true, 100);
         outStream.writeValue(outv, &ed);
         EXPECT_FALSE(outStream.hasError());
         outStream.flush();
@@ -226,7 +226,7 @@ TEST_F(DeploymentTest, StructWithOutputDeployment) {
             100 /* 100 */
         };
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_w4 outv(true, 100);
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_w4 outv(true, 100);
         outStream.writeValue(outv, &ed);
         EXPECT_FALSE(outStream.hasError());
         outStream.flush();
@@ -252,7 +252,7 @@ TEST_F(DeploymentTest, StructWithOutputDeployment) {
             100 /* 100 */
         };
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_w4 outv(true, 100);
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_w4 outv(true, 100);
         outStream.writeValue(outv, &ed);
         EXPECT_FALSE(outStream.hasError());
         outStream.flush();
@@ -277,7 +277,7 @@ TEST_F(DeploymentTest, StructWithOutputDeployment) {
             100 /* 100 */
         };
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_w4 outv(true, 100);
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_w4 outv(true, 100);
         outStream.writeValue(outv, &ed);
         EXPECT_FALSE(outStream.hasError());
         outStream.flush();
@@ -296,16 +296,16 @@ TEST_F(DeploymentTest, StructWithOutputDeployment) {
 TEST_F(DeploymentTest, StructAttributeDeployment) {
     CommonAPI::CallStatus callStatus;
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_wd outv(true, 100);
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_wd inv;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_wd outv(true, 100);
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_wd inv;
 
         testProxy_->getAStruct_wd_attrAttribute().setValue(outv, callStatus, inv);
         ASSERT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
         EXPECT_EQ(outv, inv);
     }
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_long outv;
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_long inv;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_long outv;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_long inv;
 
         outv.setBooleanMember(true);
         std::vector<int8_t> a(200);
@@ -322,8 +322,8 @@ TEST_F(DeploymentTest, StructAttributeDeployment) {
 TEST_F(DeploymentTest, StructTooShortArrayLengthWidth) {
     CommonAPI::CallStatus callStatus;
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_long outv;
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_long inv;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_long outv;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_long inv;
 
         outv.setBooleanMember(true);
         std::vector<int8_t> a(200000);
@@ -339,51 +339,51 @@ TEST_F(DeploymentTest, StructTooShortArrayLengthWidth) {
 TEST_F(DeploymentTest, StructTypeDeployment) {
     CommonAPI::CallStatus callStatus;
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_w0 outv;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_w0 outv;
         outv.setBooleanMember(true);
         std::vector<int8_t> a(2000);
         outv.setArrayMember(a);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_w0 inv;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_w0 inv;
 
         testProxy_->getAStruct_w0Attribute().setValue(outv, callStatus, inv);
         ASSERT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
         EXPECT_EQ(outv, inv);
     }
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_w1 outv;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_w1 outv;
         outv.setBooleanMember(true);
         std::vector<int8_t> a(200);
         outv.setArrayMember(a);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_w1 inv;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_w1 inv;
 
         testProxy_->getAStruct_w1Attribute().setValue(outv, callStatus, inv);
         ASSERT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
         EXPECT_EQ(outv, inv);
     }
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_w1 outv;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_w1 outv;
         outv.setBooleanMember(false);
         std::vector<int8_t> a(2000);
         outv.setArrayMember(a);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_w1 inv;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_w1 inv;
 
         testProxy_->getAStruct_w1Attribute().setValue(outv, callStatus, inv);
         ASSERT_NE(callStatus, CommonAPI::CallStatus::SUCCESS);
     }
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_w2 outv(true, 100);
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_w2 inv;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_w2 outv(true, 100);
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_w2 inv;
 
         testProxy_->getAStruct_w2Attribute().setValue(outv, callStatus, inv);
         ASSERT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
         EXPECT_EQ(outv, inv);
     }
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_w4 outv(true, 100);
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_w4 inv;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_w4 outv(true, 100);
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_w4 inv;
 
         testProxy_->getAStruct_w4Attribute().setValue(outv, callStatus, inv);
         ASSERT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
@@ -396,12 +396,12 @@ TEST_F(DeploymentTest, StructTypeDeployment) {
 TEST_F(DeploymentTest, StructAttrDeplOverridesTypeDeployment) {
     CommonAPI::CallStatus callStatus;
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_w0 outv;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_w0 outv;
         outv.setBooleanMember(true);
         std::vector<int8_t> a(2000);
         outv.setArrayMember(a);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_w0 inv;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_w0 inv;
 
         testProxy_->getAStruct_w0_overrideAttribute().setValue(outv, callStatus, inv);
         // will fail because the deployment won't allow to fit such a long value
@@ -414,10 +414,10 @@ TEST_F(DeploymentTest, StructAttrDeplOverridesTypeDeployment) {
 TEST_F(DeploymentTest, StructAttrFieldDeploymentsOK) {
     CommonAPI::CallStatus callStatus;
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_field_type_depls outv;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_field_type_depls outv;
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_d3 unionMember;
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_w1 structMember;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_d3 unionMember;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_w1 structMember;
 
         std::vector<int16_t> a(20);
         outv.setArrayMember(a);
@@ -431,7 +431,7 @@ TEST_F(DeploymentTest, StructAttrFieldDeploymentsOK) {
         structMember.setArrayMember(a8);
         outv.setStructMember(structMember);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_field_type_depls inv;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_field_type_depls inv;
 
         testProxy_->getAStruct_field_type_deplsAttribute().setValue(outv, callStatus, inv);
         ASSERT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
@@ -447,10 +447,10 @@ TEST_F(DeploymentTest, StructAttrFieldDeploymentsOK) {
 TEST_F(DeploymentTest, StructAttrFieldDeploymentsFaultyUnionMember) {
     CommonAPI::CallStatus callStatus;
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_field_type_depls outv;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_field_type_depls outv;
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_d3 unionMember;
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_w1 structMember;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_d3 unionMember;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_w1 structMember;
 
         std::vector<int16_t> a(20);
         outv.setArrayMember(a);
@@ -464,7 +464,7 @@ TEST_F(DeploymentTest, StructAttrFieldDeploymentsFaultyUnionMember) {
         structMember.setArrayMember(a8);
         outv.setStructMember(structMember);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_field_type_depls inv;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_field_type_depls inv;
 
         testProxy_->getAStruct_field_type_deplsAttribute().setValue(outv, callStatus, inv);
         // will fail because the deployment of the union member prohibits the value
@@ -477,10 +477,10 @@ TEST_F(DeploymentTest, StructAttrFieldDeploymentsFaultyUnionMember) {
 TEST_F(DeploymentTest, StructAttrFieldDeploymentsFaultyArrayMember) {
     CommonAPI::CallStatus callStatus;
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_field_type_depls outv;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_field_type_depls outv;
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_d3 unionMember;
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_w1 structMember;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_d3 unionMember;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_w1 structMember;
 
         std::vector<int16_t> a(2000);
         outv.setArrayMember(a);
@@ -494,7 +494,7 @@ TEST_F(DeploymentTest, StructAttrFieldDeploymentsFaultyArrayMember) {
         structMember.setArrayMember(a8);
         outv.setStructMember(structMember);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_field_type_depls inv;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_field_type_depls inv;
 
         testProxy_->getAStruct_field_type_deplsAttribute().setValue(outv, callStatus, inv);
         // will fail because the deployment of the array member prohibits the value
@@ -507,10 +507,10 @@ TEST_F(DeploymentTest, StructAttrFieldDeploymentsFaultyArrayMember) {
 TEST_F(DeploymentTest, StructAttrFieldDeploymentsFaultyStructMember) {
     CommonAPI::CallStatus callStatus;
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_field_type_depls outv;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_field_type_depls outv;
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_d3 unionMember;
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_w1 structMember;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_d3 unionMember;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_w1 structMember;
 
         std::vector<int16_t> a(20);
         outv.setArrayMember(a);
@@ -524,7 +524,7 @@ TEST_F(DeploymentTest, StructAttrFieldDeploymentsFaultyStructMember) {
         structMember.setArrayMember(a8);
         outv.setStructMember(structMember);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_field_type_depls inv;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_field_type_depls inv;
 
         testProxy_->getAStruct_field_type_deplsAttribute().setValue(outv, callStatus, inv);
         // will fail because the deployment of the struct member prohibits the value
@@ -537,10 +537,10 @@ TEST_F(DeploymentTest, StructAttrFieldDeploymentsFaultyStructMember) {
 TEST_F(DeploymentTest, ExtendedStructAttrFieldDeploymentsOK) {
     CommonAPI::CallStatus callStatus;
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStructExtended outv;
+        @TYPE_COLLECTION_FULL_NAME@::tStructExtended outv;
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_d3 unionMember;
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_w1 structMember;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_d3 unionMember;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_w1 structMember;
 
         std::vector<int16_t> a(20);
         outv.setEarrayMember(a);
@@ -554,7 +554,7 @@ TEST_F(DeploymentTest, ExtendedStructAttrFieldDeploymentsOK) {
         structMember.setArrayMember(a8);
         outv.setEstructMember(structMember);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStructExtended inv;
+        @TYPE_COLLECTION_FULL_NAME@::tStructExtended inv;
 
         testProxy_->getAStructExtendedAttribute().setValue(outv, callStatus, inv);
         ASSERT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
@@ -567,10 +567,10 @@ TEST_F(DeploymentTest, ExtendedStructAttrFieldDeploymentsOK) {
 TEST_F(DeploymentTest, ExtendedStructAttrFieldDeploymentsFaultyUnionMember) {
     CommonAPI::CallStatus callStatus;
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStructExtended outv;
+        @TYPE_COLLECTION_FULL_NAME@::tStructExtended outv;
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_d3 unionMember;
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_w1 structMember;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_d3 unionMember;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_w1 structMember;
 
         std::vector<int16_t> a(20);
         outv.setEarrayMember(a);
@@ -584,7 +584,7 @@ TEST_F(DeploymentTest, ExtendedStructAttrFieldDeploymentsFaultyUnionMember) {
         structMember.setArrayMember(a8);
         outv.setEstructMember(structMember);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStructExtended inv;
+        @TYPE_COLLECTION_FULL_NAME@::tStructExtended inv;
 
         testProxy_->getAStructExtendedAttribute().setValue(outv, callStatus, inv);
         // will fail because the deployment of the union member prohibits the value
@@ -597,10 +597,10 @@ TEST_F(DeploymentTest, ExtendedStructAttrFieldDeploymentsFaultyUnionMember) {
 TEST_F(DeploymentTest, ExtendedStructAttrFieldDeploymentsFaultyArrayMember) {
     CommonAPI::CallStatus callStatus;
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStructExtended outv;
+        @TYPE_COLLECTION_FULL_NAME@::tStructExtended outv;
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_d3 unionMember;
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_w1 structMember;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_d3 unionMember;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_w1 structMember;
 
         std::vector<int16_t> a(2000);
         outv.setEarrayMember(a);
@@ -614,7 +614,7 @@ TEST_F(DeploymentTest, ExtendedStructAttrFieldDeploymentsFaultyArrayMember) {
         structMember.setArrayMember(a8);
         outv.setEstructMember(structMember);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStructExtended inv;
+        @TYPE_COLLECTION_FULL_NAME@::tStructExtended inv;
 
         testProxy_->getAStructExtendedAttribute().setValue(outv, callStatus, inv);
         // will fail because the deployment of the array member prohibits the value
@@ -627,10 +627,10 @@ TEST_F(DeploymentTest, ExtendedStructAttrFieldDeploymentsFaultyArrayMember) {
 TEST_F(DeploymentTest, ExtendedStructAttrFieldDeploymentsFaultyStructMember) {
     CommonAPI::CallStatus callStatus;
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStructExtended outv;
+        @TYPE_COLLECTION_FULL_NAME@::tStructExtended outv;
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_d3 unionMember;
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_w1 structMember;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_d3 unionMember;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_w1 structMember;
 
         std::vector<int16_t> a(20);
         outv.setEarrayMember(a);
@@ -644,7 +644,7 @@ TEST_F(DeploymentTest, ExtendedStructAttrFieldDeploymentsFaultyStructMember) {
         structMember.setArrayMember(a8);
         outv.setEstructMember(structMember);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStructExtended inv;
+        @TYPE_COLLECTION_FULL_NAME@::tStructExtended inv;
 
         testProxy_->getAStructExtendedAttribute().setValue(outv, callStatus, inv);
         // will fail because the deployment of the struct member prohibits the value
@@ -657,23 +657,23 @@ TEST_F(DeploymentTest, ExtendedStructAttrFieldDeploymentsFaultyStructMember) {
 TEST_F(DeploymentTest, StructFieldDeployment) {
     CommonAPI::CallStatus callStatus;
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_field_depls outv;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_field_depls outv;
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_field structMember;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_field structMember;
         std::vector<uint8_t> a(8);
         std::iota (std::begin(a), std::end(a), 0);
         structMember.setUint8Member(a);
         outv.setStructMember(structMember);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum enumMember;
-        enumMember = v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum::V1;
+        @TYPE_COLLECTION_FULL_NAME@::tEnum enumMember;
+        enumMember = @TYPE_COLLECTION_FULL_NAME@::tEnum::V1;
         outv.setEnumMember(enumMember);
 
         uint16_t intMember;
         intMember = 0x0FFF;
         outv.setIntMember(intMember);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_field unionMember;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_field unionMember;
         std::string str = "str";
         unionMember = str;
         outv.setUnionMember(unionMember);
@@ -681,7 +681,7 @@ TEST_F(DeploymentTest, StructFieldDeployment) {
         std::vector<int8_t> arrayMember(8);
         std::iota (std::begin(arrayMember), std::end(arrayMember), 0);
         outv.setArrayMember(arrayMember);
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_field_depls inv;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_field_depls inv;
         testProxy_->getAStruct_field_deplsAttribute().setValue(outv, callStatus, inv);
 
         ASSERT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
@@ -694,24 +694,24 @@ TEST_F(DeploymentTest, StructFieldDeployment) {
 TEST_F(DeploymentTest, StructStructFieldDeployment) {
     CommonAPI::CallStatus callStatus;
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_field_depls outv;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_field_depls outv;
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_field structMember;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_field structMember;
         // this value is too large, and the value should not be transmitted.
         std::vector<uint8_t> a(257);
         std::iota (std::begin(a), std::end(a), 0);
         structMember.setUint8Member(a);
         outv.setStructMember(structMember);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum enumMember;
-        enumMember = v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum::V1;
+        @TYPE_COLLECTION_FULL_NAME@::tEnum enumMember;
+        enumMember = @TYPE_COLLECTION_FULL_NAME@::tEnum::V1;
         outv.setEnumMember(enumMember);
 
         uint16_t intMember;
         intMember = 3;
         outv.setIntMember(intMember);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_field unionMember;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_field unionMember;
         std::string str = "str";
         unionMember = str;
         outv.setUnionMember(unionMember);
@@ -719,7 +719,7 @@ TEST_F(DeploymentTest, StructStructFieldDeployment) {
         std::vector<int8_t> arrayMember(8);
         std::iota (std::begin(arrayMember), std::end(arrayMember), 0);
         outv.setArrayMember(arrayMember);
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_field_depls inv;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_field_depls inv;
         testProxy_->getAStruct_field_deplsAttribute().setValue(outv, callStatus, inv);
 
         ASSERT_NE(callStatus, CommonAPI::CallStatus::SUCCESS);
@@ -731,23 +731,23 @@ TEST_F(DeploymentTest, StructStructFieldDeployment) {
 TEST_F(DeploymentTest, StructArrayFieldDeployment) {
     CommonAPI::CallStatus callStatus;
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_field_depls outv;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_field_depls outv;
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_field structMember;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_field structMember;
         std::vector<uint8_t> a(8);
         std::iota (std::begin(a), std::end(a), 0);
         structMember.setUint8Member(a);
         outv.setStructMember(structMember);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum enumMember;
-        enumMember = v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum::V1;
+        @TYPE_COLLECTION_FULL_NAME@::tEnum enumMember;
+        enumMember = @TYPE_COLLECTION_FULL_NAME@::tEnum::V1;
         outv.setEnumMember(enumMember);
 
         uint16_t intMember;
         intMember = 3;
         outv.setIntMember(intMember);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_field unionMember;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_field unionMember;
         std::string str = "str";
         unionMember = str;
         outv.setUnionMember(unionMember);
@@ -756,7 +756,7 @@ TEST_F(DeploymentTest, StructArrayFieldDeployment) {
         std::vector<int8_t> arrayMember(80);
         std::iota (std::begin(arrayMember), std::end(arrayMember), 0);
         outv.setArrayMember(arrayMember);
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_field_depls inv;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_field_depls inv;
         testProxy_->getAStruct_field_deplsAttribute().setValue(outv, callStatus, inv);
 
         ASSERT_NE(callStatus, CommonAPI::CallStatus::SUCCESS);
@@ -768,23 +768,23 @@ TEST_F(DeploymentTest, StructArrayFieldDeployment) {
 TEST_F(DeploymentTest, StructUnionFieldDeployment) {
     CommonAPI::CallStatus callStatus;
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_field_depls outv;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_field_depls outv;
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_field structMember;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_field structMember;
         std::vector<uint8_t> a(8);
         std::iota (std::begin(a), std::end(a), 0);
         structMember.setUint8Member(a);
         outv.setStructMember(structMember);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum enumMember;
-        enumMember = v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum::V1;
+        @TYPE_COLLECTION_FULL_NAME@::tEnum enumMember;
+        enumMember = @TYPE_COLLECTION_FULL_NAME@::tEnum::V1;
         outv.setEnumMember(enumMember);
 
         uint16_t intMember;
         intMember = 3;
         outv.setIntMember(intMember);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_field unionMember;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_field unionMember;
         // this value is too large, and the value should not be transmitted.
         std::string str(70000, 'a');
         unionMember = str;
@@ -793,7 +793,7 @@ TEST_F(DeploymentTest, StructUnionFieldDeployment) {
         std::vector<int8_t> arrayMember(8);
         std::iota (std::begin(arrayMember), std::end(arrayMember), 0);
         outv.setArrayMember(arrayMember);
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_field_depls inv;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_field_depls inv;
         testProxy_->getAStruct_field_deplsAttribute().setValue(outv, callStatus, inv);
 
         ASSERT_NE(callStatus, CommonAPI::CallStatus::SUCCESS);
@@ -806,23 +806,23 @@ TEST_F(DeploymentTest, StructUnionFieldDeployment) {
 TEST_F(DeploymentTest, DISABLED_StructIntFieldDeployment) {
     CommonAPI::CallStatus callStatus;
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_field_depls outv;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_field_depls outv;
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_field structMember;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_field structMember;
         std::vector<uint8_t> a(8);
         std::iota (std::begin(a), std::end(a), 0);
         structMember.setUint8Member(a);
         outv.setStructMember(structMember);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum enumMember;
-        enumMember = v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum::V1;
+        @TYPE_COLLECTION_FULL_NAME@::tEnum enumMember;
+        enumMember = @TYPE_COLLECTION_FULL_NAME@::tEnum::V1;
         outv.setEnumMember(enumMember);
 
         uint16_t intMember;
         intMember = 4; // this value will be truncated during transfer.
         outv.setIntMember(intMember);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_field unionMember;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_field unionMember;
         std::string str = "str";
         unionMember = str;
         outv.setUnionMember(unionMember);
@@ -830,7 +830,7 @@ TEST_F(DeploymentTest, DISABLED_StructIntFieldDeployment) {
         std::vector<int8_t> arrayMember(8);
         std::iota (std::begin(arrayMember), std::end(arrayMember), 0);
         outv.setArrayMember(arrayMember);
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_field_depls inv;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_field_depls inv;
         testProxy_->getAStruct_field_deplsAttribute().setValue(outv, callStatus, inv);
 
         ASSERT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
@@ -843,24 +843,24 @@ TEST_F(DeploymentTest, DISABLED_StructIntFieldDeployment) {
 TEST_F(DeploymentTest, StructEnumFieldDeployment) {
     CommonAPI::CallStatus callStatus;
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_field_depls outv;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_field_depls outv;
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_field structMember;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_field structMember;
         std::vector<uint8_t> a(8);
         std::iota (std::begin(a), std::end(a), 0);
         structMember.setUint8Member(a);
         outv.setStructMember(structMember);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum enumMember;
+        @TYPE_COLLECTION_FULL_NAME@::tEnum enumMember;
         // this enum value is too large to fit. It will be truncated during transfer.
-        enumMember = v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum::V3;
+        enumMember = @TYPE_COLLECTION_FULL_NAME@::tEnum::V3;
         outv.setEnumMember(enumMember);
 
         uint16_t intMember;
         intMember = 3;
         outv.setIntMember(intMember);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tUnion_field unionMember;
+        @TYPE_COLLECTION_FULL_NAME@::tUnion_field unionMember;
         std::string str = "str";
         unionMember = str;
         outv.setUnionMember(unionMember);
@@ -868,13 +868,141 @@ TEST_F(DeploymentTest, StructEnumFieldDeployment) {
         std::vector<int8_t> arrayMember(8);
         std::iota (std::begin(arrayMember), std::end(arrayMember), 0);
         outv.setArrayMember(arrayMember);
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tStruct_field_depls inv;
+        @TYPE_COLLECTION_FULL_NAME@::tStruct_field_depls inv;
         testProxy_->getAStruct_field_deplsAttribute().setValue(outv, callStatus, inv);
 
         ASSERT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
         ASSERT_EQ(inv.getEnumMember(), 232); // 232 is the 8-bit truncated value of V3 = 1000
     }
 }
+
+/**
+* @test Use a method with an structure as an argument. for both input and output.
+*/
+TEST_F(DeploymentTest, StructMethodDeployment_IO) {
+    @TYPE_COLLECTION_FULL_NAME@::tStruct_w2_arg outv;
+    @TYPE_COLLECTION_FULL_NAME@::tStruct_w2_arg inv;
+
+    outv.setBooleanMember(true);
+    std::vector<int8_t> a(200);
+    outv.setArrayMember(a);
+
+    CommonAPI::CallStatus callStatus;
+    testProxy_->mStruct_io(outv, callStatus, inv);
+
+    EXPECT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
+    EXPECT_EQ(outv, inv);
+}
+TEST_F(DeploymentTest, StructMethodDeployment_I) {
+    @TYPE_COLLECTION_FULL_NAME@::tStruct_w2_arg outv;
+
+    outv.setBooleanMember(true);
+    std::vector<int8_t> a(200);
+    outv.setArrayMember(a);
+
+    CommonAPI::CallStatus callStatus;
+    testProxy_->mStruct_i(outv, callStatus);
+
+    EXPECT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
+
+}
+TEST_F(DeploymentTest, StructMethodDeployment_O) {
+    @TYPE_COLLECTION_FULL_NAME@::tStruct_w2_arg outv;
+    @TYPE_COLLECTION_FULL_NAME@::tStruct_w2_arg inv;
+
+    outv.setBooleanMember(true);
+    std::vector<int8_t> a(200);
+    outv.setArrayMember(a);
+
+    CommonAPI::CallStatus callStatus;
+    testProxy_->mStruct_o(callStatus, inv);
+
+    EXPECT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
+    EXPECT_EQ(outv, inv);
+}
+TEST_F(DeploymentTest, StructMethodDeployment_IO_Fail) {
+    @TYPE_COLLECTION_FULL_NAME@::tStruct_w2_arg outv;
+    @TYPE_COLLECTION_FULL_NAME@::tStruct_w2_arg inv;
+
+    outv.setBooleanMember(true);
+    std::vector<int8_t> a(400);
+    outv.setArrayMember(a);
+
+    CommonAPI::CallStatus callStatus;
+    testProxy_->mStruct_io(outv, callStatus, inv);
+
+    EXPECT_EQ(callStatus, CommonAPI::CallStatus::SERIALIZATION_ERROR);
+}
+TEST_F(DeploymentTest, StructMethodDeployment_I_Fail) {
+    @TYPE_COLLECTION_FULL_NAME@::tStruct_w2_arg outv;
+
+    outv.setBooleanMember(true);
+    std::vector<int8_t> a(400);
+    outv.setArrayMember(a);
+
+    CommonAPI::CallStatus callStatus;
+    testProxy_->mStruct_i(outv, callStatus);
+
+    EXPECT_EQ(callStatus, CommonAPI::CallStatus::SERIALIZATION_ERROR);
+
+}
+TEST_F(DeploymentTest, StructMethodDeployment_O_Fail) {
+    @TYPE_COLLECTION_FULL_NAME@::tStruct_w2_arg inv;
+
+    CommonAPI::CallStatus callStatus;
+    testProxy_->mStruct_of(callStatus, inv);
+
+    EXPECT_EQ(callStatus, CommonAPI::CallStatus::REMOTE_ERROR);
+}
+
+/**
+* @test Use a broadcast with a structure.
+*/
+TEST_F(DeploymentTest, StructBroadcastDeployment) {
+
+    CommonAPI::CallStatus callStatus;
+    std::promise<@TYPE_COLLECTION_FULL_NAME@::tStruct_w2_arg> p;
+    auto f = p.get_future();
+
+    // subscribe
+    uint32_t subscription = testProxy_->getBStructEvent().subscribe([&](
+        const @TYPE_COLLECTION_FULL_NAME@::tStruct_w2_arg &y
+    ) {
+        p.set_value(y);
+    });
+
+    // trigger the event
+    testProxy_->mBCastTrigger(v1_0::commonapi::someip::deploymenttest::TestInterface::tEnumTriggerType::T_STRUCT, 200, callStatus);
+    // wait until broadcast has been signaled
+    std::future_status status = f.wait_for(std::chrono::seconds(7));
+    EXPECT_EQ(status, std::future_status::ready);
+    testProxy_->getBUnionEvent().unsubscribe(subscription);
+}
+
+/**
+* @test Use a broadcast with a structure. Will fail on purpose.
+*/
+TEST_F(DeploymentTest, StructBroadcastDeploymentBadValue) {
+
+    CommonAPI::CallStatus callStatus;
+    std::promise<@TYPE_COLLECTION_FULL_NAME@::tStruct_w2_arg> p;
+    auto f = p.get_future();
+
+    // subscribe
+    uint32_t subscription = testProxy_->getBStructEvent().subscribe([&](
+        const @TYPE_COLLECTION_FULL_NAME@::tStruct_w2_arg &y
+    ) {
+        p.set_value(y);
+    });
+
+    // trigger the event
+    testProxy_->mBCastTrigger(v1_0::commonapi::someip::deploymenttest::TestInterface::tEnumTriggerType::T_STRUCT, 400, callStatus);
+    // wait until broadcast has been signaled
+    std::future_status status = f.wait_for(std::chrono::seconds(7));
+    EXPECT_EQ(status, std::future_status::timeout);
+    testProxy_->getBStructEvent().unsubscribe(subscription);
+}
+
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
     ::testing::AddGlobalTestEnvironment(new Environment());

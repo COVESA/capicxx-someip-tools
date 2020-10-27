@@ -1,0 +1,521 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+package commonapi.someip.deploymenttest
+
+interface TestInterface {
+    version { major 1 minor 0 }
+
+    attribute UInt8 aUint8
+    attribute Int8 aInt8
+    attribute UInt16 aUint16
+    attribute Int16 aInt16
+    attribute UInt32 aUint32
+    attribute Int32 aInt32
+    attribute UInt64 aUint64
+    attribute Int64 aInt64
+    attribute Boolean aBoolean
+    attribute Float aFloat
+    attribute Double aDouble
+    attribute String aString
+    attribute ByteBuffer aByteBuffer
+
+    /* integer attributes with bit width deployments */
+    /* test 8-bit values with all possible bit field values */
+    attribute UInt8 aUint8b1
+    attribute UInt8 aUint8b2
+    attribute UInt8 aUint8b3
+    attribute UInt8 aUint8b4
+    attribute UInt8 aUint8b5
+    attribute UInt8 aUint8b6
+    attribute UInt8 aUint8b7
+    attribute UInt8 aUint8b8
+    attribute UInt8 aUint8b10
+
+    attribute Int8 aInt8b2
+    attribute Int8 aInt8b3
+    attribute Int8 aInt8b4
+    attribute Int8 aInt8b5
+    attribute Int8 aInt8b6
+    attribute Int8 aInt8b7
+    attribute Int8 aInt8b8
+
+    attribute Int8 aInt8b9
+
+    /* for other lengths (16, 32, 64) test some random bit lengths */
+    attribute UInt16 aUint16b1
+    attribute UInt16 aUint16b16
+    attribute UInt16 aUint16b9
+    attribute UInt16 aUint16b18
+    attribute Int16 aInt16b2
+    attribute Int16 aInt16b7
+    attribute Int16 aInt16b16
+    attribute Int16 aInt16b25
+
+    attribute UInt32 aUint32b1
+    attribute UInt32 aUint32b32
+    attribute UInt32 aUint32b12
+    attribute UInt32 aUint32b40
+    attribute Int32 aInt32b2
+    attribute Int32 aInt32b29
+    attribute Int32 aInt32b32
+    attribute Int32 aInt32b64
+
+    attribute UInt64 aUint64b1
+    attribute UInt64 aUint64b64
+    attribute UInt64 aUint64b44
+    attribute Int64 aInt64b2
+    attribute Int64 aInt64b62
+    attribute Int64 aInt64b64
+
+    attribute Integer(0, 1) aInt0to1
+    attribute Integer(-5, 5) aIntm5to5
+    attribute Integer(-5000000, 5000000) aIntm5mto5m
+    attribute Integer(0, 1) aInt0to1b1
+    attribute Integer(-5, 5) aIntm5to5b3
+    attribute Integer(-5000000, 5000000) aIntm5mto5mb16
+
+    attribute @TYPE_COLLECTION_PREFIX@i32Array aArrayw0n0x10
+    attribute @TYPE_COLLECTION_PREFIX@i32Array aArrayw0n5x20
+    attribute @TYPE_COLLECTION_PREFIX@i32Array aArrayw1n0x15
+    attribute @TYPE_COLLECTION_PREFIX@i32Array aArrayw1n10x200
+    attribute @TYPE_COLLECTION_PREFIX@i32Array aArrayw2n15x2000
+    attribute @TYPE_COLLECTION_PREFIX@i32Array aArrayw4n400x200000
+
+    attribute @TYPE_COLLECTION_PREFIX@tEnum4_16 aEnum4_16
+    attribute @TYPE_COLLECTION_PREFIX@tEnum4_32 aEnum4_32
+    attribute @TYPE_COLLECTION_PREFIX@tEnum2_8 aEnum2_8
+    attribute @TYPE_COLLECTION_PREFIX@tEnum2_16 aEnum2_16
+    attribute @TYPE_COLLECTION_PREFIX@tEnum1_8 aEnum1_8
+    attribute @TYPE_COLLECTION_PREFIX@tEnum1_1 aEnum1_1
+    attribute @TYPE_COLLECTION_PREFIX@tEnum aEnum
+    attribute @TYPE_COLLECTION_PREFIX@tEnum2_8 aEnum_override
+
+    attribute @TYPE_COLLECTION_PREFIX@tUnion_1 aUnion_1
+    attribute @TYPE_COLLECTION_PREFIX@tUnion_2 aUnion_2
+    attribute @TYPE_COLLECTION_PREFIX@tUnion_3 aUnion_3
+    attribute @TYPE_COLLECTION_PREFIX@tUnion_4 aUnion_4
+
+    attribute @TYPE_COLLECTION_PREFIX@tUnion_d1 aUnion_d1
+    attribute @TYPE_COLLECTION_PREFIX@tUnion_d2 aUnion_d2
+    attribute @TYPE_COLLECTION_PREFIX@tUnion_d3 aUnion_d3
+    attribute @TYPE_COLLECTION_PREFIX@tUnion_d4 aUnion_d4
+    attribute @TYPE_COLLECTION_PREFIX@tUnion_d3 aUnion_override
+    attribute @TYPE_COLLECTION_PREFIX@tUnion_field_depls aUnion_field_depls
+
+    attribute @TYPE_COLLECTION_PREFIX@i8Array aArrayi8
+    attribute @TYPE_COLLECTION_PREFIX@i16Array aArrayi16
+    attribute @TYPE_COLLECTION_PREFIX@i32Array aArrayi32
+    attribute @TYPE_COLLECTION_PREFIX@i8Array aArrayi8_override
+    attribute @TYPE_COLLECTION_PREFIX@i16Array aArrayi16_override
+    attribute @TYPE_COLLECTION_PREFIX@i32Array aArrayi32_override
+
+    attribute Int8[] aArray_anonymous
+
+    attribute @TYPE_COLLECTION_PREFIX@tStruct_w0 aStruct_w0
+    attribute @TYPE_COLLECTION_PREFIX@tStruct_w1 aStruct_w1
+    attribute @TYPE_COLLECTION_PREFIX@tStruct_w2 aStruct_w2
+    attribute @TYPE_COLLECTION_PREFIX@tStruct_w4 aStruct_w4
+    attribute @TYPE_COLLECTION_PREFIX@tStruct_wd aStruct_wd
+    attribute @TYPE_COLLECTION_PREFIX@tStruct_w0 aStruct_w0_override
+    attribute @TYPE_COLLECTION_PREFIX@tStruct_wd aStruct_wd_attr
+    attribute @TYPE_COLLECTION_PREFIX@tStruct_long aStruct_long
+
+    attribute String aString_l10_w0
+    attribute String aString_w1
+    attribute String aString_w2
+    attribute String aString_w4
+    attribute String aString_utf8
+    attribute String aString_utf16_be
+    attribute String aString_utf16_le
+
+    method mArrayi8_io {
+        in {
+            @TYPE_COLLECTION_PREFIX@i8Array inArg
+        }
+        out {
+            @TYPE_COLLECTION_PREFIX@i8Array outArg
+        }
+    }
+
+    method mArrayi8_i {
+        in {
+            @TYPE_COLLECTION_PREFIX@i8Array inArg
+        }
+    }
+
+    method mArrayi8_o {
+        out {
+            @TYPE_COLLECTION_PREFIX@i8Array outArg
+        }
+    }
+
+    method mArray_anon_io {
+        in {
+            Int8[] inArg
+        }
+        out {
+            Int8[] outArg
+        }
+    }
+
+    broadcast bArrayi8 {
+        out {
+            @TYPE_COLLECTION_PREFIX@i8Array outArg
+        }
+    }
+
+    broadcast bUnion {
+        out {
+            @TYPE_COLLECTION_PREFIX@tUnion_d2 outArg
+        }
+    }
+
+    broadcast bStruct {
+        out {
+            @TYPE_COLLECTION_PREFIX@tStruct_w2_arg outArg
+        }
+    }
+
+    broadcast bMap {
+        out {
+            @TYPE_COLLECTION_PREFIX@tMapString outArg
+        }
+    }
+
+    broadcast bArray_anon {
+        out {
+            Int8[] outArg
+        }
+    }
+
+    attribute @TYPE_COLLECTION_PREFIX@tStruct_field_type_depls aStruct_field_type_depls
+    attribute @TYPE_COLLECTION_PREFIX@tStructExtended aStructExtended
+    attribute @TYPE_COLLECTION_PREFIX@tStruct_field_depls aStruct_field_depls
+
+    attribute @TYPE_COLLECTION_PREFIX@tMapString aMapString
+
+    attribute @TYPE_COLLECTION_PREFIX@tMapString aMapw0n0x10
+    attribute @TYPE_COLLECTION_PREFIX@tMapString aMapw0n5x20
+    attribute @TYPE_COLLECTION_PREFIX@tMapString aMapw1n0x10
+    attribute @TYPE_COLLECTION_PREFIX@tMapString aMapw1n5x50
+    attribute @TYPE_COLLECTION_PREFIX@tMapString aMapw2n15x2000
+    attribute @TYPE_COLLECTION_PREFIX@tMapString aMapw4n400x200000
+
+    method mMap_io {
+        in {
+            @TYPE_COLLECTION_PREFIX@tMapString inArg
+        }
+        out {
+            @TYPE_COLLECTION_PREFIX@tMapString outArg
+        }
+    }
+
+    method mMap_i {
+        in {
+            @TYPE_COLLECTION_PREFIX@tMapString inArg
+        }
+    }
+
+    method mMap_o {
+        out {
+            @TYPE_COLLECTION_PREFIX@tMapString outArg
+        }
+    }
+
+    method mMap_n5_io {
+        in {
+            @TYPE_COLLECTION_PREFIX@tMapString inArg
+        }
+        out {
+            @TYPE_COLLECTION_PREFIX@tMapString outArg
+        }
+    }
+
+    method mMap_n6_i {
+        in {
+            @TYPE_COLLECTION_PREFIX@tMapString inArg
+        }
+    }
+
+    method mMap_n7_o {
+        out {
+            @TYPE_COLLECTION_PREFIX@tMapString outArg
+        }
+    }
+
+    attribute ByteBuffer aBBdefault
+    attribute ByteBuffer aBBn0x0
+    attribute ByteBuffer aBBn10x0
+    attribute ByteBuffer aBBn0x10
+    attribute ByteBuffer aBBn5x20
+    attribute ByteBuffer aBBn100000x100000
+    attribute ByteBuffer aBBn5x20x0
+    attribute ByteBuffer aBBn50x200x1
+    attribute ByteBuffer aBBn500x2000x2
+    attribute ByteBuffer aBBn1500x2000x4
+
+    method mUnion_ioa {
+        in {
+            @TYPE_COLLECTION_PREFIX@tUnion_d2[] inArg
+        }
+        out {
+            @TYPE_COLLECTION_PREFIX@tUnion_d2[] outArg
+        }
+    }
+
+    method mUnion_io {
+        in {
+            @TYPE_COLLECTION_PREFIX@tUnion_d2 inArg
+        }
+        out {
+            @TYPE_COLLECTION_PREFIX@tUnion_d2 outArg
+        }
+    }
+
+    method mUnion_i {
+        in {
+            @TYPE_COLLECTION_PREFIX@tUnion_d2 inArg
+        }
+    }
+
+    method mUnion_o {
+        out {
+            @TYPE_COLLECTION_PREFIX@tUnion_d2 outArg
+        }
+    }
+
+    method mUnion_of {
+        out {
+            @TYPE_COLLECTION_PREFIX@tUnion_d2 outArg
+        }
+    }
+
+    method mStruct_io {
+        in {
+            @TYPE_COLLECTION_PREFIX@tStruct_w2_arg inArg
+        }
+        out {
+            @TYPE_COLLECTION_PREFIX@tStruct_w2_arg outArg
+        }
+    }
+
+    method mStruct_i {
+        in {
+            @TYPE_COLLECTION_PREFIX@tStruct_w2_arg inArg
+        }
+    }
+
+    method mStruct_o {
+        out {
+            @TYPE_COLLECTION_PREFIX@tStruct_w2_arg outArg
+        }
+    }
+
+    method mStruct_of {
+        out {
+            @TYPE_COLLECTION_PREFIX@tStruct_w2_arg outArg
+        }
+    }
+
+    method mBCastTrigger {
+        in {
+            tEnumTriggerType type
+            UInt32 parameter
+        }
+    }
+
+    enumeration tEnumTriggerType {
+        T_ARRAY = 1
+        T_MAP = 2
+        T_UNION = 3
+        T_STRUCT = 4
+        T_ANON = 5
+    }
+
+@TYPE_COLLECTION_BLOCK@
+
+    array i8Array of Int8
+    array i16Array of Int16
+    array i32Array of Int32
+    array i8BigArray of Int8
+
+    enumeration tEnum {
+        V1= 0
+        V2= 123
+        V3= 1000
+        V4= -10000
+        VTRUNCATED = 232
+    }
+
+    enumeration tEnum4_16 {
+        V1= 0
+        V2= 123
+        V3= 1000
+        V4= 10000
+    }
+
+    enumeration tEnum4_32 {
+        V1= 0
+        V2= 123
+        V3= 1002
+        V4= 10012
+        V5= 1000015
+    }
+
+    enumeration tEnum2_8 {
+        V1= 0
+        V2= 123
+        V3= 11
+    }
+
+    enumeration tEnum2_16 {
+        V1= 0
+        V2= 123
+        V3= 1000
+    }
+
+    enumeration tEnum1_8 {
+        V1= 0
+        V2= 123
+        V3= 100
+    }
+
+    enumeration tEnum1_1 {
+        V1= 0
+        V2= 1
+        V3= 2
+        V4= 3
+    }
+
+    union tUnion_1 {
+        UInt8 m_byte
+        Int16 m_word
+        String str
+    }
+
+    union tUnion_2 {
+        UInt8 m_byte
+        Int16 m_word
+        String str
+    }
+
+    union tUnion_3 {
+        UInt8 m_byte
+        Int16 m_word
+        String str
+    }
+
+    union tUnion_4 {
+        UInt8 m_byte
+        Int16 m_word
+        String str
+    }
+
+    union tUnion_d1 {
+        UInt8 m_byte
+        Int16 m_word
+        String str
+    }
+
+    union tUnion_d2 {
+        UInt8 m_byte
+        Int16 m_word
+        String str
+    }
+
+    union tUnion_d3 {
+        UInt8 m_byte
+        Int16 m_word
+        String str
+    }
+
+    union tUnion_d4 {
+        UInt8 m_byte
+        Int16 m_word
+        String str
+    }
+
+    struct tStruct_w0 {
+        Boolean booleanMember
+        i8BigArray arrayMember
+    }
+
+    struct tStruct_w1 {
+        Boolean booleanMember
+        i8BigArray arrayMember
+    }
+
+    struct tStruct_w2 {
+        Boolean booleanMember
+        UInt8 uint8Member
+    }
+
+    struct tStruct_w4 {
+        Boolean booleanMember
+        UInt8 uint8Member
+    }
+
+    struct tStruct_w2_arg {
+        Boolean booleanMember
+        i8BigArray arrayMember
+    }
+
+    struct tStruct_wd {
+        Boolean booleanMember
+        UInt8 uint8Member
+    }
+
+    struct tStruct_long {
+        Boolean booleanMember
+        i8BigArray arrayMember
+    }
+
+
+    struct tStruct_field_type_depls {
+        i16Array arrayMember
+        tUnion_d3 unionMember
+        tStruct_w1 structMember
+    }
+
+    struct tStruct_field {
+        UInt8[] uint8Member
+    }
+
+    union tUnion_field {
+        UInt8 m_byte
+        Int16 m_word
+        String str
+    }
+    array i8Array_field of Int8
+
+    struct tStruct_field_depls {
+        tStruct_field structMember
+        tEnum enumMember
+        UInt16 intMember
+        tUnion_field unionMember
+        i8Array_field arrayMember
+    }
+
+    union tUnion_field_depls {
+        tStruct_field structMember
+        tEnum enumMember
+        UInt16 intMember
+        tUnion_field unionMember
+        i8Array_field arrayMember
+    }
+
+    struct tStructBase {
+        Boolean booleanMember
+    }
+    struct tStructExtended extends tStructBase {
+        i16Array earrayMember
+        tUnion_d3 eunionMember
+        tStruct_w1 estructMember
+    }
+
+    map tMapString {
+        UInt32 to String
+    }
+
+}

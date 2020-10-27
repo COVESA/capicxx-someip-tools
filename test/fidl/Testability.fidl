@@ -1,0 +1,862 @@
+/*
+ * ##############################
+ * #####                    #####
+ * #####   Generated File   #####
+ * #####                    #####
+ * ##############################
+ *
+ * Fibex origin: FBX411_SP2021_akt_V32_MultiBus_hPAD_EyeQ5_2b_V21_lokal_20190304122505.xml
+ * Franca version: 0.13.1.201807231814
+ */
+package de.bmw.infrastructure.testability
+
+import de.bmw.environmentalmodel.common.* from "Common.fidl"
+import de.bmw.infrastructure.testabilitytypes.* from "TestabilityTypes.fidl"
+<** @description :
+            Standard[en]=The service-interfacce for testing service-oriented communication, SOME/IP, and service discovery.
+            changes in version 2.0 compared to version 1.0:
+            - echoUINT8E2E removed
+            - triggerEventUINT8E2E removed
+            - refactoring EGs (TestEventUINT8Multicast removed out of EG 0x0005)
+            - AppCycle for TestEventUINT8E2E added (1 second)
+            isExternal=no
+            relatedLogicalInterface=Debug
+            providerDomain=Infrastructure **>
+interface EnhancedTestabilityServiceHigh2 {
+	version {
+		major 2
+		minor 0
+	}
+
+	<**
+		@description : Standard[en]=A field which contains the major, minor, and build version of the testability service-interface.
+	**>
+	attribute TestabilityTypes.VersionType ETSInterfaceVersion readonly
+
+	<**
+		@description : Standard[en]=A field of type UINT8.
+	**>
+	attribute UInt8 TestFieldUINT8
+
+	<**
+		@description : Standard[en]=A field with an array declaration of UINT8 values.
+	**>
+	attribute UInt8 [ ] TestFieldUINT8Array
+
+	<**
+		@description : Standard[en]=A field of type UINT8. In this case a reliable connection has to be used.
+	**>
+	attribute UInt8 TestFieldUINT8Reliable
+
+	<**
+		@description : Standard[en]=The method adds the two passed parameters UINT8 and UINT16 and returns the sum as an UINT32 to check the correct byte order.
+	**>
+	method checkByteOrder {
+		in {
+			<**
+				@description : Standard[en]=The first summand,
+			**>
+			UInt8 summandUINT8
+			<**
+				@description : Standard[en]=The second summand.
+			**>
+			UInt16 summandUINT16
+		}
+		out {
+			<**
+				@description : Standard[en]=The return sum.
+			**>
+			UInt32 sum
+		}
+	}
+
+	<**
+		@description : Standard[en]=Activates the Client of the Testability Service
+	**>
+	method clientServiceActivate fireAndForget {
+		in {
+			<**
+				@description : Standard[en]=Time in seconds after which the client starts service discovery.
+			**>
+			UInt8 start
+		}
+	}
+
+	<**
+		@description : Standard[en]=Triggers the Client to call the echo method
+	**>
+	method clientServiceCallEchoUINT8Array {
+		in {
+			<**
+				@description : Standard[en]=An UINT8 field.
+			**>
+			UInt8 [ ] inUINT8Array
+		}
+		out {
+			<**
+				@description : Standard[en]=Returned UINT8 field.
+			**>
+			UInt8 [ ] outUINT8Array
+		}
+	}
+
+	<**
+		@description : Standard[en]=Deactivates the Client of the Testability Service
+	**>
+	method clientServiceDeactivate fireAndForget {
+		in {
+			<**
+				@description : Standard[en]=Time in seconds after which the client stops service discovery.
+			**>
+			UInt8 stop
+		}
+	}
+
+	<**
+		@description : Standard[en]=The method returns the last received value of TestEventUINT8Reliable.
+	**>
+	method clientServiceGetLastValueOfEventTCP {
+		out {
+			UInt8 value
+		}
+	}
+
+	<**
+		@description : Standard[en]=The method returns the last received value of TestEventUINT8Multicast.
+	**>
+	method clientServiceGetLastValueOfEventUDPMulticast {
+		out {
+			UInt8 value
+		}
+	}
+
+	<**
+		@description : Standard[en]=The method returns the last received value of TestEventUINT8.
+	**>
+	method clientServiceGetLastValueOfEventUDPUnicast {
+		out {
+			UInt8 value
+		}
+	}
+
+	<**
+		@description : Standard[en]=Triggers the client to subscribe to another Testability Service
+	**>
+	method clientServiceSubscribeEventgroup fireAndForget {
+		in {
+			<**
+				@description : Standard[en]=Time in seconds after which the client subscribes to an eventgroup
+			**>
+			UInt8 start
+			<**
+				@description : Standard[en]=Time in seconds after which the client unsubscribes from an eventgroup
+			**>
+			UInt8 duration
+		}
+	}
+
+	<**
+		@description : Standard[en]=The method returns the bitfields sent to it in reversed order per bitfield.
+	**>
+	method echoBitfields {
+		in {
+			<**
+				@description : Standard[en]=Bitfield with 8 Bits.
+			**>
+			UInt8 bitfield8_in
+			<**
+				@description : Standard[en]=Bitfield with 16 Bits.
+			**>
+			UInt16 bitfield16_in
+			<**
+				@description : Standard[en]=Bitfield with 32 Bits.
+			**>
+			UInt32 bitfield32_in
+		}
+		out {
+			<**
+				@description : Standard[en]=Bitfield with 8 Bits in reversed order.
+			**>
+			UInt8 bitfield8_out
+			<**
+				@description : Standard[en]=Bitfield with 16 Bits in reversed order.
+			**>
+			UInt16 bitfield16_out
+			<**
+				@description : Standard[en]=Bitfield with 32 Bits in reversed order.
+			**>
+			UInt32 bitfield32_out
+		}
+	}
+
+	<**
+		@description : Standard[en]=The methods returns the transfered parameters back to the invoker.
+	**>
+	method echoCommonDatatypes {
+		in {
+			<**
+				@description : Standard[en]=A boolean value.
+			**>
+			Boolean bOOLEAN_in
+			<**
+				@description : Standard[en]=An UINT8 value.
+			**>
+			UInt8 uINT8_in
+			<**
+				@description : Standard[en]=An UINT16 value.
+			**>
+			UInt16 uINT16_in
+			<**
+				@description : Standard[en]=An UINT32 value.
+			**>
+			UInt32 uINT32_in
+			<**
+				@description : Standard[en]=An INT8 value.
+			**>
+			Int8 iNT8_in
+			<**
+				@description : Standard[en]=An INT16 value.
+			**>
+			Int16 iNT16_in
+			<**
+				@description : Standard[en]=An INT32 value.
+			**>
+			Int32 iNT32_in
+			<**
+				@description : Standard[en]=A FLOAT32 value.
+			**>
+			Float fLOAT32_in
+		}
+		out {
+			<**
+				@description : Standard[en]=A FLOAT32 value.
+			**>
+			Float fLOAT32_out
+			<**
+				@description : Standard[en]=An INT32 value.
+			**>
+			Int32 iNT32_out
+			<**
+				@description : Standard[en]=An INT16 value.
+			**>
+			Int16 iNT16_out
+			<**
+				@description : Standard[en]=An INT8 value.
+			**>
+			Int8 iNT8_out
+			<**
+				@description : Standard[en]=An UINT32 value.
+			**>
+			UInt32 uINT32_out
+			<**
+				@description : Standard[en]=An UINT16 value.
+			**>
+			UInt16 uINT16_out
+			<**
+				@description : Standard[en]=An UINT8 value.
+			**>
+			UInt8 uINT8_out
+			<**
+				@description : Standard[en]=A boolean value.
+			**>
+			Boolean bOOLEAN_out
+		}
+	}
+
+	<**
+		@description : Standard[en]=The method returns the transfered enumeration value back to the invoker.
+	**>
+	method echoENUM {
+		in {
+			<**
+				@description : Standard[en]=An enumeration value.
+			**>
+			TestabilityTypes.Enumeration1 enumerationElement
+		}
+		out {
+			<**
+				@description : Standard[en]=The enumeration return value.
+			**>
+			TestabilityTypes.Enumeration1 enumerationReturnElement
+		}
+	}
+
+	<**
+		@description : Standard[en]=The method returns the passed parameter.
+	**>
+	method echoExtendedDatatypes {
+		in {
+			<**
+				@description : Standard[en]=The input parameter.
+			**>
+			TestabilityTypes.UnionOfStructs [ ] inputData
+		}
+		out {
+			<**
+				@description : Standard[en]=The return parameter.
+			**>
+			TestabilityTypes.UnionOfStructs [ ] returnData
+		}
+	}
+
+	<**
+		@description : Standard[en]=The method returns the passed parameter.
+	**>
+	method echoExtendedDatatypes16BitLengthAndTypeField {
+		in {
+			<**
+				@description : Standard[en]=The input parameter.
+			**>
+			TestabilityTypes.UnionOfStructs [ ] inputData
+		}
+		out {
+			<**
+				@description : Standard[en]=The return parameter.
+			**>
+			TestabilityTypes.UnionOfStructs [ ] returnData
+		}
+	}
+
+	<**
+		@description : Standard[en]=The method returns the passed parameter.
+	**>
+	method echoExtendedDatatypes8BitLengthAndTypeField {
+		in {
+			<**
+				@description : Standard[en]=The input parameter.
+			**>
+			TestabilityTypes.UnionOfStructs [ ] inputData
+		}
+		out {
+			<**
+				@description : Standard[en]=The return parameter.
+			**>
+			TestabilityTypes.UnionOfStructs [ ] returnData
+		}
+	}
+
+	<**
+		@description : Standard[en]=The method returns the transfered FLOAT64 value back to the invoker.
+	**>
+	method echoFLOAT64 {
+		in {
+			<**
+				@description : Standard[en]=An FLOAT64 value.
+			**>
+			Double fLOAT64Value
+		}
+		out {
+			<**
+				@description : Standard[en]=The FLOAT64 return value.
+			**>
+			Double fLOAT64ReturnValue
+		}
+	}
+
+	<**
+		@description : Standard[en]=The method returns the transfered INT64 value back to the invoker.
+	**>
+	method echoINT64 {
+		in {
+			<**
+				@description : Standard[en]=An INT64 value.
+			**>
+			Int64 iNT64Value
+		}
+		out {
+			<**
+				@description : Standard[en]=The INT64 return value.
+			**>
+			Int64 iNT64ReturnValue
+		}
+	}
+
+	<**
+		@description : Standard[en]=The method returns the transfered INT8 value back to the invoker.
+	**>
+	method echoINT8 {
+		in {
+			<**
+				@description : Standard[en]=An INT8 value.
+			**>
+			Int8 iNT8Value
+		}
+		out {
+			<**
+				@description : Standard[en]=The INT8 return value.
+			**>
+			Int8 iNT8ReturnValue
+		}
+	}
+
+	<**
+		@description : Standard[en]=The method returns the transfered static UINT8 array back to the invoker.
+	**>
+	method echoStaticUINT8Array {
+		in {
+			<**
+				@description : Standard[en]=Static UINT8 Array
+			**>
+			UInt8 [ ] uINT8Array
+		}
+		out {
+			<**
+				@description : Standard[en]=Static UINT8 Array
+			**>
+			UInt8 [ ] uINT8ArrayReturnValue
+		}
+	}
+
+	<**
+		@description : Standard[en]=The method returns the transfered structure back to the invoker.
+	**>
+	method echoSTRUCT {
+		in {
+			<**
+				@description : Standard[en]=An struct element.
+			**>
+			TestabilityTypes.Structure1 structElement
+		}
+		out {
+			<**
+				@description : Standard[en]=The return struct element.
+			**>
+			TestabilityTypes.Structure1 structReturnElement
+		}
+	}
+
+	<**
+		@description : Standard[en]=The method returns the transfered structure back to the invoker.
+	**>
+	method echoSTRUCTSimple {
+		in {
+			<**
+				@description : Standard[en]=An struct element.
+			**>
+			TestabilityTypes.StructureSimple [ ] structElement
+		}
+		out {
+			<**
+				@description : Standard[en]=The return struct element.
+			**>
+			TestabilityTypes.StructureSimple [ ] structReturnElement
+		}
+	}
+
+	<**
+		@description : Standard[en]=The method returns the transfered number value back to the invoker.
+	**>
+	method echoTYPEDEF {
+		in {
+			<**
+				@description : Standard[en]=An typedef value.
+			**>
+			TestabilityTypes.Build typeDefElement
+		}
+		out {
+			<**
+				@description : Standard[en]=The typedef return value.
+			**>
+			TestabilityTypes.Build typeDefreturnElement
+		}
+	}
+
+	<**
+		@description : Standard[en]=The method returns the transfered UINT64 value back to the invoker.
+	**>
+	method echoUINT64 {
+		in {
+			<**
+				@description : Standard[en]=An UINT64 value.
+			**>
+			UInt64 uINT64Value
+		}
+		out {
+			<**
+				@description : Standard[en]=The UINT64 return value.
+			**>
+			UInt64 uINT64ReturnValue
+		}
+	}
+
+	<**
+		@description : Standard[en]=The method returns the transfered UINT8 value back to the invoker.
+	**>
+	method echoUINT8 {
+		in {
+			<**
+				@description : Standard[en]=An UINT8 value.
+			**>
+			UInt8 uINT8Value
+		}
+		out {
+			<**
+				@description : Standard[en]=The UINT8 return value.
+			**>
+			UInt8 uINT8ReturnValue
+		}
+	}
+
+	<**
+		@description : Standard[en]=The method returns the transfered array of UINT8 elements back to the invoker.
+	**>
+	method echoUINT8Array {
+		in {
+			<**
+				@description : Standard[en]=An array of UINT8 elements.
+			**>
+			UInt8 [ ] inUINT8Array
+		}
+		out {
+			<**
+				@description : Standard[en]=The return array of UINT8 elements.
+			**>
+			UInt8 [ ] outUINT8Array
+		}
+	}
+
+	<**
+		@description : Standard[en]=The method returns the transfered array of UINT8 elements back to the invoker. The array has a length field of 16 bits.
+	**>
+	method echoUINT8Array16BitLength {
+		in {
+			<**
+				@description : Standard[en]=An array of UINT8 elements.
+			**>
+			UInt8 [ ] inUINT8Array
+		}
+		out {
+			<**
+				@description : Standard[en]=The return array of UINT8 elements.
+			**>
+			UInt8 [ ] outUINT8Array
+		}
+	}
+
+	<**
+		@description : Standard[en]=The method returns the transfered multi-dimensional UINT8 array back to the invoker.
+	**>
+	method echoUINT8Array2Dim {
+		in {
+			<**
+				@description : Standard[en]=2-Dimensional UINT8 Array
+			**>
+			TestabilityTypes.uINT8ArrayArray [ ] uINT8Array
+		}
+		out {
+			<**
+				@description : Standard[en]=Returned 2-Dimensional UINT8 Array
+			**>
+			TestabilityTypes.uINT8ArrayReturnValueArray [ ] uINT8ArrayReturnValue
+		}
+	}
+
+	<**
+		@description : Standard[en]=The method returns the transfered array of UINT8 elements back to the invoker. The array has a length field of 8 bits.
+	**>
+	method echoUINT8Array8BitLength {
+		in {
+			<**
+				@description : Standard[en]=An array of UINT8 elements.
+			**>
+			UInt8 [ ] inUINT8Array
+		}
+		out {
+			<**
+				@description : Standard[en]=The return array of UINT8 elements.
+			**>
+			UInt8 [ ] outUINT8Array
+		}
+	}
+
+	<**
+		@description : Standard[en]=The method returns the transfered array of UINT8 elements with a minimum size of 3 entries back to the invoker.
+	**>
+	method echoUINT8ArrayMinSize {
+		in {
+			UInt8 [ ] uINT8Array
+		}
+		out {
+			UInt8 [ ] uINT8ArrayReturnValue
+		}
+	}
+
+	<**
+		@description : Standard[en]=The method returns the transfered UINT8 value back to the invoker. In this case, a reliable connection has to be used.
+	**>
+	method echoUINT8RELIABLE {
+		in {
+			<**
+				@description : Standard[en]=An UINT8 value.
+			**>
+			UInt8 uINT8Value
+		}
+		out {
+			<**
+				@description : Standard[en]=The UINT8 return value.
+			**>
+			UInt8 uINT8ReturnValue
+		}
+	}
+
+	<**
+		@description : Standard[en]=The method returns the transfered union back to the invoker.
+	**>
+	method echoUNION {
+		in {
+			<**
+				@description : Standard[en]=An union element.
+			**>
+			TestabilityTypes.Union1 unionElement
+		}
+		out {
+			<**
+				@description : Standard[en]=The union return element.
+			**>
+			TestabilityTypes.Union1 unionReturnElement
+		}
+	}
+
+	<**
+		@description : Standard[en]=The method returns the transfered UTF16 string of dynamic length back to the invoker.
+	**>
+	method echoUTF16DYNAMIC {
+		in {
+			<**
+				@description : Standard[en]=An UTF16 dynamic length string.
+			**>
+			String uTF16DynamicLengthString
+		}
+		out {
+			<**
+				@description : Standard[en]=The UTF16 dynamic length return string.
+			**>
+			String uTF16DynamicLengthReturnString
+		}
+	}
+
+	<**
+		@description : Standard[en]=The method returns the transfered UTF16 string of fixed length 511 bytes back to the invoker.
+	**>
+	method echoUTF16FIXED {
+		in {
+			<**
+				@description : Standard[en]=An UTF16 fixed length string.
+			**>
+			String uTF16FixedLength511String
+		}
+		out {
+			<**
+				@description : Standard[en]=The UTF16 fixed length return string.
+			**>
+			String uTF16FixedLength511ReturnString
+		}
+	}
+
+	<**
+		@description : Standard[en]=The method returns the transfered UTF8 string of dynamic length back to the invoker.
+	**>
+	method echoUTF8DYNAMIC {
+		in {
+			<**
+				@description : Standard[en]=An UTF8 dynamic length string.
+			**>
+			String uTF8DynamicLengthString
+		}
+		out {
+			<**
+				@description : Standard[en]=The UTF8 dynamic length return string.
+			**>
+			String uTF8DynamicLengthReturnString
+		}
+	}
+
+	<**
+		@description : Standard[en]=The method returns the transfered UTF8 string of fixed length 255 bytes back to the invoker.
+	**>
+	method echoUTF8FIXED {
+		in {
+			<**
+				@description : Standard[en]=An UTF8 fixed length string.
+			**>
+			String uTF8FixedLength255String
+		}
+		out {
+			<**
+				@description : Standard[en]=The UTF8 fixed length return string.
+			**>
+			String uTF8FixedLength255ReturnString
+		}
+	}
+
+	<**
+		@description : Standard[en]=The method resets the interface to the default values.
+	**>
+	method resetInterface fireAndForget { }
+
+	<**
+		@description : Standard[en]=The method suspends the interface for n seconds and resets afterwards.
+	**>
+	method suspendInterface fireAndForget {
+		in {
+			UInt8 start
+			UInt8 duration
+		}
+	}
+
+	<**
+		@description : Standard[en]=The method triggers the event TestEventUINT8.
+	**>
+	method triggerEventUINT8 fireAndForget {
+		in {
+			UInt8 start
+			UInt8 duration
+			UInt8 debounceTime
+		}
+	}
+
+	<**
+		@description : Standard[en]=The method triggers the event TestEventUINT8Array.
+	**>
+	method triggerEventUINT8Array fireAndForget {
+		in {
+			UInt8 start
+			UInt8 duration
+			UInt8 debounceTime
+		}
+	}
+
+	<**
+		@description : Standard[en]=The method triggers the event TestEventUINT8Multicast.
+	**>
+	method triggerEventUINT8Multicast fireAndForget {
+		in {
+			UInt8 start
+			UInt8 duration
+			UInt8 debounceTime
+		}
+	}
+
+	<**
+		@description : Standard[en]=The method triggers the event TestEventUINT8Reliable.
+	**>
+	method triggerEventUINT8Reliable fireAndForget {
+		in {
+			UInt8 start
+			UInt8 duration
+			UInt8 debounceTime
+		}
+	}
+
+	<**
+		@description : Standard[en]=An event to test an UINT8 parameter. It is send periodically and triggered by the triggerEventUINT8 method. The UINT8 value has to be incremented after each transmission.
+	**>
+	broadcast TestEventUINT8 {
+		out {
+			<**
+				@description : Standard[en]=An UINT8 value.
+			**>
+			UInt8 uINT8Value
+		}
+	}
+
+	<**
+		@description : Standard[en]=An event to test parameters with array declarations. It is send periodically and triggered by the triggerEventUINT8Array method. The array has to be increased after each transmission. The array values correlates to the index of each element.
+	**>
+	broadcast TestEventUINT8Array {
+		out {
+			<**
+				@description : Standard[en]=An array of UIN8 elements.
+			**>
+			UInt8 [ ] uINT8Array
+		}
+	}
+
+	<**
+		@description :
+            Standard[en]=An event to test E2E-protected communication.
+            It must be send periodically after subscription from the tester.
+            The UINT8 value has to be incremented after each transmission.
+            APPLICATION-CYCLE=1
+	**>
+	broadcast TestEventUINT8E2E {
+		out {
+			<**
+				@description : Standard[en]=Reserved for Options.
+			**>
+			Common.CommonCRCLength length
+			<**
+				@description : Standard[en]=The sender/receiver identifier.
+			**>
+			Common.CommonCRCCounter counter
+			<**
+				@description : Standard[en]=The dataID.
+			**>
+			Common.CommonCRCID dataID
+			<**
+				@description : Standard[en]=The application CRC.
+			**>
+			Common.CommonCRC cRC
+			<**
+				@description : Standard[en]=An UINT8 value.
+			**>
+			UInt8 uINT8Value
+		}
+	}
+
+	<**
+		@description : Standard[en]=An event to test an UINT8 parameter. It is send periodically to a multicast address and triggered by the triggerEventUINT8Multicast method. The UINT8 value has to be incremented after each transmission.
+	**>
+	broadcast TestEventUINT8Multicast {
+		out {
+			<**
+				@description : Standard[en]=An UINT8 value.
+			**>
+			UInt8 uINT8Value
+		}
+	}
+
+	<**
+		@description : Standard[en]=An event to test the reliable declaration. It is send periodically by using a reliable connection (e.g. TCP) and triggered by the triggerEventUINT8Reliable method. The UINT8 value has to be incremented after each transmission.
+	**>
+	broadcast TestEventUINT8Reliable {
+		out {
+			<**
+				@description : Standard[en]=An UINT8 value.
+			**>
+			UInt8 uINT8Value
+		}
+	}
+}
+
+<** @description :
+            Standard[en]=Testability Service only for SOME/IP TP.
+            Standard[de]=Testservice nur für SOME/IP TP Absicherung. **>
+interface EnhancedTestabilityServiceTP {
+	version {
+		major 1
+		minor 0
+	}
+
+	method echoUINT8ArrayLengthTP {
+		in {
+			<**
+				@description : Standard[en]=An array of UINT8 elements.
+			**>
+			UInt8 [ ] inUINT8Array
+		}
+		out {
+			<**
+				@description : Standard[en]=The return array of UINT8 elements.
+			**>
+			UInt8 [ ] outUINT8Array
+		}
+	}
+       method use {
+             in {
+                    TestabilityTypes.StructureOfStrings[] it
+             }
+       }
+
+
+}

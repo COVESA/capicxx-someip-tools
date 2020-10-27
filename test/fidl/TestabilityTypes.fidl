@@ -1,0 +1,119 @@
+/*
+ * ##############################
+ * #####                    #####
+ * #####   Generated File   #####
+ * #####                    #####
+ * ##############################
+ *
+ * Fibex origin: FBX411_SP2021_akt_V32_MultiBus_hPAD_EyeQ5_2b_V21_lokal_20190304122505.xml
+ * Franca version: 0.13.1.201807231814
+ */
+package de.bmw.infrastructure.testabilitytypes
+
+<**
+	@details : The name of this type collection will be removed once Franca supports anonymous type collections.
+**>
+typeCollection TestabilityTypes {
+	typedef Build is UInt8
+
+	enumeration Enumeration1 {
+		<**
+			@description : Initialization / Status Unknown
+		**>
+		INITIALIZATION_STATUS_UNKNOWN = 1
+		<**
+			@description : One
+		**>
+		ONE = 2
+		<**
+			@description : Two
+		**>
+		TWO = 3
+		<**
+			@description : Three
+		**>
+		THREE = 4
+		<**
+			@description : Four
+		**>
+		FOUR = 5
+		<**
+			@description : Signal Unfilled
+		**>
+		SIGNAL_UNFILLED = 255
+	}
+
+	struct Structure1 {
+		SubStructure1 subStructure
+		String stringFixedLength
+		<**
+			@description :
+            ARXML_ARRAY_ID_35UP=1711677309
+            ARXML_ARRAY_ID_SP2018=1073741596
+		**>
+		UInt8 [ ] integerArray
+	}
+
+	struct StructureOfIntegers {
+		UInt8 uINT8
+		UInt16 uINT16
+		<**
+			@description :
+            ARXML_ARRAY_ID_35UP=1904536363
+            ARXML_ARRAY_ID_SP2018=1896895979
+		**>
+		uINT32Array2DArray [ ] uINT32Array2D
+	}
+
+	struct StructureOfStringAndUnion {
+		String uTF8String
+		UnionOfStructureOfIntegers unionOfStructureOfIntegers
+	}
+
+	struct StructureOfStrings {
+		String uTF8String
+		String uTF16String
+	}
+
+	struct StructureSimple {
+		Float floatStructureSimple
+		UInt8 uint8StructureSimple
+	}
+
+	struct SubStructure1 {
+		VersionType ^version
+		Enumeration1 number
+		Union1 variableInteger
+	}
+
+	struct VersionType {
+		UInt8 majorVersion
+		UInt32 minorVersion
+	}
+
+	union Union1 {
+		UInt8 uInt8Member
+		UInt16 uInt16Member
+		<**
+			@description :
+            ARXML_ARRAY_ID_35UP=1081674596
+            ARXML_ARRAY_ID_SP2018=1730578664
+		**>
+		UInt32 [ ] uInt32MemberArray
+	}
+
+	union UnionOfStructs {
+		StructureOfStringAndUnion structOfStringsAndUnion
+		StructureOfStrings structureOfStrings
+	}
+
+	union UnionOfStructureOfIntegers {
+		StructureOfIntegers structureOfIntegers
+	}
+
+	array uINT32Array2DArray of UInt32
+
+	array uINT8ArrayArray of UInt8
+
+	array uINT8ArrayReturnValueArray of UInt8
+}

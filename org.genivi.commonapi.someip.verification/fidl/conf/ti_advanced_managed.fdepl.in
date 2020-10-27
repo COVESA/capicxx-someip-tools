@@ -3,7 +3,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import "platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-SOMEIP_deployment_spec.fdepl"
+import "platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-4-SOMEIP_deployment_spec.fdepl"
 import "@COMMONAPI_TEST_FIDL_PATH@/ti_advanced_managed.fidl"
 
 define org.genivi.commonapi.someip.deployment for interface commonapi.advanced.managed.Manager {
@@ -13,7 +13,7 @@ define org.genivi.commonapi.someip.deployment for interface commonapi.advanced.m
         SomeIpGetterID = 3000
         SomeIpSetterID = 3001
         SomeIpNotifierID = 33000
-        SomeIpEventGroups = { 17749 }
+        SomeIpNotifierEventGroups = { 17749 }
     }
 
     method addDevice {
@@ -25,7 +25,7 @@ define org.genivi.commonapi.someip.deployment for interface commonapi.advanced.m
     }
 }
 
-define org.genivi.commonapi.someip.deployment for provider Service {
+define org.genivi.commonapi.someip.deployment for provider as Service {
     instance commonapi.advanced.managed.Manager {
         InstanceId = "commonapi.advanced.managed.Manager"
 
@@ -45,7 +45,7 @@ define org.genivi.commonapi.someip.deployment for interface commonapi.advanced.m
 }
 
 
-define org.genivi.commonapi.someip.deployment for provider Service {
+define org.genivi.commonapi.someip.deployment for provider as Service {
     instance commonapi.advanced.managed.Device {
         InstanceId = "commonapi.advanced.managed.Manager.device01"
 
@@ -56,7 +56,7 @@ define org.genivi.commonapi.someip.deployment for provider Service {
     }
 }
 
-define org.genivi.commonapi.someip.deployment for provider Service {
+define org.genivi.commonapi.someip.deployment for provider as Service {
     instance commonapi.advanced.managed.Device {
         InstanceId = "commonapi.advanced.managed.Manager.device02"
 
@@ -75,7 +75,7 @@ define org.genivi.commonapi.someip.deployment for interface commonapi.advanced.m
     }
 }
 
-define org.genivi.commonapi.someip.deployment for provider Service {
+define org.genivi.commonapi.someip.deployment for provider as Service {
     instance commonapi.advanced.managed.SpecialDevice {
         InstanceId = "commonapi.advanced.managed.Manager.specialDevice00"
 
@@ -90,11 +90,11 @@ define org.genivi.commonapi.someip.deployment for interface commonapi.advanced.m
 	  SomeIpServiceID = 4663
 
     method test {
-		    SomeIpMethodID = 33003
+		    SomeIpMethodID = 3
     }
 }
 
-define org.genivi.commonapi.someip.deployment for provider Service {
+define org.genivi.commonapi.someip.deployment for provider as Service {
 	  instance commonapi.advanced.managed.HLevelTop {
   		  InstanceId = "commonapi.advanced.managed.HLevelTop"
 
@@ -111,10 +111,10 @@ define org.genivi.commonapi.someip.deployment for interface commonapi.advanced.m
     		SomeIpGetterID = 3004
     		SomeIpSetterID = 3005
     		SomeIpNotifierID = 33004
-    		SomeIpEventGroups = { 17750 }
+    		SomeIpNotifierEventGroups = { 17750 }
   	}
 }
-define org.genivi.commonapi.someip.deployment for provider Service {
+define org.genivi.commonapi.someip.deployment for provider as Service {
   	instance commonapi.advanced.managed.HLevelMiddle {
     		InstanceId = "commonapi.advanced.managed.HLevelTop.middle01"
 
@@ -131,11 +131,11 @@ define org.genivi.commonapi.someip.deployment for interface commonapi.advanced.m
     		SomeIpGetterID = 3006
     		SomeIpSetterID = 3007
     		SomeIpNotifierID = 33005
-    		SomeIpEventGroups = { 17751 }
+    		SomeIpNotifierEventGroups = { 17751 }
   	}
 }
 
-define org.genivi.commonapi.someip.deployment for provider Service {
+define org.genivi.commonapi.someip.deployment for provider as Service {
   	instance commonapi.advanced.managed.HLevelBottom {
     		InstanceId = "commonapi.advanced.managed.HLevelTop.middle01.bottom01"
 

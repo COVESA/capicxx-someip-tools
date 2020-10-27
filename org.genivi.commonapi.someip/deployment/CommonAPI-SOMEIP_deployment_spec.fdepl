@@ -4,7 +4,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- * 
+ *
  * Version 1.0
  *
  * This is the Franca deployment specification to be used for CommonAPI C++
@@ -72,7 +72,7 @@ specification org.genivi.commonapi.someip.deployment extends org.genivi.commonap
         SomeIpMethodID:              Integer                         ;
         SomeIpReliable:              Boolean                         (default: false);
         SomeIpPriority:              Integer                         (optional);
-        
+
         /*
          * define how to retrieve an error message and map it to Franca error parameters
          */
@@ -96,7 +96,7 @@ specification org.genivi.commonapi.someip.deployment extends org.genivi.commonap
     for arrays {
         SomeIpArrayMinLength:        Integer                         (default: 0);
         SomeIpArrayMaxLength:        Integer                         (default: 0);
-        /* 
+        /*
          * If SomeIpArrayLengthWidth == 0, the array has SomeIpArrayMaxLength elements.
          * If SomeIpArrayLengthWidth == 1, 2 or 4 bytes, SomeIpArrayMinLength and
          * SomeIpArrayMaxLength are ignored.
@@ -123,7 +123,7 @@ specification org.genivi.commonapi.someip.deployment extends org.genivi.commonap
          */
         SomeIpUnionDefaultOrder:     Boolean                         (optional);
         /*
-         * If SomeIpUnionLengthWidth == 0, SomeIpUnionMaxLength must be set to the 
+         * If SomeIpUnionLengthWidth == 0, SomeIpUnionMaxLength must be set to the
          * size of the biggest contained type.
          */
         SomeIpUnionMaxLength:        Integer                         (optional);

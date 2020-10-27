@@ -1,4 +1,4 @@
-import "platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-SOMEIP_deployment_spec.fdepl"
+import "platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-4-SOMEIP_deployment_spec.fdepl"
 import "@COMMONAPI_TEST_FIDL_PATH@/ti_advanced_bselective.fidl"
 
 define org.genivi.commonapi.someip.deployment for interface commonapi.advanced.bselective.TestInterface {
@@ -11,11 +11,11 @@ define org.genivi.commonapi.someip.deployment for interface commonapi.advanced.b
     
     broadcast bTestSelective {
         SomeIpEventID = 33002
-        SomeIpEventGroups = { 33004 }
+        SomeIpEventGroups = { 4 }
     }
 }
 
-define org.genivi.commonapi.someip.deployment for provider Service {
+define org.genivi.commonapi.someip.deployment for provider as Service {
     instance commonapi.advanced.bselective.TestInterface {
         InstanceId = "commonapi.advanced.bselective.TestInterface"
 

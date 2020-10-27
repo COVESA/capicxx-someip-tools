@@ -3,7 +3,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import "platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-SOMEIP_deployment_spec.fdepl"
+import "platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-4-SOMEIP_deployment_spec.fdepl"
 import "@COMMONAPI_TEST_FIDL_PATH@/ti_advanced_extended.fidl"
 
 define org.genivi.commonapi.someip.deployment for interface commonapi.advanced.extended.AFExtendedBase {
@@ -13,7 +13,7 @@ define org.genivi.commonapi.someip.deployment for interface commonapi.advanced.e
         SomeIpGetterID = 3001
         SomeIpSetterID = 3002
         SomeIpNotifierID = 33001
-        SomeIpEventGroups = { 33001 }
+        SomeIpNotifierEventGroups = { 1 }
     }
     method doSomething {
         SomeIpMethodID = 535
@@ -21,11 +21,11 @@ define org.genivi.commonapi.someip.deployment for interface commonapi.advanced.e
     }
     broadcast bBase {
         SomeIpEventID = 41913
-        SomeIpEventGroups = { 17750 }
+        SomeIpEventGroups = { 50 }
     }
 }
 
-define org.genivi.commonapi.someip.deployment for provider Service {
+define org.genivi.commonapi.someip.deployment for provider as Service {
     instance commonapi.advanced.extended.AFExtendedBase {
         InstanceId = "commonapi.advanced.extended.AFExtendedBase"
 
@@ -43,7 +43,7 @@ define org.genivi.commonapi.someip.deployment for interface commonapi.advanced.e
         SomeIpGetterID = 3003
         SomeIpSetterID = 3004
         SomeIpNotifierID = 33002
-        SomeIpEventGroups = { 33002 }
+        SomeIpNotifierEventGroups = { 2 }
     }
 
     method doSomethingSpecial {
@@ -52,11 +52,11 @@ define org.genivi.commonapi.someip.deployment for interface commonapi.advanced.e
     }
     broadcast bSpecial {
         SomeIpEventID = 41914
-        SomeIpEventGroups = { 17751 }
+        SomeIpEventGroups = { 51 }
     }
 }
 
-define org.genivi.commonapi.someip.deployment for provider Service {
+define org.genivi.commonapi.someip.deployment for provider as Service {
     instance commonapi.advanced.extended.AFExtendedOnce {
         InstanceId = "commonapi.advanced.extended.AFExtendedOnce"
 
@@ -74,7 +74,7 @@ define org.genivi.commonapi.someip.deployment for interface commonapi.advanced.e
         SomeIpGetterID = 3005
         SomeIpSetterID = 3006
         SomeIpNotifierID = 33003
-        SomeIpEventGroups = { 33003 }
+        SomeIpNotifierEventGroups = { 3 }
     }
     method doSomethingExtraSpecial {
         SomeIpMethodID = 547
@@ -82,11 +82,11 @@ define org.genivi.commonapi.someip.deployment for interface commonapi.advanced.e
     }
     broadcast bExtraSpecial {
         SomeIpEventID = 41915
-        SomeIpEventGroups = { 17752 }
+        SomeIpEventGroups = { 52 }
     }
 }
 
-define org.genivi.commonapi.someip.deployment for provider Service {
+define org.genivi.commonapi.someip.deployment for provider as Service {
     instance commonapi.advanced.extended.AFExtendedTwice {
         InstanceId = "commonapi.advanced.extended.AFExtendedTwice"
 

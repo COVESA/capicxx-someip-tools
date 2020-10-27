@@ -190,7 +190,7 @@ specifiy the SOME/IP service identifier:
 
 [source,java]
 ----
-import "platform:/plugin/org.genivi.commonapi.core/deployment/CommonAPI-SOMEIP_deployment_spec.fdepl"
+import "platform:/plugin/org.genivi.commonapi.core/deployment/CommonAPI-4-SOMEIP_deployment_spec.fdepl"
 
 define org.genivi.commonapi.someip.deployment for interface <CommonAPI interface name> {
 	SomeIpServiceID = <id>

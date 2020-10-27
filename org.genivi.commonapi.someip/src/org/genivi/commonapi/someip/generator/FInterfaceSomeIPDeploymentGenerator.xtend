@@ -1,9 +1,7 @@
-/* Copyright (C) 2014, 2015 BMW Group
- * Author: Lutz Bichler (lutz.bichler@bmw.de)
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-
+/* Copyright (C) 2014-2020 Bayerische Motoren Werke Aktiengesellschaft (BMW AG)
+   This Source Code Form is subject to the terms of the Mozilla Public
+   License, v. 2.0. If a copy of the MPL was not distributed with this
+   file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.genivi.commonapi.someip.generator
 
 import com.google.inject.Inject
@@ -21,9 +19,9 @@ import org.genivi.commonapi.someip.preferences.PreferenceConstantsSomeIP
 import org.franca.core.franca.FBroadcast
 
 class FInterfaceSomeIPDeploymentGenerator extends FTypeCollectionSomeIPDeploymentGenerator {
-    @Inject private extension FrancaGeneratorExtensions
-    @Inject private extension FrancaSomeIPGeneratorExtensions
-    @Inject private extension FrancaSomeIPDeploymentAccessorHelper
+	@Inject extension FrancaGeneratorExtensions
+	@Inject extension FrancaSomeIPGeneratorExtensions
+	@Inject extension FrancaSomeIPDeploymentAccessorHelper
 
     def generateDeployment(FInterface fInterface, IFileSystemAccess fileSystemAccess,
         PropertyAccessor deploymentAccessor, IResource modelid) {
@@ -56,11 +54,9 @@ class FInterfaceSomeIPDeploymentGenerator extends FTypeCollectionSomeIPDeploymen
             «ENDIF»
         «ENDFOR»
 
-        #if !defined (COMMONAPI_INTERNAL_COMPILATION)
-        #define COMMONAPI_INTERNAL_COMPILATION
-        #endif
+        «startInternalCompilation»
         #include <CommonAPI/SomeIP/Deployment.hpp>
-        #undef COMMONAPI_INTERNAL_COMPILATION
+        «endInternalCompilation»
 
         «_interface.generateVersionNamespaceBegin»
         «_interface.model.generateNamespaceBeginDeclaration»
@@ -83,23 +79,27 @@ class FInterfaceSomeIPDeploymentGenerator extends FTypeCollectionSomeIPDeploymen
 
         // Attribute-specific deployments
         «FOR a: _interface.attributes»
-            «a.generateDeploymentDeclaration(_interface, _accessor)»
+            «val overwriteAccessor = _accessor.getOverwriteAccessor(a)»
+            «a.generateDeploymentDeclaration(_interface, overwriteAccessor)»
         «ENDFOR»
 
         // Argument-specific deployment
         «FOR m : _interface.methods»
             «FOR a : m.inArgs»
-                «a.generateDeploymentDeclaration(m, _interface, _accessor)»
+                «val overwriteAccessor = _accessor.getOverwriteAccessor(a)»
+                «a.generateDeploymentDeclaration(m, _interface, overwriteAccessor)»
             «ENDFOR»
             «FOR a : m.outArgs»
-            	«a.generateDeploymentDeclaration(m, _interface, _accessor)»
+                «val overwriteAccessor = _accessor.getOverwriteAccessor(a)»
+                «a.generateDeploymentDeclaration(m, _interface, overwriteAccessor)»
             «ENDFOR»
         «ENDFOR»
 
         // Broadcast-specific deployments
         «FOR broadcast : _interface.broadcasts»
             «FOR a : broadcast.outArgs»
-                «a.generateDeploymentDeclaration(broadcast, _interface, _accessor)»
+                «val overwriteAccessor = _accessor.getOverwriteAccessor(a)»
+                «a.generateDeploymentDeclaration(broadcast, _interface, overwriteAccessor)»
             «ENDFOR»
         «ENDFOR»
 
@@ -127,23 +127,27 @@ class FInterfaceSomeIPDeploymentGenerator extends FTypeCollectionSomeIPDeploymen
 
         // Attribute-specific deployments
         «FOR a: _interface.attributes»
-            «a.generateDeploymentDefinition(_interface,_accessor)»
+            «val overwriteAccessor = _accessor.getOverwriteAccessor(a)»
+            «a.generateDeploymentDefinition(_interface,overwriteAccessor)»
         «ENDFOR»
 
         // Argument-specific deployment
         «FOR m : _interface.methods»
             «FOR a : m.inArgs»
-                «a.generateDeploymentDefinition(m, _interface, _accessor)»
+                «val overwriteAccessor = _accessor.getOverwriteAccessor(a)»
+                «a.generateDeploymentDefinition(m, _interface, overwriteAccessor)»
             «ENDFOR»
             «FOR a : m.outArgs»
-                «a.generateDeploymentDefinition(m, _interface, _accessor)»
+                «val overwriteAccessor = _accessor.getOverwriteAccessor(a)»
+                «a.generateDeploymentDefinition(m, _interface, overwriteAccessor)»
             «ENDFOR»
         «ENDFOR»
 
         // Broadcast-specific deployments
         «FOR broadcast : _interface.broadcasts»
             «FOR a : broadcast.outArgs»
-                «a.generateDeploymentDefinition(broadcast, _interface, _accessor)»
+                «val overwriteAccessor = _accessor.getOverwriteAccessor(a)»
+                «a.generateDeploymentDefinition(broadcast, _interface, overwriteAccessor)»
             «ENDFOR»
         «ENDFOR»
 
@@ -181,16 +185,24 @@ class FInterfaceSomeIPDeploymentGenerator extends FTypeCollectionSomeIPDeploymen
         if (_accessor.hasSpecificDeployment(_attribute) || (_attribute.array && _accessor.hasDeployment(_attribute))) {
             var String definition = ""
             if (_attribute.array && _accessor.hasNonArrayDeployment(_attribute)) {
+                if (_attribute.type.derived !== null) {
+                    definition += _attribute.type.derived.generateDeploymentParameterDefinitions(_interface, _accessor)
+                }
                 definition += _attribute.type.getDeploymentType(_interface, true) + " " + _attribute.name + "ElementDeployment("
-                definition += getDeploymentParameter(_attribute.type, _attribute, _accessor)
+                definition += getDeploymentParameter(_attribute.type, _attribute, _interface, _accessor)
                 definition += ");\n";
+            }
+            else {
+		        if (!_attribute.array && _attribute.type.derived !== null) {
+		            definition += _attribute.type.derived.generateDeploymentParameterDefinitions(_interface, _accessor)
+		        }
             }
             definition += _attribute.getDeploymentType(_interface, true) + " " + _attribute.name + "Deployment("
             if (_attribute.array && _accessor.hasNonArrayDeployment(_attribute)) {
                 definition += "&" + _attribute.name + "ElementDeployment, "
-                definition += getArrayDeploymentParameter(_attribute.type, _attribute, _accessor)
+                definition += getArrayDeploymentParameter(_attribute.type, _attribute, _interface, _accessor)
             } else {
-                definition += _attribute.getDeploymentParameter(_attribute, _accessor)
+                definition += _attribute.getDeploymentParameter(_attribute, _interface, _accessor)
             }
             definition += ");"
             return definition
@@ -202,16 +214,24 @@ class FInterfaceSomeIPDeploymentGenerator extends FTypeCollectionSomeIPDeploymen
         if (_accessor.hasSpecificDeployment(_argument) || (_argument.array && _accessor.hasDeployment(_argument))) {
             var String definition = ""
             if (_argument.array && _accessor.hasNonArrayDeployment(_argument)) {
+                if (_argument.type.derived !== null) {
+                    definition += _argument.type.derived.generateDeploymentParameterDefinitions(_interface, _accessor)
+                }
                 definition += _argument.type.getDeploymentType(_interface, true) + " " + _method.name + "_" + _argument.name + "ElementDeployment("
-                definition += getDeploymentParameter(_argument.type, _argument, _accessor)
+                definition += getDeploymentParameter(_argument.type, _argument, _interface, _accessor)
                 definition += ");\n";
+            }
+            else {
+                 if (!_argument.array && _argument.type.derived !== null) {
+                    definition += _argument.type.derived.generateDeploymentParameterDefinitions(_interface, _accessor)
+                 }
             }
             definition += _argument.getDeploymentType(_interface, true) + " " + _method.name + "_" + _argument.name + "Deployment("
             if (_argument.array && _accessor.hasNonArrayDeployment(_argument)) {
                 definition += "&" + _method.name + "_" + _argument.name + "ElementDeployment, "
-                definition += getArrayDeploymentParameter(_argument.type, _argument, _accessor)
+                definition += getArrayDeploymentParameter(_argument.type, _argument, _interface, _accessor)
             } else {
-                definition += _argument.getDeploymentParameter(_argument, _accessor)
+                definition += _argument.getDeploymentParameter(_argument, _interface, _accessor)
             }
             definition += ");"
             return definition
@@ -223,15 +243,20 @@ class FInterfaceSomeIPDeploymentGenerator extends FTypeCollectionSomeIPDeploymen
             var String definition = ""
             if (_argument.array && _accessor.hasNonArrayDeployment(_argument)) {
                 definition += _argument.type.getDeploymentType(_interface, true) + " " + _broadcast.name + "_" + _argument.name + "ElementDeployment("
-                definition += getDeploymentParameter(_argument.type, _argument, _accessor)
+                definition += getDeploymentParameter(_argument.type, _argument, _interface, _accessor)
                 definition += ");\n";
+            }
+            else {
+		        if (!_argument.array && _argument.type.derived !== null) {
+		            definition += _argument.type.derived.generateDeploymentParameterDefinitions(_interface, _accessor)
+		        }
             }
             definition += _argument.getDeploymentType(_interface, true) + " " + _broadcast.name + "_" + _argument.name + "Deployment("
             if (_argument.array && _accessor.hasNonArrayDeployment(_argument)) {
                 definition += "&" + _broadcast.name + "_" + _argument.name + "ElementDeployment, "
-                definition += getArrayDeploymentParameter(_argument.type, _argument, _accessor)
+                definition += getArrayDeploymentParameter(_argument.type, _argument, _interface, _accessor)
             } else {
-                definition += _argument.getDeploymentParameter(_argument, _accessor)
+                definition += _argument.getDeploymentParameter(_argument, _interface, _accessor)
             }
             definition += ");"
             return definition

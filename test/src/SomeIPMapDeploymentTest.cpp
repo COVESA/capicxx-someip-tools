@@ -172,7 +172,7 @@ TEST_F(DeploymentTest, MapWithWrongNumberOfElements) {
 
         std::unordered_map<int, std::string> outMap ;
         for (int i = 0; i < 201; i++) {
-            outMap.insert( {{i, "value"}});
+            outMap.insert(std::pair<int, std::string>(i, "value"));
         }
 
         outStream.writeValue(outMap, &ed_1);
@@ -196,7 +196,7 @@ TEST_F(DeploymentTest, MapWithWrongNumberOfElements) {
 
         std::unordered_map<int, std::string> outMap ;
         for (int i = 0; i < 2001; i++) {
-            outMap.insert( {{i, "value"}});
+            outMap.insert(std::pair<int, std::string>(i, "value"));
         }
 
         outStream.writeValue(outMap, &ed_2);
@@ -207,7 +207,7 @@ TEST_F(DeploymentTest, MapWithWrongNumberOfElements) {
 
         std::unordered_map<int, std::string> outMap ;
         for (int i = 0; i < 9; i++) {
-            outMap.insert( {{i, "value"}});
+            outMap.insert(std::pair<int, std::string>(i, "value"));
         }
 
         outStream.writeValue(outMap, &ed_4);
@@ -218,7 +218,7 @@ TEST_F(DeploymentTest, MapWithWrongNumberOfElements) {
 
         std::unordered_map<int, std::string> outMap ;
         for (int i = 0; i < 200001; i++) {
-            outMap.insert( {{i, "value"}});
+            outMap.insert(std::pair<int, std::string>(i, "value"));
         }
 
         outStream.writeValue(outMap, &ed_4);
@@ -290,7 +290,7 @@ TEST_F(DeploymentTest, MapWithCorrectNumberOfElements) {
 
         std::unordered_map<int, std::string> outMap ;
         for (int i = 0; i < 11; i++) {
-            outMap.insert( {{i, "value"}});
+            outMap.insert(std::pair<int, std::string>(i, "value"));
         }
 
         outStream.writeValue(outMap, &ed_1);
@@ -311,7 +311,7 @@ TEST_F(DeploymentTest, MapWithCorrectNumberOfElements) {
 
         std::unordered_map<int, std::string> outMap ;
         for (int i = 0; i < 13; i++) {
-            outMap.insert( {{i, "value"}});
+            outMap.insert(std::pair<int, std::string>(i, "value"));
         }
 
         outStream.writeValue(outMap, &ed_1);
@@ -333,7 +333,7 @@ TEST_F(DeploymentTest, MapWithCorrectNumberOfElements) {
 
         std::unordered_map<int, std::string> outMap ;
         for (int i = 0; i < 5; i++) {
-            outMap.insert( {{i, "value"}});
+            outMap.insert(std::pair<int, std::string>(i, "value"));
         }
 
         outStream.writeValue(outMap, &ed_2);
@@ -355,7 +355,7 @@ TEST_F(DeploymentTest, MapWithCorrectNumberOfElements) {
 
         std::unordered_map<int, std::string> outMap ;
         for (int i = 0; i < 1000; i++) {
-            outMap.insert( {{i, "value"}});
+            outMap.insert(std::pair<int, std::string>(i, "value"));
         }
 
         outStream.writeValue(outMap, &ed_2);
@@ -377,7 +377,7 @@ TEST_F(DeploymentTest, MapWithCorrectNumberOfElements) {
 
         std::unordered_map<int, std::string> outMap ;
         for (int i = 0; i < 222; i++) {
-            outMap.insert( {{i, "value"}});
+            outMap.insert(std::pair<int, std::string>(i, "value"));
         }
 
         outStream.writeValue(outMap, &ed_2);
@@ -399,7 +399,7 @@ TEST_F(DeploymentTest, MapWithCorrectNumberOfElements) {
 
         std::unordered_map<int, std::string> outMap ;
         for (int i = 0; i < 10; i++) {
-            outMap.insert( {{i, "walue"}});
+            outMap.insert(std::pair<int, std::string>(i, "walue"));
         }
 
         outStream.writeValue(outMap, &ed_4);
@@ -421,7 +421,7 @@ TEST_F(DeploymentTest, MapWithCorrectNumberOfElements) {
 
         std::unordered_map<int, std::string> outMap ;
         for (int i = 0; i < 100000; i++) {
-            outMap.insert( {{i, "value"}});
+            outMap.insert(std::pair<int, std::string>(i, "value"));;
         }
 
         outStream.writeValue(outMap, &ed_4);
@@ -443,7 +443,7 @@ TEST_F(DeploymentTest, MapWithCorrectNumberOfElements) {
 
         std::unordered_map<int, std::string> outMap ;
         for (int i = 0; i < 1000; i++) {
-            outMap.insert( {{i, "value"}});
+            outMap.insert(std::pair<int, std::string>(i, "value"));
         }
 
         outStream.writeValue(outMap, &ed_4);
@@ -471,7 +471,7 @@ TEST_F(DeploymentTest, MapAttributeWithCorrectNumberOfElements) {
         std::unordered_map<uint32_t, std::string> outMap ;
         std::unordered_map<uint32_t, std::string> inMap ;
         for (uint32_t i = 0; i < 10; i++) {
-            outMap.insert( {{i, "v1"}});
+            outMap.insert(std::pair<uint32_t, std::string>(i, "v1"));
         }
         testProxy_->getAMapw0n0x10Attribute().setValue(outMap, callStatus, inMap);
         ASSERT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
@@ -481,7 +481,7 @@ TEST_F(DeploymentTest, MapAttributeWithCorrectNumberOfElements) {
         std::unordered_map<uint32_t, std::string> outMap ;
         std::unordered_map<uint32_t, std::string> inMap ;
         for (uint32_t i = 0; i < 20; i++) {
-            outMap.insert( {{i, "v2"}});
+            outMap.insert(std::pair<uint32_t, std::string>(i, "v2"));
         }
 
         testProxy_->getAMapw0n5x20Attribute().setValue(outMap, callStatus, inMap);
@@ -500,7 +500,7 @@ TEST_F(DeploymentTest, MapAttributeWithCorrectNumberOfElements) {
         std::unordered_map<uint32_t, std::string> outMap ;
         std::unordered_map<uint32_t, std::string> inMap ;
         for (uint32_t i = 0; i < 1; i++) {
-            outMap.insert( {{i, "v4"}});
+            outMap.insert(std::pair<uint32_t, std::string>(i, "v4"));
         }
 
         testProxy_->getAMapw1n0x10Attribute().setValue(outMap, callStatus, inMap);
@@ -511,7 +511,7 @@ TEST_F(DeploymentTest, MapAttributeWithCorrectNumberOfElements) {
         std::unordered_map<uint32_t, std::string> outMap ;
         std::unordered_map<uint32_t, std::string> inMap ;
         for (uint32_t i = 0; i < 10; i++) {
-            outMap.insert( {{i, "v5"}});
+            outMap.insert(std::pair<uint32_t, std::string>(i, "v5"));;
         }
 
         testProxy_->getAMapw1n0x10Attribute().setValue(outMap, callStatus, inMap);
@@ -522,7 +522,7 @@ TEST_F(DeploymentTest, MapAttributeWithCorrectNumberOfElements) {
         std::unordered_map<uint32_t, std::string> outMap ;
         std::unordered_map<uint32_t, std::string> inMap ;
         for (uint32_t i = 0; i < 5; i++) {
-            outMap.insert( {{i, "v6"}});
+            outMap.insert(std::pair<uint32_t, std::string>(i, "v6"));
         }
 
         testProxy_->getAMapw1n5x50Attribute().setValue(outMap, callStatus, inMap);
@@ -533,7 +533,7 @@ TEST_F(DeploymentTest, MapAttributeWithCorrectNumberOfElements) {
         std::unordered_map<uint32_t, std::string> outMap ;
         std::unordered_map<uint32_t, std::string> inMap ;
         for (uint32_t i = 0; i < 15; i++) {
-            outMap.insert( {{i, "v7"}});
+            outMap.insert(std::pair<uint32_t, std::string>(i, "v7"));
         }
 
         testProxy_->getAMapw1n5x50Attribute().setValue(outMap, callStatus, inMap);
@@ -544,7 +544,7 @@ TEST_F(DeploymentTest, MapAttributeWithCorrectNumberOfElements) {
         std::unordered_map<uint32_t, std::string> outMap ;
         std::unordered_map<uint32_t, std::string> inMap ;
         for (uint32_t i = 0; i < 15; i++) {
-            outMap.insert( {{i, "v8"}});
+            outMap.insert(std::pair<uint32_t, std::string>(i, "v8"));
         }
 
         testProxy_->getAMapw2n15x2000Attribute().setValue(outMap, callStatus, inMap);
@@ -555,7 +555,7 @@ TEST_F(DeploymentTest, MapAttributeWithCorrectNumberOfElements) {
         std::unordered_map<uint32_t, std::string> outMap ;
         std::unordered_map<uint32_t, std::string> inMap ;
         for (uint32_t i = 0; i < 1000; i++) {
-            outMap.insert( {{i, "v9"}});
+            outMap.insert(std::pair<uint32_t, std::string>(i, "v9"));
         }
 
         testProxy_->getAMapw2n15x2000Attribute().setValue(outMap, callStatus, inMap);
@@ -566,7 +566,7 @@ TEST_F(DeploymentTest, MapAttributeWithCorrectNumberOfElements) {
         std::unordered_map<uint32_t, std::string> outMap ;
         std::unordered_map<uint32_t, std::string> inMap ;
         for (uint32_t i = 0; i < 1000; i++) {
-            outMap.insert( {{i, "v10"}});
+            outMap.insert(std::pair<uint32_t, std::string>(i, "v10"));
         }
 
         testProxy_->getAMapw2n15x2000Attribute().setValue(outMap, callStatus, inMap);
@@ -577,7 +577,7 @@ TEST_F(DeploymentTest, MapAttributeWithCorrectNumberOfElements) {
         std::unordered_map<uint32_t, std::string> outMap ;
         std::unordered_map<uint32_t, std::string> inMap ;
         for (uint32_t i = 0; i < 400; i++) {
-            outMap.insert( {{i, "v11"}});
+            outMap.insert(std::pair<uint32_t, std::string>(i, "v11"));
         }
 
         testProxy_->getAMapw4n400x200000Attribute().setValue(outMap, callStatus, inMap);
@@ -588,7 +588,7 @@ TEST_F(DeploymentTest, MapAttributeWithCorrectNumberOfElements) {
         std::unordered_map<uint32_t, std::string> outMap ;
         std::unordered_map<uint32_t, std::string> inMap ;
         for (uint32_t i = 0; i < 20000; i++) {
-            outMap.insert( {{i, "v12"}});
+            outMap.insert(std::pair<uint32_t, std::string>(i, "v12"));
         }
 
         testProxy_->getAMapw4n400x200000Attribute().setValue(outMap, callStatus, inMap);
@@ -599,7 +599,7 @@ TEST_F(DeploymentTest, MapAttributeWithCorrectNumberOfElements) {
         std::unordered_map<uint32_t, std::string> outMap ;
         std::unordered_map<uint32_t, std::string> inMap ;
         for (uint32_t i = 0; i < 200000; i++) {
-            outMap.insert( {{i, "v13"}});
+            outMap.insert(std::pair<uint32_t, std::string>(i, "v13"));
         }
 
         testProxy_->getAMapw4n400x200000Attribute().setValue(outMap, callStatus, inMap);
@@ -617,7 +617,7 @@ TEST_F(DeploymentTest, MapAttributeWithWrongNumberOfElements) {
         std::unordered_map<uint32_t, std::string> outMap ;
         std::unordered_map<uint32_t, std::string> inMap ;
         for (uint32_t i = 0; i < 9; i++) {
-            outMap.insert( {{i, "vx1"}});
+            outMap.insert(std::pair<uint32_t, std::string>(i, "vx1"));
         }
         testProxy_->getAMapw0n0x10Attribute().setValue(outMap, callStatus, inMap);
         ASSERT_NE(callStatus, CommonAPI::CallStatus::SUCCESS);
@@ -626,7 +626,7 @@ TEST_F(DeploymentTest, MapAttributeWithWrongNumberOfElements) {
         std::unordered_map<uint32_t, std::string> outMap ;
         std::unordered_map<uint32_t, std::string> inMap ;
         for (uint32_t i = 0; i < 4; i++) {
-            outMap.insert( {{i, "vx2"}});
+            outMap.insert(std::pair<uint32_t, std::string>(i, "vx2"));
         }
 
         testProxy_->getAMapw0n5x20Attribute().setValue(outMap, callStatus, inMap);
@@ -636,7 +636,7 @@ TEST_F(DeploymentTest, MapAttributeWithWrongNumberOfElements) {
         std::unordered_map<uint32_t, std::string> outMap ;
         std::unordered_map<uint32_t, std::string> inMap ;
         for (uint32_t i = 0; i < 21; i++) {
-            outMap.insert( {{i, "q"}});
+            outMap.insert(std::pair<uint32_t, std::string>(i, "q"));
         }
 
         testProxy_->getAMapw0n5x20Attribute().setValue(outMap, callStatus, inMap);
@@ -646,7 +646,7 @@ TEST_F(DeploymentTest, MapAttributeWithWrongNumberOfElements) {
         std::unordered_map<uint32_t, std::string> outMap ;
         std::unordered_map<uint32_t, std::string> inMap ;
         for (uint32_t i = 0; i < 11; i++) {
-            outMap.insert( {{i, "q"}});
+            outMap.insert(std::pair<uint32_t, std::string>(i, "q"));
         }
         testProxy_->getAMapw1n0x10Attribute().setValue(outMap, callStatus, inMap);
         ASSERT_NE(callStatus, CommonAPI::CallStatus::SUCCESS);
@@ -655,7 +655,7 @@ TEST_F(DeploymentTest, MapAttributeWithWrongNumberOfElements) {
         std::unordered_map<uint32_t, std::string> outMap ;
         std::unordered_map<uint32_t, std::string> inMap ;
         for (uint32_t i = 0; i < 4; i++) {
-            outMap.insert( {{i, "four"}});
+            outMap.insert(std::pair<uint32_t, std::string>(i, "four"));
         }
 
         testProxy_->getAMapw1n5x50Attribute().setValue(outMap, callStatus, inMap);
@@ -665,7 +665,7 @@ TEST_F(DeploymentTest, MapAttributeWithWrongNumberOfElements) {
         std::unordered_map<uint32_t, std::string> outMap ;
         std::unordered_map<uint32_t, std::string> inMap ;
         for (uint32_t i = 0; i < 51; i++) {
-            outMap.insert( {{i, ""}});
+            outMap.insert(std::pair<uint32_t, std::string>(i, ""));
         }
 
         testProxy_->getAMapw1n5x50Attribute().setValue(outMap, callStatus, inMap);
@@ -677,7 +677,7 @@ TEST_F(DeploymentTest, MapAttributeWithWrongNumberOfElements) {
         // 10 values is within legal limits, but with a string this long,
         // the size of the map won't fit in one byte.
         for (uint32_t i = 0; i < 10; i++) {
-            outMap.insert( {{i, "this_is_too_long"}});
+            outMap.insert(std::pair<uint32_t, std::string>(i, "this_is_too_long"));
         }
 
         testProxy_->getAMapw1n5x50Attribute().setValue(outMap, callStatus, inMap);
@@ -687,7 +687,7 @@ TEST_F(DeploymentTest, MapAttributeWithWrongNumberOfElements) {
         std::unordered_map<uint32_t, std::string> outMap ;
         std::unordered_map<uint32_t, std::string> inMap ;
         for (uint32_t i = 0; i < 14; i++) {
-            outMap.insert( {{i, "zz"}});
+            outMap.insert(std::pair<uint32_t, std::string>(i, "zz"));
         }
 
         testProxy_->getAMapw2n15x2000Attribute().setValue(outMap, callStatus, inMap);
@@ -697,7 +697,7 @@ TEST_F(DeploymentTest, MapAttributeWithWrongNumberOfElements) {
         std::unordered_map<uint32_t, std::string> outMap ;
         std::unordered_map<uint32_t, std::string> inMap ;
         for (uint32_t i = 0; i < 2001; i++) {
-            outMap.insert( {{i, "qzz"}});
+            outMap.insert(std::pair<uint32_t, std::string>(i, "qzz"));
         }
 
         testProxy_->getAMapw2n15x2000Attribute().setValue(outMap, callStatus, inMap);
@@ -709,7 +709,7 @@ TEST_F(DeploymentTest, MapAttributeWithWrongNumberOfElements) {
         // 1900 values is within legal limits, but with a string this long,
         // the size of the map won't fit in two bytes
         for (uint32_t i = 0; i < 1900; i++) {
-            outMap.insert( {{i, "ThisStringIsWayTooLongToFitInTheData"}});
+            outMap.insert(std::pair<uint32_t, std::string>(i, "ThisStringIsWayTooLongToFitInTheData"));
         }
 
         testProxy_->getAMapw2n15x2000Attribute().setValue(outMap, callStatus, inMap);
@@ -725,7 +725,7 @@ TEST_F(DeploymentTest, MapAttributeWithWrongNumberOfElements) {
         std::unordered_map<uint32_t, std::string> outMap ;
         std::unordered_map<uint32_t, std::string> inMap ;
         for (uint32_t i = 0; i < 399; i++) {
-            outMap.insert( {{i, "v1q3"}});
+            outMap.insert(std::pair<uint32_t, std::string>(i, "v1q3"));
         }
 
         testProxy_->getAMapw4n400x200000Attribute().setValue(outMap, callStatus, inMap);
@@ -735,7 +735,7 @@ TEST_F(DeploymentTest, MapAttributeWithWrongNumberOfElements) {
         std::unordered_map<uint32_t, std::string> outMap ;
         std::unordered_map<uint32_t, std::string> inMap ;
         for (uint32_t i = 0; i < 200001; i++) {
-            outMap.insert( {{i, "qq"}});
+            outMap.insert(std::pair<uint32_t, std::string>(i, "qq"));
         }
 
         testProxy_->getAMapw4n400x200000Attribute().setValue(outMap, callStatus, inMap);
@@ -748,10 +748,10 @@ TEST_F(DeploymentTest, MapAttributeWithWrongNumberOfElements) {
 TEST_F(DeploymentTest, MapMethodDeployment_IO) {
     std::unordered_map<uint32_t, std::string> outMap;
     for (uint32_t i = 1; i < 300; i++) {
-        outMap.insert( {{i, "in"}});
+        outMap.insert(std::pair<uint32_t, std::string>(i, "in"));
     }
     // the item for key 0 gives the # of elements in the return map
-    outMap.insert( {{0, "400"}});
+    outMap.insert(std::pair<uint32_t, std::string>(0, "400"));
 
     std::unordered_map<uint32_t, std::string> inMap ;
     CommonAPI::CallStatus callStatus;
@@ -768,10 +768,10 @@ TEST_F(DeploymentTest, MapMethodDeployment_IO_BadInput) {
     std::unordered_map<uint32_t, std::string> outMap;
     // 299 items is just too little. this should fail.
     for (uint32_t i = 1; i < 299; i++) {
-        outMap.insert( {{i, "in"}});
+        outMap.insert(std::pair<uint32_t, std::string>(i, "in"));
     }
     // the item for key 0 gives the # of elements in the return map
-    outMap.insert( {{0, "400"}});
+    outMap.insert(std::pair<uint32_t, std::string>(0, "400"));
 
     std::unordered_map<uint32_t, std::string> inMap ;
     CommonAPI::CallStatus callStatus;
@@ -788,11 +788,11 @@ TEST_F(DeploymentTest, MapMethodDeployment_IO_BadOutput) {
     std::unordered_map<uint32_t, std::string> outMap;
 
     for (uint32_t i = 1; i < 300; i++) {
-        outMap.insert( {{i, "in"}});
+        outMap.insert(std::pair<uint32_t, std::string>(i, "in"));
     }
     // the item for key 0 gives the # of elements in the return map
     // 399 is too few, so it will fail when the value is returned.
-    outMap.insert( {{0, "399"}});
+    outMap.insert(std::pair<uint32_t, std::string>(0, "399"));
 
     std::unordered_map<uint32_t, std::string> inMap ;
     CommonAPI::CallStatus callStatus;
@@ -807,10 +807,10 @@ TEST_F(DeploymentTest, MapMethodDeployment_I_O) {
 
     std::unordered_map<uint32_t, std::string> outMap;
     for (uint32_t i = 1; i < 20; i++) {
-        outMap.insert( {{i, "in"}});
+        outMap.insert(std::pair<uint32_t, std::string>(i, "in"));
     }
     // the item for key 0 gives the # of elements in the return map
-    outMap.insert( {{0, "40"}});
+    outMap.insert(std::pair<uint32_t, std::string>(0, "40"));
 
     std::unordered_map<uint32_t, std::string> inMap ;
     CommonAPI::CallStatus callStatus;
@@ -827,10 +827,10 @@ TEST_F(DeploymentTest, MapMethodDeployment_I_O_BadInput) {
 
     std::unordered_map<uint32_t, std::string> outMap;
     for (uint32_t i = 1; i < 21; i++) {
-        outMap.insert( {{i, "in"}});
+        outMap.insert(std::pair<uint32_t, std::string>(i, "in"));
     }
     // the item for key 0 gives the # of elements in the return map
-    outMap.insert( {{0, "40"}});
+    outMap.insert(std::pair<uint32_t, std::string>(0, "40"));
 
     std::unordered_map<uint32_t, std::string> inMap ;
     CommonAPI::CallStatus callStatus;
@@ -844,10 +844,10 @@ TEST_F(DeploymentTest, MapMethodDeployment_I_O_BadOutput) {
 
     std::unordered_map<uint32_t, std::string> outMap;
     for (uint32_t i = 1; i < 20; i++) {
-        outMap.insert( {{i, "in"}});
+        outMap.insert(std::pair<uint32_t, std::string>(i, "in"));
     }
     // the item for key 0 gives the # of elements in the return map
-    outMap.insert( {{0, "41"}});
+    outMap.insert(std::pair<uint32_t, std::string>(0, "41"));
 
     std::unordered_map<uint32_t, std::string> inMap ;
     CommonAPI::CallStatus callStatus;
@@ -862,10 +862,10 @@ TEST_F(DeploymentTest, MapMethodDeployment_I_O_BadOutput) {
 TEST_F(DeploymentTest, MapMethodDeployment_IO_MinLength) {
     std::unordered_map<uint32_t, std::string> outMap;
     for (uint32_t i = 1; i < 5; i++) {
-        outMap.insert( {{i, "in"}});
+        outMap.insert(std::pair<uint32_t, std::string>(i, "in"));
     }
     // the item for key 0 gives the # of elements in the return map
-    outMap.insert( {{0, "6"}});
+    outMap.insert(std::pair<uint32_t, std::string>(0, "6"));
 
     std::unordered_map<uint32_t, std::string> inMap ;
     CommonAPI::CallStatus callStatus;
@@ -880,10 +880,10 @@ TEST_F(DeploymentTest, MapMethodDeployment_IO_MinLength) {
 TEST_F(DeploymentTest, MapMethodDeployment_IO_MinLength_BadInput) {
     std::unordered_map<uint32_t, std::string> outMap;
     for (uint32_t i = 1; i < 4; i++) {
-        outMap.insert( {{i, "in"}});
+        outMap.insert(std::pair<uint32_t, std::string>(i, "in"));
     }
     // the item for key 0 gives the # of elements in the return map
-    outMap.insert( {{0, "6"}});
+    outMap.insert(std::pair<uint32_t, std::string>(0, "6"));
 
     std::unordered_map<uint32_t, std::string> inMap ;
     CommonAPI::CallStatus callStatus;
@@ -897,10 +897,10 @@ TEST_F(DeploymentTest, MapMethodDeployment_IO_MinLength_BadInput) {
 TEST_F(DeploymentTest, MapMethodDeployment_IO_MinLength_BadOutput) {
     std::unordered_map<uint32_t, std::string> outMap;
     for (uint32_t i = 1; i < 5; i++) {
-        outMap.insert( {{i, "in"}});
+        outMap.insert(std::pair<uint32_t, std::string>(i, "in"));
     }
     // the item for key 0 gives the # of elements in the return map
-    outMap.insert( {{0, "5"}});
+    outMap.insert(std::pair<uint32_t, std::string>(0, "5"));
 
     std::unordered_map<uint32_t, std::string> inMap ;
     CommonAPI::CallStatus callStatus;
@@ -913,10 +913,10 @@ TEST_F(DeploymentTest, MapMethodDeployment_IO_MinLength_BadOutput) {
 TEST_F(DeploymentTest, MapMethodDeployment_I_O_MinLength) {
     std::unordered_map<uint32_t, std::string> outMap;
     for (uint32_t i = 1; i < 6; i++) {
-        outMap.insert( {{i, "in"}});
+        outMap.insert(std::pair<uint32_t, std::string>(i, "in"));
     }
     // the item for key 0 gives the # of elements in the return map
-    outMap.insert( {{0, "7"}});
+    outMap.insert(std::pair<uint32_t, std::string>(0, "7"));
 
     std::unordered_map<uint32_t, std::string> inMap ;
     CommonAPI::CallStatus callStatus;
@@ -932,10 +932,10 @@ TEST_F(DeploymentTest, MapMethodDeployment_I_O_MinLength) {
 TEST_F(DeploymentTest, MapMethodDeployment_I_O_MinLength_BadInput) {
     std::unordered_map<uint32_t, std::string> outMap;
     for (uint32_t i = 1; i < 5; i++) {
-        outMap.insert( {{i, "in"}});
+        outMap.insert(std::pair<uint32_t, std::string>(i, "in"));
     }
     // the item for key 0 gives the # of elements in the return map
-    outMap.insert( {{0, "7"}});
+    outMap.insert(std::pair<uint32_t, std::string>(0, "7"));
 
     std::unordered_map<uint32_t, std::string> inMap ;
     CommonAPI::CallStatus callStatus;
@@ -948,10 +948,10 @@ TEST_F(DeploymentTest, MapMethodDeployment_I_O_MinLength_BadInput) {
 TEST_F(DeploymentTest, MapMethodDeployment_I_O_MinLength_BadOutput) {
     std::unordered_map<uint32_t, std::string> outMap;
     for (uint32_t i = 1; i < 6; i++) {
-        outMap.insert( {{i, "in"}});
+        outMap.insert(std::pair<uint32_t, std::string>(i, "in"));
     }
     // the item for key 0 gives the # of elements in the return map
-    outMap.insert( {{0, "6"}});
+    outMap.insert(std::pair<uint32_t, std::string>(0, "6"));
 
     std::unordered_map<uint32_t, std::string> inMap ;
     CommonAPI::CallStatus callStatus;
@@ -960,6 +960,55 @@ TEST_F(DeploymentTest, MapMethodDeployment_I_O_MinLength_BadOutput) {
     testProxy_->mMap_n7_o(callStatus, inMap);
     EXPECT_EQ(callStatus, CommonAPI::CallStatus::REMOTE_ERROR);
 }
+
+/**
+* @test Use a broadcast with a map.
+*/
+TEST_F(DeploymentTest, MapBroadcastDeployment) {
+
+    CommonAPI::CallStatus callStatus;
+    std::promise<std::unordered_map<uint32_t, std::string>> p;
+    auto f = p.get_future();
+
+    // subscribe
+    uint32_t subscription = testProxy_->getBMapEvent().subscribe([&](
+        const std::unordered_map<uint32_t, std::string> &y
+    ) {
+        p.set_value(y);
+    });
+
+    // trigger the event
+    testProxy_->mBCastTrigger(v1_0::commonapi::someip::deploymenttest::TestInterface::tEnumTriggerType::T_MAP, 7, callStatus);
+    // wait until broadcast has been signaled
+    std::future_status status = f.wait_for(std::chrono::seconds(7));
+    EXPECT_EQ(status, std::future_status::ready);
+    EXPECT_EQ(f.get().size(), 7UL);
+    testProxy_->getBMapEvent().unsubscribe(subscription);
+}
+/**
+* @test Use a broadcast with a map. The broadcast tries to send too long a value.
+*/
+TEST_F(DeploymentTest, MapBroadcastDeploymentBadValue) {
+
+    CommonAPI::CallStatus callStatus;
+    std::promise<std::unordered_map<uint32_t, std::string>> p;
+    auto f = p.get_future();
+
+    // subscribe
+    uint32_t subscription = testProxy_->getBMapEvent().subscribe([&](
+        const std::unordered_map<uint32_t, std::string> &y
+    ) {
+        p.set_value(y);
+    });
+
+    // trigger the event
+    testProxy_->mBCastTrigger(v1_0::commonapi::someip::deploymenttest::TestInterface::tEnumTriggerType::T_MAP, 6, callStatus);
+    // wait until broadcast has been signaled
+    std::future_status status = f.wait_for(std::chrono::seconds(7));
+    EXPECT_EQ(status, std::future_status::timeout);
+    testProxy_->getBMapEvent().unsubscribe(subscription);
+}
+
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
     ::testing::AddGlobalTestEnvironment(new Environment());

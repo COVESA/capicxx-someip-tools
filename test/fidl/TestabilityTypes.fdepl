@@ -1,0 +1,104 @@
+/*
+ * ##############################
+ * #####                    #####
+ * #####   Generated File   #####
+ * #####                    #####
+ * ##############################
+ * 
+ * Fibex origin: FBX411_SP2021_akt_V32_MultiBus_hPAD_EyeQ5_2b_V21_lokal_20190304122505.xml
+ * Franca version: 0.13.1.201807231814
+ */
+import
+"platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-4-SOMEIP_deployment_spec.fdepl"
+import "TestabilityTypes.fidl"
+
+define org.genivi.commonapi.someip.deployment for typeCollection
+de.bmw.infrastructure.testabilitytypes.TestabilityTypes
+as de.bmw.infrastructure.testabilitytypes.TestabilityTypes {
+
+    enumeration Enumeration1 {
+    }
+
+    struct Structure1 {
+        stringFixedLength {
+            SomeIpStringLength = 255
+            SomeIpStringLengthWidth = 0
+        }
+        integerArray {
+            SomeIpArrayMaxLength = 5
+            SomeIpArrayMinLength = 0
+        }
+    }
+
+    struct StructureOfIntegers {
+        uINT32Array2D {
+            SomeIpArrayMaxLength = 3
+            SomeIpArrayMinLength = 1
+        }
+    }
+
+    struct StructureOfStringAndUnion {
+        uTF8String {
+            SomeIpStringLengthWidth = 4
+        }
+        unionOfStructureOfIntegers {
+            #union {
+                SomeIpUnionLengthWidth = 4
+            }
+        }
+    }
+
+    struct StructureOfStrings {
+        uTF8String {
+            SomeIpStringLengthWidth = 4
+        }
+        uTF16String {
+            SomeIpStringEncoding = utf16be
+            SomeIpStringLengthWidth = 4
+        }
+    }
+
+    struct StructureSimple {
+    }
+
+    struct SubStructure1 {
+        variableInteger {
+            #union {
+                SomeIpUnionLengthWidth = 4
+            }
+        }
+    }
+
+    struct VersionType {
+    }
+
+    union Union1 {
+        uInt32MemberArray {
+            SomeIpArrayMaxLength = 8
+            SomeIpArrayMinLength = 8
+            SomeIpArrayLengthWidth = 0
+        }
+    }
+
+    union UnionOfStructs {
+    }
+
+    union UnionOfStructureOfIntegers {
+    }
+
+    array uINT32Array2DArray {
+        SomeIpArrayMaxLength = 5
+        SomeIpArrayMinLength = 0
+    }
+
+    array uINT8ArrayArray {
+        SomeIpArrayMaxLength = 5
+        SomeIpArrayMinLength = 0
+    }
+
+    array uINT8ArrayReturnValueArray {
+        SomeIpArrayMaxLength = 5
+        SomeIpArrayMinLength = 0
+    }
+
+}

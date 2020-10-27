@@ -109,7 +109,7 @@ TEST_F(DeploymentTest, EnumWithDeployment) {
         false);
     {
         CommonAPI::SomeIP::OutputStream outStream(message, false);
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum outv(v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum::V1);
+        @TYPE_COLLECTION_FULL_NAME@::tEnum outv(@TYPE_COLLECTION_FULL_NAME@::tEnum::V1);
 
         outStream.writeValue(outv, &ed_32i);
         EXPECT_FALSE(outStream.hasError());
@@ -117,14 +117,14 @@ TEST_F(DeploymentTest, EnumWithDeployment) {
 
         CommonAPI::SomeIP::InputStream inStream(message, false);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum inv;
+        @TYPE_COLLECTION_FULL_NAME@::tEnum inv;
         inStream.readValue(inv, &ed_32i);
 
         EXPECT_EQ(outv, inv);
     }
     {
         CommonAPI::SomeIP::OutputStream outStream(message, false);
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum outv(v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum::V1);
+        @TYPE_COLLECTION_FULL_NAME@::tEnum outv(@TYPE_COLLECTION_FULL_NAME@::tEnum::V1);
 
         outStream.writeValue(outv, &ed_16i);
         EXPECT_FALSE(outStream.hasError());
@@ -132,14 +132,14 @@ TEST_F(DeploymentTest, EnumWithDeployment) {
 
         CommonAPI::SomeIP::InputStream inStream(message, false);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum inv;
+        @TYPE_COLLECTION_FULL_NAME@::tEnum inv;
         inStream.readValue(inv, &ed_16i);
 
         EXPECT_EQ(outv, inv);
     }
     {
         CommonAPI::SomeIP::OutputStream outStream(message, false);
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum outv(v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum::V1);
+        @TYPE_COLLECTION_FULL_NAME@::tEnum outv(@TYPE_COLLECTION_FULL_NAME@::tEnum::V1);
 
         outStream.writeValue(outv, &ed_8i);
         EXPECT_FALSE(outStream.hasError());
@@ -147,14 +147,14 @@ TEST_F(DeploymentTest, EnumWithDeployment) {
 
         CommonAPI::SomeIP::InputStream inStream(message, false);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum inv;
+        @TYPE_COLLECTION_FULL_NAME@::tEnum inv;
         inStream.readValue(inv, &ed_8i);
 
         EXPECT_EQ(outv, inv);
     }
     {
         CommonAPI::SomeIP::OutputStream outStream(message, false);
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum outv(v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum::V1);
+        @TYPE_COLLECTION_FULL_NAME@::tEnum outv(@TYPE_COLLECTION_FULL_NAME@::tEnum::V1);
 
         outStream.writeValue(outv, &ed_32);
         EXPECT_FALSE(outStream.hasError());
@@ -162,14 +162,14 @@ TEST_F(DeploymentTest, EnumWithDeployment) {
 
         CommonAPI::SomeIP::InputStream inStream(message, false);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum inv;
+        @TYPE_COLLECTION_FULL_NAME@::tEnum inv;
         inStream.readValue(inv, &ed_32);
 
         EXPECT_EQ(outv, inv);
     }
     {
         CommonAPI::SomeIP::OutputStream outStream(message, false);
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum outv(v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum::V1);
+        @TYPE_COLLECTION_FULL_NAME@::tEnum outv(@TYPE_COLLECTION_FULL_NAME@::tEnum::V1);
 
         outStream.writeValue(outv, &ed_16);
         EXPECT_FALSE(outStream.hasError());
@@ -177,14 +177,14 @@ TEST_F(DeploymentTest, EnumWithDeployment) {
 
         CommonAPI::SomeIP::InputStream inStream(message, false);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum inv;
+        @TYPE_COLLECTION_FULL_NAME@::tEnum inv;
         inStream.readValue(inv, &ed_16);
 
         EXPECT_EQ(outv, inv);
     }
     {
         CommonAPI::SomeIP::OutputStream outStream(message, false);
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum outv(v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum::V1);
+        @TYPE_COLLECTION_FULL_NAME@::tEnum outv(@TYPE_COLLECTION_FULL_NAME@::tEnum::V1);
 
         outStream.writeValue(outv, &ed_8);
         EXPECT_FALSE(outStream.hasError());
@@ -192,14 +192,14 @@ TEST_F(DeploymentTest, EnumWithDeployment) {
 
         CommonAPI::SomeIP::InputStream inStream(message, false);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum inv;
+        @TYPE_COLLECTION_FULL_NAME@::tEnum inv;
         inStream.readValue(inv, &ed_8);
 
         EXPECT_EQ(outv, inv);
     }
     {
         CommonAPI::SomeIP::OutputStream outStream(message, false);
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum outv(v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum::V1);
+        @TYPE_COLLECTION_FULL_NAME@::tEnum outv(@TYPE_COLLECTION_FULL_NAME@::tEnum::V1);
 
         outStream.writeValue(outv, &ed_32is);
         EXPECT_FALSE(outStream.hasError());
@@ -207,14 +207,14 @@ TEST_F(DeploymentTest, EnumWithDeployment) {
 
         CommonAPI::SomeIP::InputStream inStream(message, false);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum inv;
+        @TYPE_COLLECTION_FULL_NAME@::tEnum inv;
         inStream.readValue(inv, &ed_32is);
 
         EXPECT_EQ(outv, inv);
     }
     {
         CommonAPI::SomeIP::OutputStream outStream(message, false);
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum outv(v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum::V1);
+        @TYPE_COLLECTION_FULL_NAME@::tEnum outv(@TYPE_COLLECTION_FULL_NAME@::tEnum::V1);
 
         outStream.writeValue(outv, &ed_16is);
         EXPECT_FALSE(outStream.hasError());
@@ -222,14 +222,14 @@ TEST_F(DeploymentTest, EnumWithDeployment) {
 
         CommonAPI::SomeIP::InputStream inStream(message, false);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum inv;
+        @TYPE_COLLECTION_FULL_NAME@::tEnum inv;
         inStream.readValue(inv, &ed_16is);
 
         EXPECT_EQ(outv, inv);
     }
     {
         CommonAPI::SomeIP::OutputStream outStream(message, false);
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum outv(v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum::V1);
+        @TYPE_COLLECTION_FULL_NAME@::tEnum outv(@TYPE_COLLECTION_FULL_NAME@::tEnum::V1);
 
         outStream.writeValue(outv, &ed_8is);
         EXPECT_FALSE(outStream.hasError());
@@ -237,14 +237,14 @@ TEST_F(DeploymentTest, EnumWithDeployment) {
 
         CommonAPI::SomeIP::InputStream inStream(message, false);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum inv;
+        @TYPE_COLLECTION_FULL_NAME@::tEnum inv;
         inStream.readValue(inv, &ed_8is);
 
         EXPECT_EQ(outv, inv);
     }
     {
         CommonAPI::SomeIP::OutputStream outStream(message, false);
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum outv(v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum::V1);
+        @TYPE_COLLECTION_FULL_NAME@::tEnum outv(@TYPE_COLLECTION_FULL_NAME@::tEnum::V1);
 
         outStream.writeValue(outv, &ed_32s);
         EXPECT_FALSE(outStream.hasError());
@@ -252,14 +252,14 @@ TEST_F(DeploymentTest, EnumWithDeployment) {
 
         CommonAPI::SomeIP::InputStream inStream(message, false);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum inv;
+        @TYPE_COLLECTION_FULL_NAME@::tEnum inv;
         inStream.readValue(inv, &ed_32s);
 
         EXPECT_EQ(outv, inv);
     }
     {
         CommonAPI::SomeIP::OutputStream outStream(message, false);
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum outv(v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum::V1);
+        @TYPE_COLLECTION_FULL_NAME@::tEnum outv(@TYPE_COLLECTION_FULL_NAME@::tEnum::V1);
 
         outStream.writeValue(outv, &ed_16s);
         EXPECT_FALSE(outStream.hasError());
@@ -267,14 +267,14 @@ TEST_F(DeploymentTest, EnumWithDeployment) {
 
         CommonAPI::SomeIP::InputStream inStream(message, false);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum inv;
+        @TYPE_COLLECTION_FULL_NAME@::tEnum inv;
         inStream.readValue(inv, &ed_16s);
 
         EXPECT_EQ(outv, inv);
     }
     {
         CommonAPI::SomeIP::OutputStream outStream(message, false);
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum outv(v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum::V1);
+        @TYPE_COLLECTION_FULL_NAME@::tEnum outv(@TYPE_COLLECTION_FULL_NAME@::tEnum::V1);
 
         outStream.writeValue(outv, &ed_8s);
         EXPECT_FALSE(outStream.hasError());
@@ -282,7 +282,7 @@ TEST_F(DeploymentTest, EnumWithDeployment) {
 
         CommonAPI::SomeIP::InputStream inStream(message, false);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum inv;
+        @TYPE_COLLECTION_FULL_NAME@::tEnum inv;
         inStream.readValue(inv, &ed_8s);
 
         EXPECT_EQ(outv, inv);
@@ -313,7 +313,7 @@ TEST_F(DeploymentTest, EnumInvalidValue) {
 
         CommonAPI::SomeIP::InputStream inStream(message, false);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum inv;
+        @TYPE_COLLECTION_FULL_NAME@::tEnum inv;
         inStream.readValue(inv, &ed_32i);
 
         EXPECT_EQ(-1, inv);
@@ -327,7 +327,7 @@ TEST_F(DeploymentTest, EnumInvalidValue) {
 
         CommonAPI::SomeIP::InputStream inStream(message, false);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum inv;
+        @TYPE_COLLECTION_FULL_NAME@::tEnum inv;
         inStream.readValue(inv, &ed_16i);
 
         EXPECT_EQ(-2, inv);
@@ -338,7 +338,7 @@ TEST_F(DeploymentTest, EnumInvalidValue) {
 
         CommonAPI::SomeIP::InputStream inStream(message, false);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum inv;
+        @TYPE_COLLECTION_FULL_NAME@::tEnum inv;
         inStream.readValue(inv, &ed_8i);
 
         EXPECT_EQ(-3, inv);
@@ -352,7 +352,7 @@ TEST_F(DeploymentTest, EnumInvalidValue) {
 
         CommonAPI::SomeIP::InputStream inStream(message, false);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum inv;
+        @TYPE_COLLECTION_FULL_NAME@::tEnum inv;
         inStream.readValue(inv, &ed_32is);
 
         EXPECT_EQ(-4, inv);
@@ -366,7 +366,7 @@ TEST_F(DeploymentTest, EnumInvalidValue) {
 
         CommonAPI::SomeIP::InputStream inStream(message, false);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum inv;
+        @TYPE_COLLECTION_FULL_NAME@::tEnum inv;
         inStream.readValue(inv, &ed_16is);
 
         EXPECT_EQ(-5, inv);
@@ -377,7 +377,7 @@ TEST_F(DeploymentTest, EnumInvalidValue) {
 
         CommonAPI::SomeIP::InputStream inStream(message, false);
 
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum inv;
+        @TYPE_COLLECTION_FULL_NAME@::tEnum inv;
         inStream.readValue(inv, &ed_8is);
 
         EXPECT_EQ(-6, inv);
@@ -390,56 +390,56 @@ TEST_F(DeploymentTest, EnumAttributeWithTypeDeployment) {
 
     CommonAPI::CallStatus callStatus;
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum4_16 outv(v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum4_16::V1);
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum4_16 inv;
+        @TYPE_COLLECTION_FULL_NAME@::tEnum4_16 outv(@TYPE_COLLECTION_FULL_NAME@::tEnum4_16::V1);
+        @TYPE_COLLECTION_FULL_NAME@::tEnum4_16 inv;
 
         testProxy_->getAEnum4_16Attribute().setValue(outv, callStatus, inv);
         ASSERT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
         EXPECT_EQ(outv, inv);
     }
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum4_32 outv(v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum4_32::V1);
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum4_32 inv;
+        @TYPE_COLLECTION_FULL_NAME@::tEnum4_32 outv(@TYPE_COLLECTION_FULL_NAME@::tEnum4_32::V1);
+        @TYPE_COLLECTION_FULL_NAME@::tEnum4_32 inv;
 
         testProxy_->getAEnum4_32Attribute().setValue(outv, callStatus, inv);
         ASSERT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
         EXPECT_EQ(outv, inv);
     }
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum2_8 outv(v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum2_8::V1);
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum2_8 inv;
+        @TYPE_COLLECTION_FULL_NAME@::tEnum2_8 outv(@TYPE_COLLECTION_FULL_NAME@::tEnum2_8::V1);
+        @TYPE_COLLECTION_FULL_NAME@::tEnum2_8 inv;
 
         testProxy_->getAEnum2_8Attribute().setValue(outv, callStatus, inv);
         ASSERT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
         EXPECT_EQ(outv, inv);
     }
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum2_16 outv(v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum2_16::V1);
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum2_16 inv;
+        @TYPE_COLLECTION_FULL_NAME@::tEnum2_16 outv(@TYPE_COLLECTION_FULL_NAME@::tEnum2_16::V1);
+        @TYPE_COLLECTION_FULL_NAME@::tEnum2_16 inv;
 
         testProxy_->getAEnum2_16Attribute().setValue(outv, callStatus, inv);
         ASSERT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
         EXPECT_EQ(outv, inv);
     }
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum1_8 outv(v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum1_8::V1);
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum1_8 inv;
+        @TYPE_COLLECTION_FULL_NAME@::tEnum1_8 outv(@TYPE_COLLECTION_FULL_NAME@::tEnum1_8::V1);
+        @TYPE_COLLECTION_FULL_NAME@::tEnum1_8 inv;
 
         testProxy_->getAEnum1_8Attribute().setValue(outv, callStatus, inv);
         ASSERT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
         EXPECT_EQ(outv, inv);
     }
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum1_1 outv(v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum1_1::V1);
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum1_1 inv;
+        @TYPE_COLLECTION_FULL_NAME@::tEnum1_1 outv(@TYPE_COLLECTION_FULL_NAME@::tEnum1_1::V1);
+        @TYPE_COLLECTION_FULL_NAME@::tEnum1_1 inv;
 
         testProxy_->getAEnum1_1Attribute().setValue(outv, callStatus, inv);
         ASSERT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
         EXPECT_EQ(outv, inv);
     }
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum1_1 outv(v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum1_1::V3);
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum1_1 inv;
+        @TYPE_COLLECTION_FULL_NAME@::tEnum1_1 outv(@TYPE_COLLECTION_FULL_NAME@::tEnum1_1::V3);
+        @TYPE_COLLECTION_FULL_NAME@::tEnum1_1 inv;
 
         testProxy_->getAEnum1_1Attribute().setValue(outv, callStatus, inv);
         ASSERT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
@@ -447,8 +447,8 @@ TEST_F(DeploymentTest, EnumAttributeWithTypeDeployment) {
         EXPECT_EQ(0, inv);
     }
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum1_1 outv(v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum1_1::V4);
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum1_1 inv;
+        @TYPE_COLLECTION_FULL_NAME@::tEnum1_1 outv(@TYPE_COLLECTION_FULL_NAME@::tEnum1_1::V4);
+        @TYPE_COLLECTION_FULL_NAME@::tEnum1_1 inv;
 
         testProxy_->getAEnum1_1Attribute().setValue(outv, callStatus, inv);
         ASSERT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
@@ -463,8 +463,8 @@ TEST_F(DeploymentTest, EnumAttributeWithAttrDeployment) {
 
     CommonAPI::CallStatus callStatus;
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum outv(v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum::V1);
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum inv;
+        @TYPE_COLLECTION_FULL_NAME@::tEnum outv(@TYPE_COLLECTION_FULL_NAME@::tEnum::V1);
+        @TYPE_COLLECTION_FULL_NAME@::tEnum inv;
 
         testProxy_->getAEnumAttribute().setValue(outv, callStatus, inv);
         ASSERT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
@@ -479,15 +479,15 @@ TEST_F(DeploymentTest, DISABLED_EnumAttrDeplOverridesTypeDepl) {
 
     CommonAPI::CallStatus callStatus;
     {
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum2_8 outv(v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum2_8::V2);
-        v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum2_8 inv;
+        @TYPE_COLLECTION_FULL_NAME@::tEnum2_8 outv(@TYPE_COLLECTION_FULL_NAME@::tEnum2_8::V2);
+        @TYPE_COLLECTION_FULL_NAME@::tEnum2_8 inv;
 
         testProxy_->getAEnum_overrideAttribute().setValue(outv, callStatus, inv);
         ASSERT_EQ(callStatus, CommonAPI::CallStatus::SUCCESS);
         // the values won't be the same because the deployment clips some bits off the value.
         EXPECT_NE(outv, inv);
         // in fact, the resulting value will be equal to V3 which is the bit-clipped version of V2
-        EXPECT_EQ(v1_0::commonapi::someip::deploymenttest::TestInterface::tEnum2_8::V3, inv);
+        EXPECT_EQ(@TYPE_COLLECTION_FULL_NAME@::tEnum2_8::V3, inv);
     }
 }
 int main(int argc, char** argv) {
