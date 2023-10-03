@@ -376,12 +376,13 @@ class FrancaSomeIPGeneratorExtensions {
 
     def dispatch String getDeploymentName(FType _type, FTypeCollection _tc, PropertyAccessor _accessor) {
         if (_accessor.hasDeployment(_type) ) {
-            if (_accessor.isProperOverwrite()) {
-                return _tc.getFullName + "_::" + _accessor.getName() +  _type.name + "Deployment"
-            } else {
-                val container = _type.eContainer() as FTypeCollection
-                return container.getFullName + "_::" + _type.name + "Deployment"
-            }
+            // This code caused an issue related to enumerations overwrites
+            // if (_accessor.isProperOverwrite()) {
+            //     return _tc.getFullName + "_::" + _accessor.getName() +  _type.name + "Deployment"
+            // }else {
+            val container = _type.eContainer() as FTypeCollection
+            return container.getFullName + "_::" + _type.name + "Deployment"
+            
         }
         return ""
     }

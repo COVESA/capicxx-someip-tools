@@ -1,5 +1,57 @@
 Changes
 =======
+v3.2.14
+- Adapt StubAdapter to new ClientId interface
+
+v3.2.13
+- Enable Modify generation TypeColl without name
+
+v3.2.12
+- Revert Modify generation TypeColl without name
+
+v3.2.11
+- Validation error on pdugateway
+- Enable Modify generation TypeColl without name
+
+v3.2.10
+- Revert Modify generation TypeColl without name
+
+v3.2.9
+- Increase heap memory
+- Modify generation TypeColl without name
+
+v3.2.8
+- Increase maximum heap memory size
+- Disable renaming of overwrite enumerations
+- Accept enumeration/enumerator with same name
+- Update dependencies
+- Accept duplicate arg names for method in/out
+
+v3.2.7
+- Update Generator to change the Parameter name "info"
+
+v3.2.6
+- Modify generation of TypeCollections without name
+- Accept Methods with Parameters with the same name
+- Accept duplicate argument names for method in and out
+
+v3.2.5
+- Accept an Interface with a method with the same name
+
+v3.2.4
+- Fix "com.google.inject" dependencies
+- Remove invalid completed future
+- Update generated code to use getSomeIPClient instead direct dynamic_pointer_cast
+
+v3.2.3
+- Fix for attributes of type "inline array of EnumerationType"
+- Added json interface catalog generator
+- Update SomeIP validator
+
+v3.2.2
+- Fix selective event handler registration
+- Extend the client identifier by the hostname: Added a missing placeholder (for the new enviroment argument), a host identifier to broadcast types and a host name to ClientId
+- Adapted README to changed core generator name
 
 v3.2.0
 - Adapted to CommonAPI 3.2.0

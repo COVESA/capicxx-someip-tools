@@ -209,7 +209,7 @@ define org.genivi.commonapi.someip.deployment for interface <CommonAPI interface
 	}
 }
 
-define org.genivi.commonapi.someip.deployment for provider as <Name> {
+define org.genivi.commonapi.someip.deployment for provider <Name> {
 	instance <CommonAPI interface name> {
 		InstanceId = <CommonAPI instance name>
 		SomeIpInstanceID = <id>
