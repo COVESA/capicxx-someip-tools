@@ -159,7 +159,7 @@ class SomeIPDeploymentValidator
         validateDeploymentProperties
         validateEnumInvalidValueDeployments
         validateCorePropertyDeployments
-        // validateImports method commented in order to not verify the warning regarding to the verification of imports done in method checkMissingDeploymentImports. More information in task GLIPCI-2885.
+        // validateImports method commented in order to not verify the warning regarding to the verification of imports done in method checkMissingDeploymentImports
         // validateImports
         validateEnumSizeDeployments
     }

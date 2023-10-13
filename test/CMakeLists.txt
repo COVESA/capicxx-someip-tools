@@ -212,7 +212,7 @@ execute_process(COMMAND ${COMMONAPI_TOOL_GENERATOR} -sk Default -dest ${COMMONAP
                         WORKING_DIRECTORY ${COMMONAPI_SRC_GEN_DEST}/fidl
                         )
 ##############################################################################
-# Add code from issue GLIPCI-2226 to see that it really compiles
+# Add code to see that it really compiles
 ##############################################################################
 execute_process(COMMAND ${COMMONAPI_SOMEIP_TOOL_GENERATOR} -dest ${COMMONAPI_SRC_GEN_DEST}/ow/someip "${CMAKE_CURRENT_SOURCE_DIR}/fidl/de.bmw.infrastructure.testability.fdepl"
                         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/fidl

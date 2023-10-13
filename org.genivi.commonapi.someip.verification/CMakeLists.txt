@@ -108,7 +108,7 @@ if (MSVC)
     # Change possible backslashes to normal slashes
     string(REPLACE "\\" "/" COMMONAPI_TEST_FIDL_PATH ${COMMONAPI_TEST_FIDL_PATH})
 
-    # GLIPCI-644, remove Drive when under windows
+    # Remove Drive when under windows
     string(SUBSTRING ${COMMONAPI_TEST_FIDL_PATH} 2 -1 COMMONAPI_TEST_FIDL_PATH)
 endif()
 
