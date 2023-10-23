@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: GENIVI CommonAPI Some/IP UI
 Bundle-SymbolicName: org.genivi.commonapi.someip.ui;singleton:=true
-Bundle-Version: 3.2.0.qualifier
+Bundle-Version: 3.2.14.qualifier
 Bundle-Activator: org.genivi.commonapi.someip.ui.CommonApiSomeIPUiPlugin
 Bundle-Vendor: BMW AG
 Require-Bundle: org.eclipse.ui,
@@ -14,11 +14,11 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.xtext.builder;bundle-version="[2.7.0,3.0.0)";visibility:=reexport,
  org.eclipse.xtext.generator;bundle-version="[2.7.0,3.0.0)";visibility:=reexport,
  com.google.inject;bundle-version="[5.0.1,6.0.0)";visibility:=reexport,
- org.genivi.commonapi.core.ui;bundle-version="3.2.0",
- org.genivi.commonapi.someip;bundle-version="3.2.0",
+ org.genivi.commonapi.core.ui;bundle-version="3.2.14",
+ org.genivi.commonapi.someip;bundle-version="3.2.14",
  org.franca.core.dsl.ui;bundle-version="[0.13.1,0.14.0)",
  org.franca.deploymodel.dsl.ui;bundle-version="[0.13.1,0.14.0)",
- org.genivi.commonapi.someip.deployment.validator;bundle-version="3.2.0"
+ org.genivi.commonapi.someip.deployment.validator;bundle-version="3.2.14"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: org.genivi.commonapi.someip.ui

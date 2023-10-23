@@ -29,11 +29,12 @@ import org.genivi.commonapi.someip.preferences.PreferenceConstantsSomeIP
 import org.franca.deploymodel.dsl.fDeploy.FDExtensionRoot
 
 class FrancaSomeIPGenerator implements IGenerator {
-	@Inject extension FrancaGeneratorExtensions
-	@Inject extension FrancaSomeIPGeneratorExtensions
-	@Inject extension FInterfaceSomeIPProxyGenerator
-	@Inject extension FInterfaceSomeIPStubAdapterGenerator
-	@Inject extension FInterfaceSomeIPDeploymentGenerator
+    @Inject extension FrancaGeneratorExtensions
+    @Inject extension FrancaSomeIPGeneratorExtensions
+    @Inject extension FInterfaceSomeIPProxyGenerator
+    @Inject extension FInterfaceSomeIPStubAdapterGenerator
+    @Inject extension FInterfaceSomeIPDeploymentGenerator
+    @Inject private extension FInterfaceSomeIPJsonGenerator
 
     @Inject FDeployManager fDeployManager
 
@@ -246,6 +247,7 @@ class FrancaSomeIPGenerator implements IGenerator {
             if (FPreferencesSomeIP::instance.getPreference(PreferenceConstantsSomeIP::P_GENERATESTUB_SOMEIP, "true").
                 equals("true")) {
                 it.generateStubAdapter(fileSystemAccess, interfaceAccessor, _providers, res)
+                it.generateJSONStubAdapter(fileSystemAccess, interfaceAccessor, _providers)
             }
             if (FPreferencesSomeIP::instance.getPreference(PreferenceConstantsSomeIP::P_GENERATE_COMMON_SOMEIP, "true").
                 equals("true")) {
@@ -273,5 +275,5 @@ class FrancaSomeIPGenerator implements IGenerator {
     }
 
     var boolean withDependencies_;
-	var Set<String> generatedFiles_;
+    var Set<String> generatedFiles_;
 }

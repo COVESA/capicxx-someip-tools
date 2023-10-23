@@ -193,7 +193,7 @@ class FInterfaceSomeIPStubAdapterGenerator {
                 «_interface.generateMethodDispatcherTableContent(counterMap, methodNumberMap)»
                 «_interface.generateStubAttributeTableInitializer(_accessor)»
                 «IF (!_interface.attributes.filter[isObservable()].empty)»
-                    std::shared_ptr<CommonAPI::SomeIP::ClientId> itsClient = std::make_shared<CommonAPI::SomeIP::ClientId>(0xFFFF, 0xFFFFFFFF, 0xFFFFFFFF);
+                    std::shared_ptr<CommonAPI::SomeIP::ClientId> itsClient = std::make_shared<CommonAPI::SomeIP::ClientId>();
 
                 «ENDIF»
                 // Provided events/fields
@@ -236,7 +236,7 @@ class FInterfaceSomeIPStubAdapterGenerator {
             «FOR broadcast: _interface.broadcasts»
                 «IF broadcast.selective»
                     std::mutex «broadcast.className»Mutex_;
-                    void «broadcast.className»Handler(CommonAPI::SomeIP::client_id_t _client, CommonAPI::SomeIP::uid_t _uid, CommonAPI::SomeIP::gid_t _gid, bool _subscribe, const CommonAPI::SomeIP::SubscriptionAcceptedHandler_t& _acceptedHandler);
+                    void «broadcast.className»Handler(CommonAPI::SomeIP::client_id_t _client, const CommonAPI::SomeIP::sec_client_t *_sec_client, const std::string &_env, bool _subscribe, const CommonAPI::SomeIP::SubscriptionAcceptedHandler_t& _acceptedHandler);
                 «ENDIF»
             «ENDFOR»
 
@@ -259,7 +259,7 @@ class FInterfaceSomeIPStubAdapterGenerator {
             «IF broadcast.selective»
                 template <typename _Stub, typename... _Stubs>
                 void «_interface.someipStubAdapterClassNameInternal»<_Stub, _Stubs...>::«broadcast.stubAdapterClassFireSelectiveMethodName»(«generateFireSelectiveSignatur(broadcast, _interface)») {
-                    std::shared_ptr<CommonAPI::SomeIP::ClientId> client = std::dynamic_pointer_cast<CommonAPI::SomeIP::ClientId, CommonAPI::ClientId>(_client);
+                    std::shared_ptr<CommonAPI::SomeIP::ClientId> client = CommonAPI::SomeIP::ClientId::getSomeIPClient(_client);
                     «FOR arg: broadcast.outArgs»
                          «val String deploymentType = arg.getDeploymentType(_interface, true)»
                          «val String deployment = arg.getDeploymentRef(arg.array, broadcast, _interface, _accessor.getOverwriteAccessor(arg))»
@@ -336,8 +336,8 @@ class FInterfaceSomeIPStubAdapterGenerator {
                 }
 
                 template <typename _Stub, typename... _Stubs>
-                void «_interface.someipStubAdapterClassNameInternal»<_Stub, _Stubs...>::«broadcast.className»Handler(CommonAPI::SomeIP::client_id_t _client, CommonAPI::SomeIP::uid_t _uid, CommonAPI::SomeIP::gid_t _gid, bool _subscribe, const CommonAPI::SomeIP::SubscriptionAcceptedHandler_t& _acceptedHandler) {
-                    std::shared_ptr<CommonAPI::SomeIP::ClientId> clientId = std::make_shared<CommonAPI::SomeIP::ClientId>(CommonAPI::SomeIP::ClientId(_client, _uid, _gid));
+                void «_interface.someipStubAdapterClassNameInternal»<_Stub, _Stubs...>::«broadcast.className»Handler(CommonAPI::SomeIP::client_id_t _client, const CommonAPI::SomeIP::sec_client_t *_sec_client, const std::string &_env, bool _subscribe, const CommonAPI::SomeIP::SubscriptionAcceptedHandler_t& _acceptedHandler) {
+                    std::shared_ptr<CommonAPI::SomeIP::ClientId> clientId = std::make_shared<CommonAPI::SomeIP::ClientId>(CommonAPI::SomeIP::ClientId(_client, _sec_client, _env));
                     bool result = true;
                     if (_subscribe) {
                         «broadcast.subscribeSelectiveMethodName»(clientId, result);
@@ -391,6 +391,10 @@ class FInterfaceSomeIPStubAdapterGenerator {
 
                 «ENDIF»
             «ENDFOR»
+
+            «IF _interface.base !== null»
+                «_interface.base.getTypeCollectionName(_interface)»SomeIPStubAdapterInternal<_Stub, _Stubs...>::registerSelectiveEventHandlers();
+            «ENDIF»
         }
         
         template <typename _Stub, typename... _Stubs>
@@ -400,6 +404,10 @@ class FInterfaceSomeIPStubAdapterGenerator {
                     CommonAPI::SomeIP::StubAdapter::connection_->unregisterSubscriptionHandler(CommonAPI::SomeIP::StubAdapter::getSomeIpAddress(), «broadcast.getEventGroups(_accessor).head»);
                 «ENDIF»
             «ENDFOR»
+
+            «IF _interface.base !== null»
+                «_interface.base.getTypeCollectionName(_interface)»SomeIPStubAdapterInternal<_Stub, _Stubs...>::unregisterSelectiveEventHandlers();
+            «ENDIF»
         }
 
         «FOR managed : _interface.managedInterfaces»

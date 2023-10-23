@@ -26,8 +26,8 @@ import org.genivi.commonapi.someip.preferences.PreferenceConstantsSomeIP
 import org.genivi.commonapi.someip.preferences.FPreferencesSomeIP
 
 class FInterfaceSomeIPProxyGenerator {
-	@Inject extension FrancaGeneratorExtensions
-	@Inject extension FrancaSomeIPGeneratorExtensions
+    @Inject extension FrancaGeneratorExtensions
+    @Inject extension FrancaSomeIPGeneratorExtensions
 
     var boolean generateSyncCalls = true
 
@@ -146,34 +146,55 @@ class FInterfaceSomeIPProxyGenerator {
                             SomeIP«attribute.someipClassVariableName»Attribute(«_interface.someipProxyClassName» &_proxy,
                                 _A ... arguments) : «attribute.someipClassName(_interface, _accessor)»(
                                                         _proxy, arguments...) {}
-                    «IF !attribute.isReadonly »
-                        void setValue(const «attribute.getTypeName(_interface, true)»& requestValue,
-                                      CommonAPI::CallStatus& callStatus,
-                                      «attribute.getTypeName(_interface, true)»& responseValue,
-                                      const CommonAPI::CallInfo *_info = nullptr) {
-                            // validate input parameters
-                            if (!requestValue.validate()) {
-                                callStatus = CommonAPI::CallStatus::INVALID_VALUE;
-                                return;
+                        «IF !attribute.isReadonly»
+                            void setValue(const «attribute.getTypeName(_interface, true)»& requestValue,
+                                          CommonAPI::CallStatus& callStatus,
+                                          «attribute.getTypeName(_interface, true)»& responseValue,
+                                          const CommonAPI::CallInfo *_info = nullptr) {
+                                // validate input parameters
+                                «IF attribute.array»
+                                for (std::size_t i = 0; i < requestValue.size(); i++) {
+                                    if (!requestValue[i].validate()) {
+                                        callStatus = CommonAPI::CallStatus::INVALID_VALUE;
+                                        return;
+                                    }
+                                }
+                                «ELSE»
+                                if (!requestValue.validate()) {
+                                    callStatus = CommonAPI::CallStatus::INVALID_VALUE;
+                                    return;
+                                }
+                                «ENDIF»
+                                // call base function if ok
+                                «attribute.someipClassName(_interface, _accessor)»::setValue(requestValue, callStatus, responseValue, _info);
                             }
-                            // call base function if ok
-                            «attribute.someipClassName(_interface, _accessor)»::setValue(requestValue, callStatus, responseValue, _info);
-                        }
-                        std::future<CommonAPI::CallStatus> setValueAsync(const «attribute.getTypeName(_interface, true)»& requestValue,
-                                                                         std::function<void(const CommonAPI::CallStatus &, «attribute.getTypeName(_interface, true)»)> _callback,
-                                                                         const CommonAPI::CallInfo *_info) {
-                            // validate input parameters
-                            if (!requestValue.validate()) {
-                                «attribute.getTypeName(_interface, true)» _returnvalue;
-                                _callback(CommonAPI::CallStatus::INVALID_VALUE, _returnvalue);
-                                std::promise<CommonAPI::CallStatus> promise;
-                                promise.set_value(CommonAPI::CallStatus::INVALID_VALUE);
-                                return promise.get_future();
+                            std::future<CommonAPI::CallStatus> setValueAsync(const «attribute.getTypeName(_interface, true)»& requestValue,
+                                                                             std::function<void(const CommonAPI::CallStatus &, «attribute.getTypeName(_interface, true)»)> _callback,
+                                                                             const CommonAPI::CallInfo *_info) {
+                                // validate input parameters
+                                «IF attribute.array»
+                                    for (std::size_t i = 0; i < requestValue.size(); i++) {
+                                        if (!requestValue[i].validate()) {
+                                            «attribute.getTypeName(_interface, true)» _returnValue;
+                                            _callback(CommonAPI::CallStatus::INVALID_VALUE, _returnValue);
+                                            std::promise<CommonAPI::CallStatus> promise;
+                                            promise.set_value(CommonAPI::CallStatus::INVALID_VALUE);
+                                            return promise.get_future();
+                                        }
+                                    }
+                                «ELSE»
+                                    if (!requestValue.validate()) {
+                                        «attribute.getTypeName(_interface, true)» _returnValue;
+                                        _callback(CommonAPI::CallStatus::INVALID_VALUE, _returnValue);
+                                        std::promise<CommonAPI::CallStatus> promise;
+                                        promise.set_value(CommonAPI::CallStatus::INVALID_VALUE);
+                                        return promise.get_future();
+                                    }
+                                «ENDIF»
+                                // call base function if ok
+                                return «attribute.someipClassName(_interface, _accessor)»::setValueAsync(requestValue, _callback, _info);
                             }
-                            // call base function if ok
-                            return «attribute.someipClassName(_interface, _accessor)»::setValueAsync(requestValue, _callback, _info);
-                        }
-                    «ENDIF»
+                        «ENDIF»
                     };
                     SomeIP«attribute.someipClassVariableName»Attribute «attribute.someipClassVariableName»;
 
@@ -188,7 +209,6 @@ class FInterfaceSomeIPProxyGenerator {
                  CommonAPI::SomeIP::ProxyManager «managed.proxyManagerMemberName»;
             «ENDFOR»
 
-            std::promise<void> completed_;
         };
 
         «_interface.model.generateNamespaceEndDeclaration»
@@ -256,7 +276,6 @@ class FInterfaceSomeIPProxyGenerator {
         }
 
         «_interface.someipProxyClassName»::~«_interface.someipProxyClassName»() {
-            completed_.set_value();
         }
         
         «FOR attribute : _interface.attributes»
@@ -336,7 +355,7 @@ class FInterfaceSomeIPProxyGenerator {
         }
 
         std::future<void> «_interface.someipProxyClassName»::getCompletionFuture() {
-            return completed_.get_future();
+            return CommonAPI::SomeIP::Proxy::getCompletionFuture();
         }
         
         «_interface.model.generateNamespaceEndDeclaration»

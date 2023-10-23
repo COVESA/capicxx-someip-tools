@@ -97,6 +97,8 @@ class SomeIPDeploymentValidator
     var fdInterfaces = new ArrayList<FDInterface>
     var fdInterfaceInstances = new ArrayList<FDExtensionElement>
     var fdTypeCollections = new ArrayList<FDTypes>
+    var fdSomeIPInterfacesNames = new ArrayList<String>
+    var fdCoreInterfacesNames = new ArrayList<String>
     var allFDepls = new ArrayList<FDModel> // all FDModels but without "_deployment_spec.fdepl" files
     var maxEnumValues = new HashMap<FEnumerationType, BigInteger>
 
@@ -112,8 +114,15 @@ class SomeIPDeploymentValidator
                 allFDepls.add(fdepl)
                 for (fdInterface : fdepl.deployments.filter(typeof(FDInterface)))
                 {
+                    if(fdInterface.spec.name !== null && fdInterface.spec.name.contains(CORE_SPECIFICATION_TYPE))
+                    {
+                        checkDuplicateInterface(fdCoreInterfacesNames, fdInterface)
+                    }
                     if (fdInterface.spec.name !== null && fdInterface.spec.name.contains(SOMEIP_SPECIFICATION_TYPE))
+                    {
+                        checkDuplicateInterface(fdSomeIPInterfacesNames, fdInterface)
                         fdInterfaces.add(fdInterface)
+                    }
                 }
                 for (fdProvider : ProviderUtils.getProviders(fdepl))
                 {
@@ -122,10 +131,19 @@ class SomeIPDeploymentValidator
                 }
                 for (fdTypes : fdepl.deployments.filter(typeof(FDTypes)))
                 {
+                    if(fdTypes.spec.name !== null && fdTypes.spec.name.contains(CORE_SPECIFICATION_TYPE))
+                    {
+                        checkDuplicateType(fdCoreInterfacesNames, fdTypes)
+                    }
                     if (fdTypes.spec.name !== null && fdTypes.spec.name.contains(SOMEIP_SPECIFICATION_TYPE))
+                    {
+                        checkDuplicateType(fdSomeIPInterfacesNames, fdTypes)
                         fdTypeCollections.addAll(fdTypes)
+                    }
                 }
             }
+            fdSomeIPInterfacesNames.clear
+            fdCoreInterfacesNames.clear
         }
 
         fdInterfaces.forEach[validateInterface]
@@ -141,9 +159,47 @@ class SomeIPDeploymentValidator
         validateDeploymentProperties
         validateEnumInvalidValueDeployments
         validateCorePropertyDeployments
-        validateImports
-        validateEnumBitDeployments
+        // validateImports method commented in order to not verify the warning regarding to the verification of imports done in method checkMissingDeploymentImports
+        // validateImports
         validateEnumSizeDeployments
+    }
+
+    private def checkDuplicateType(ArrayList<String> list, FDTypes obj)
+    {
+        if (obj.target !== null)
+        {
+            if (obj.target.name !== null)
+            {
+                var name = obj.target.name.toString
+                if (list.contains(name))
+                {
+                    var diag = new FeatureBasedDiagnostic(Diagnostic.WARNING,
+                        "The type \"" + name + "\" is duplicated.",
+                        obj, null, -1, null, null)
+                    diagnostics.add(diag)
+                }
+                list.add(name)
+            }
+        }
+    }
+
+    private def checkDuplicateInterface(ArrayList<String> list, FDInterface obj)
+    {
+        if (obj.target !== null)
+        {
+            if (obj.target.name !== null)
+            {
+                var name = obj.target.name.toString
+                if (list.contains(name))
+                {
+                    var diag = new FeatureBasedDiagnostic(Diagnostic.WARNING,
+                        "The interface \"" + name + "\" is duplicated.",
+                        obj, null, -1, null, null)
+                    diagnostics.add(diag)
+                }
+                list.add(name)
+            }
+        }
     }
 
     private def validateEnumSizeDeployments()
@@ -317,85 +373,6 @@ class SomeIPDeploymentValidator
         {
             FIntegerConstant: expression.^val
             default: null
-        }
-    }
-
-    private def validateEnumBitDeployments()
-    {
-        // This validation is only relevant for 'attributes'
-        //
-        fdInterfaces.forEach[
-            attributes.forEach[
-                // If the attribute is set to 'Little Endian', verify if all directly and indirectly
-                // referenced 'enum' types do have a bit deployment specified. We cannot traverse the
-                // deployment tree here, because we are searching for missing deployment properties,
-                // not for existing ones. So, we need to traverse the Franca type and lookup a possible
-                // existing deployment for each found enum type.
-                //
-                val prop = properties.items.findFirst[decl.name == "SomeIpAttributeEndianess"]
-                if (prop !== null)
-                {
-                    val propVal = prop.enumeratorValue
-                    if (propVal !== null && propVal == "le")
-                        validateEnumBitDeployment(it, it.target?.type, it.overwrites)
-                }
-            ]
-        ]
-    }
-
-    private def void validateEnumBitDeployment(FDAttribute fdAttr, FTypeRef typeRef, FDTypeOverwrites overwrites)
-    {
-        val enumType = getEnum(typeRef)
-        if (enumType !== null)
-        {
-            var FDProperty propSomeIpEnumBitWidth = null
-
-            if (fdAttr.overwrites !== null)
-            {
-                val properties = getEnumOverwrites(fdAttr.overwrites, typeRef)
-                if (properties !== null)
-                    propSomeIpEnumBitWidth = properties.items.findFirst[decl.name == "SomeIpEnumBitWidth"]
-            }
-
-            if (propSomeIpEnumBitWidth === null && overwrites !== null)
-            {
-                val properties = getEnumOverwrites(overwrites, typeRef)
-                if (properties !== null)
-                    propSomeIpEnumBitWidth = properties.items.findFirst[decl.name == "SomeIpEnumBitWidth"]
-            }
-
-            if (propSomeIpEnumBitWidth === null)
-            {
-                val fdEnum = getEnumTypeDeployments(typeRef)
-                if (fdEnum?.properties !== null)
-                    propSomeIpEnumBitWidth = fdEnum.properties.items.findFirst[decl.name == "SomeIpEnumBitWidth"]
-            }
-
-            if (propSomeIpEnumBitWidth === null)
-            {
-                var diag = new FeatureBasedDiagnostic(Diagnostic.WARNING,
-                    "Missing bit deployment: Attribute \"" + getAttributeName(fdAttr) + "\" is declared as Little Endian, but the enumeration \"" + getFullTypeName(typeRef) + "\" used does not specify \"SomeIpEnumBitWidth\".",
-                    fdAttr, null, -1, null, null)
-                diagnostics.add(diag)
-            }
-        }
-        else
-        {
-            val compoundType = getCompound(typeRef)
-            if (compoundType !== null)
-            {
-                val typeDeployments = getCompoundTypeDeployments(typeRef)
-                compoundType.elements.forEach[element|
-                    var elementOverwrites = overwrites
-                    if (typeDeployments !== null)
-                    {
-                        val elementField = typeDeployments.fields.findFirst[target == element]
-                        if (elementField !== null)
-                            elementOverwrites = elementField.overwrites
-                    }
-                    validateEnumBitDeployment(fdAttr, element.type, elementOverwrites)
-                ]
-            }
         }
     }
 
@@ -1731,7 +1708,8 @@ class SomeIPDeploymentValidator
         for (idProps : methodIds.entrySet)
         {
             val props = idProps.value
-            if (props.size > 1)
+
+            if (verifyIdsValueAndName(props))
             {
                 for (prop : props)
                 {
@@ -1839,6 +1817,14 @@ class SomeIPDeploymentValidator
 
             if (notifierId !== null)
             {
+                if (attribute.target.isNoSubscriptions)
+                {
+                    var diag = new FeatureBasedDiagnostic(Diagnostic.WARNING,
+                       "Attribute \"" + getAttributeName(attribute) + "\" has a 'SomeIpNotifierID' specified and the 'NoSubscriptions' keyword.",
+                        attribute, FD_ATTRIBUTE__TARGET, -1, null, null)
+                    diagnostics.add(diag)
+                }
+
                 // 'SomeIpNotifierID = 0' is allowed, if the attribute is marked as 'noSubscriptions'
                 if (notifierId > 0 || (notifierId == 0 && attribute.target.isNoSubscriptions))
                     validNotifierId = true
@@ -2338,54 +2324,54 @@ class SomeIPDeploymentValidator
 //        return (intf.eContainer as FModel).name + "." + intf.name
 //    }
 
-    private def validateImports()
-    {
-        allFDepls.forEach[it.checkMissingDeploymentImports]
-    }
+    // private def validateImports()
+    // {
+    //     allFDepls.forEach[it.checkMissingDeploymentImports]
+    // }
 
-    private def checkMissingDeploymentImports(FDModel fdModel)
-    {
-        /*
-         * recursive flag
-         *  true    - recursively get the list of imported FDEPLs for the current FDEPL file
-         *          - recursively get the list of imported FIDLs for the current FDEPL file
-         *          - for each FIDL found (in any of the files), check if there is an expected FDEPL imported (in any of the files)
-         *
-         *  false   - get the list of imported FDEPLs only from the current FDEPL file
-         *          - get the list of imported FIDLs from the current FDEPL file and from the imports of the imported FIDLs (but not recursively)
-         *          - for each FIDL found, check if there is an expected FDEPL imported in the current FDEPL file
-         */
-        var recursive = false
+    // private def checkMissingDeploymentImports(FDModel fdModel)
+    // {
+    //     /*
+    //      * recursive flag
+    //      *  true    - recursively get the list of imported FDEPLs for the current FDEPL file
+    //      *          - recursively get the list of imported FIDLs for the current FDEPL file
+    //      *          - for each FIDL found (in any of the files), check if there is an expected FDEPL imported (in any of the files)
+    //      *
+    //      *  false   - get the list of imported FDEPLs only from the current FDEPL file
+    //      *          - get the list of imported FIDLs from the current FDEPL file and from the imports of the imported FIDLs (but not recursively)
+    //      *          - for each FIDL found, check if there is an expected FDEPL imported in the current FDEPL file
+    //      */
+    //     var recursive = false
 
-        if (!recursive)
-        {
-            // this version of the check does not make sense for the FDEPLs which contain 'provider' only. respectively
-            // the check make sense only for files which deploy an interface or a type collection.
-            if (fdModel.deployments.findFirst[(it instanceof FDInterface) || (it instanceof FDTypes)] === null)
-                return
-        }
+    //     if (!recursive)
+    //     {
+    //         // this version of the check does not make sense for the FDEPLs which contain 'provider' only. respectively
+    //         // the check make sense only for files which deploy an interface or a type collection.
+    //         if (fdModel.deployments.findFirst[(it instanceof FDInterface) || (it instanceof FDTypes)] === null)
+    //             return
+    //     }
 
-        var fdeplUris = getImportedFDepls(fdModel, recursive)
-        var fidlUris = getImportedFidlsUpToLevel2(fdModel, recursive)
-        val u = java.net.URI.create(fdModel.eResource.URI.toString).normalize.toString
-        for (fidl : fidlUris)
-        {
-            val correspondingFdeplImportSpec = java.net.URI.create(fidl.toString).normalize.toString.replaceFidlWithFDeplExtension
+    //     var fdeplUris = getImportedFDepls(fdModel, recursive)
+    //     var fidlUris = getImportedFidlsUpToLevel2(fdModel, recursive)
+    //     val u = java.net.URI.create(fdModel.eResource.URI.toString).normalize.toString
+    //     for (fidl : fidlUris)
+    //     {
+    //         val correspondingFdeplImportSpec = java.net.URI.create(fidl.toString).normalize.toString.replaceFidlWithFDeplExtension
 
-            // skip the FIDL which corresponds to the FDEPL which we are validating right now
-            if (!u.equals(correspondingFdeplImportSpec))
-            {
-                if (fdeplUris.findFirst[it.toString.equals(correspondingFdeplImportSpec)] === null)
-                {
-                    val fidlPath = getDisplayPath(fidl)
-                    var diag = new FeatureBasedDiagnostic(Diagnostic.WARNING,
-                        "Deployment references \"" + fidlPath + "\" without referencing expected deployment file \"" + fidlPath.replaceFidlWithFDeplExtension + "\".",
-                        fdModel, null, -1, null, null)
-                    diagnostics.add(diag)
-                }
-            }
-        }
-    }
+    //         // skip the FIDL which corresponds to the FDEPL which we are validating right now
+    //         if (!u.equals(correspondingFdeplImportSpec))
+    //         {
+    //             if (fdeplUris.findFirst[it.toString.equals(correspondingFdeplImportSpec)] === null)
+    //             {
+    //                 val fidlPath = getDisplayPath(fidl)
+    //                 var diag = new FeatureBasedDiagnostic(Diagnostic.WARNING,
+    //                     "Deployment references \"" + fidlPath + "\" without referencing expected deployment file \"" + fidlPath.replaceFidlWithFDeplExtension + "\".",
+    //                     fdModel, null, -1, null, null)
+    //                 diagnostics.add(diag)
+    //             }
+    //         }
+    //     }
+    // }
 
     private def validateProviderInstanceDeployments()
     {
@@ -2644,4 +2630,25 @@ class SomeIPDeploymentValidator
 //        return null
 //    }
 
+    /**
+     * Verify the value and name of each FDProperty
+     * Returns false if does not exist FDProperty parameters with the same value
+     * Returns false in case of two FDProperty parameters have the same value one being "SomeIpGetterID" and the other "SomeIpSetterID"
+     * Returns true for all other options which will generate an error
+     */
+    private def boolean verifyIdsValueAndName(ArrayList<FDProperty> props)
+    {
+        if (props.size <= 1)
+            return false
+        if (props.size == 2)
+        {
+            var firstProperValueFromList = props.get(0).decl.name
+            var secondProperValueFromList = props.get(1).decl.name
+            if (!firstProperValueFromList.equals(secondProperValueFromList) && !firstProperValueFromList.equals('SomeIpMethodID') && !secondProperValueFromList.equals('SomeIpMethodID'))
+            {
+                return false
+            }
+        }
+        return true
+    }
 }

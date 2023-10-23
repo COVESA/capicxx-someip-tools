@@ -5,7 +5,11 @@ IPC CommonAPI C++ SomeIP Tools
 
 Copyright
 +++++++++
-Copyright (C) 2015,2016 Bayerische Motoren Werke Aktiengesellschaft (BMW AG).
+Copyright (C) 2015-2023, Bayerische Motoren Werke Aktiengesellschaft (BMW AG).
+Copyright (C) 2015-2023, COVESA
+
+This file is part of COVESA Project IPC Common API C++.
+Contributions are licensed to the COVESA under one or more Contribution License Agreements or MPL 2.0.
 
 License
 +++++++
