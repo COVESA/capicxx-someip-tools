@@ -18,12 +18,12 @@ jobs:
       uses: actions/checkout@v3 
       with:
         repository: COVESA/capicxx-core-tools
-        path: '${{ github.workspace }}/capicxx-core-tools'
+        path: capicxx-core-tools
     - name: Set up JDK 8
       uses: actions/setup-java@v1
       with:
         java-version: 8
     - name: Build dependency
-      run: mvn -f ${{ github.workspace }}/capicxx-core-tools/org.genivi.commonapi.core.releng/pom.xml -D target.id=${{ github.workspace }}/capicxx-core-tools/org.genivi.commonapi.core.target clean verify
+      run: mvn -f capicxx-core-tools/org.genivi.commonapi.core.releng/pom.xml -D target.id=capicxx-core-tools/org.genivi.commonapi.core.target clean verify
     - name: Build project
-      run: mvn -D COREPATH=${{ github.workspace }}/capicxx-core-tools -f org.genivi.commonapi.someip.releng/pom.xml -D target.id=org.genivi.commonapi.someip.target clean verify
+      run: mvn -D COREPATH=capicxx-core-tools -f org.genivi.commonapi.someip.releng/pom.xml -D target.id=org.genivi.commonapi.someip.target clean verify
