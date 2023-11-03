@@ -24,6 +24,8 @@ jobs:
       with:
         java-version: 8
     - name: Build dependency
-      run: mvn -f capicxx-core-tools/org.genivi.commonapi.core.releng/pom.xml -D target.id=capicxx-core-tools/org.genivi.commonapi.core.target clean verify
+      run: mvn -f org.genivi.commonapi.core.releng/pom.xml -D target.id=org.genivi.commonapi.core.target clean verify
+      working-directory: capicxx-core-tools
+      
     - name: Build project
       run: mvn -D COREPATH=capicxx-core-tools -f org.genivi.commonapi.someip.releng/pom.xml -D target.id=org.genivi.commonapi.someip.target clean verify
