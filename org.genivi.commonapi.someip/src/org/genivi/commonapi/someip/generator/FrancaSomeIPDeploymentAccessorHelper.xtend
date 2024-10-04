@@ -1383,11 +1383,21 @@ class FrancaSomeIPDeploymentAccessorHelper {
 
         return false
     }
-    
+
     def boolean hasNonArrayDeployment(PropertyAccessor _accessor,
-                                      FTypedElement _attribute) {
-        if (_attribute.type.derived !== null
-            && _attribute.type.derived instanceof FMapType) {
+                                  FTypedElement _attribute, FTypeRef _type) {
+        if (_type.derived !== null
+            && _type.derived instanceof FTypeDef) {
+
+            val typedef = _attribute.type.derived as FTypeDef
+
+            if (predefinedTypeIsBasicType(typedef)) {
+                return _accessor.hasNonArrayDeployment(_attribute, typedef.actualType)
+            }
+        }
+
+        if (_type.derived !== null
+            && _type.derived instanceof FMapType) {
             if (hasSomeIpMapMinLength(_accessor, _attribute)) {
                 return true
             }
@@ -1399,8 +1409,8 @@ class FrancaSomeIPDeploymentAccessorHelper {
             }
         }
 
-        if (_attribute.type.predefined !== null
-            && _attribute.type.predefined == FBasicTypeId.BYTE_BUFFER) {
+        if (_type.predefined !== null
+            && _type.predefined == FBasicTypeId.BYTE_BUFFER) {
             if (hasSomeIpByteBufferMinLength(_accessor, _attribute)) {
                 return true
             }
@@ -1412,8 +1422,8 @@ class FrancaSomeIPDeploymentAccessorHelper {
             }
         }
 
-        if (_attribute.type.predefined !== null
-            && _attribute.type.predefined == FBasicTypeId.STRING) {
+        if (_type.predefined !== null
+            && _type.predefined == FBasicTypeId.STRING) {
             if (hasSomeIpStringLength (_accessor, _attribute)) {
                 return true
             }
@@ -1425,8 +1435,8 @@ class FrancaSomeIPDeploymentAccessorHelper {
             }
         }
 
-        if (_attribute.type.derived !== null
-            && _attribute.type.derived instanceof FStructType) {
+        if (_type.derived !== null
+            && _type.derived instanceof FStructType) {
             if (hasSomeIpStructLengthWidth (_accessor, _attribute)) {
                 return true
             }
@@ -1440,8 +1450,8 @@ class FrancaSomeIPDeploymentAccessorHelper {
             }
         }
 
-        if (_attribute.type.derived !== null
-            && _attribute.type.derived instanceof FUnionType) {
+        if (_type.derived !== null
+            && _type.derived instanceof FUnionType) {
             if (hasSomeIpUnionLengthWidth (_accessor, _attribute)) {
                 return true
             }
@@ -1454,7 +1464,7 @@ class FrancaSomeIPDeploymentAccessorHelper {
             if (hasSomeIpUnionMaxLength (_accessor, _attribute)) {
                 return true
             }
-            val union = _attribute.type.derived as FUnionType
+            val union = _type.derived as FUnionType
             if (_accessor.isProperOverwrite()) {
                 for (element : union.elements) {
                     if (_accessor.hasSpecificDeployment(element)) {
@@ -1464,8 +1474,8 @@ class FrancaSomeIPDeploymentAccessorHelper {
             }
         }
 
-        if (_attribute.type.derived !== null
-            && _attribute.type.derived instanceof FEnumerationType) {
+        if (_type.derived !== null
+            && _type.derived instanceof FEnumerationType) {
             if (hasSomeIpEnumWidth(_accessor, _attribute)) {
                 return true
             }
@@ -1477,15 +1487,15 @@ class FrancaSomeIPDeploymentAccessorHelper {
             }
         }
 
-        if (_attribute.type.predefined !== null
-            && (_attribute.type.predefined == FBasicTypeId.INT8
-                || _attribute.type.predefined == FBasicTypeId.INT16
-                || _attribute.type.predefined == FBasicTypeId.INT32
-                || _attribute.type.predefined == FBasicTypeId.INT64
-                || _attribute.type.predefined == FBasicTypeId.UINT8
-                || _attribute.type.predefined == FBasicTypeId.UINT16
-                || _attribute.type.predefined == FBasicTypeId.UINT32
-                || _attribute.type.predefined == FBasicTypeId.UINT64)) {
+        if (_type.predefined !== null
+            && (_type.predefined == FBasicTypeId.INT8
+                || _type.predefined == FBasicTypeId.INT16
+                || _type.predefined == FBasicTypeId.INT32
+                || _type.predefined == FBasicTypeId.INT64
+                || _type.predefined == FBasicTypeId.UINT8
+                || _type.predefined == FBasicTypeId.UINT16
+                || _type.predefined == FBasicTypeId.UINT32
+                || _type.predefined == FBasicTypeId.UINT64)) {
             if (hasSomeIpIntegerBitWidth (_accessor, _attribute)) {
                 return true
             }
@@ -1493,7 +1503,24 @@ class FrancaSomeIPDeploymentAccessorHelper {
                 return true
             }
         }
-
         return false
+    }
+
+    def boolean predefinedTypeIsBasicType(FTypeDef typedef) {
+        if (typedef.actualType.predefined == FBasicTypeId.BYTE_BUFFER
+            || typedef.actualType.predefined == FBasicTypeId.STRING
+            || typedef.actualType.predefined == FBasicTypeId.INT8
+            || typedef.actualType.predefined == FBasicTypeId.INT16
+            || typedef.actualType.predefined == FBasicTypeId.INT32
+            || typedef.actualType.predefined == FBasicTypeId.INT64
+            || typedef.actualType.predefined == FBasicTypeId.UINT8
+            || typedef.actualType.predefined == FBasicTypeId.UINT16
+            || typedef.actualType.predefined == FBasicTypeId.UINT32
+            || typedef.actualType.predefined == FBasicTypeId.UINT64) {
+            return true
+        }
+        else {
+            return false
+        }
     }
 }

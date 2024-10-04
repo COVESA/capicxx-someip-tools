@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: GENIVI CommonAPI Some/IP Deployment Validator
 Bundle-SymbolicName: org.genivi.commonapi.someip.deployment.validator;singleton:=true
-Bundle-Version: 3.2.14.qualifier
+Bundle-Version: 3.2.15.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Vendor: BMW AG
 Export-Package: org.genivi.commonapi.someip.deployment.validator
