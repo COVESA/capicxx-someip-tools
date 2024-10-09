@@ -1,0 +1,32 @@
+import "platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-4-SOMEIP_deployment_spec.fdepl"
+import "@COMMONAPI_TEST_FIDL_PATH@/ClientIdService.fidl"
+
+define org.genivi.commonapi.someip.deployment for interface commonapi.vsomeipsec.ClientIdService as TS {
+    SomeIpServiceID = 45525
+
+    attribute a {
+        SomeIpGetterID = 22
+        SomeIpSetterID = 11
+        SomeIpNotifierID = 32769
+        SomeIpNotifierEventGroups = { 1 }
+    }
+
+    broadcast b2 {
+        SomeIpEventID = 32881
+        SomeIpEventGroups = { 32881 }
+    }
+
+    method m {
+        SomeIpMethodID = 100
+    }
+
+}
+
+define org.genivi.commonapi.someip.deployment for provider as CIS_INSTANCE {
+
+    instance commonapi.vsomeipsec.ClientIdService as CIS_ONE {
+        InstanceId = "1"
+        SomeIpInstanceID = 1
+    }
+
+}

@@ -1,5 +1,11 @@
 Changes
 =======
+v3.2.15
+- Create verification test for noRead
+- Update gitignore and cleanup project
+- Add FTypeDef in hasNonArrayDeployment
+- Added workflow to build the project in Ubuntu, Windows, and macOS
+
 v3.2.14
 - Adapt StubAdapter to new ClientId interface
 

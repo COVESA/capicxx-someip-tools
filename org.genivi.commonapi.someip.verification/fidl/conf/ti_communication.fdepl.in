@@ -35,6 +35,21 @@ define org.genivi.commonapi.someip.deployment for interface commonapi.communicat
         SomeIpNotifierEventGroups = { 1 }
     }
 
+    attribute testE {
+        SomeIpSetterID = 3010
+        SomeIpNotifierID = 33003
+        SomeIpNotifierEventGroups = { 1 }
+    }
+
+    attribute testF {
+        SomeIpNotifierID = 33004
+        SomeIpNotifierEventGroups = { 1 }
+    }
+
+    attribute testG {
+        SomeIpSetterID = 3011
+    }
+
     method testMethod {
         SomeIpMethodID = 515
         SomeIpReliable = true

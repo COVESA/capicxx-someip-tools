@@ -184,7 +184,7 @@ class FInterfaceSomeIPDeploymentGenerator extends FTypeCollectionSomeIPDeploymen
     def protected dispatch String generateDeploymentDefinition(FAttribute _attribute, FInterface _interface, PropertyAccessor _accessor) {
         if (_accessor.hasSpecificDeployment(_attribute) || (_attribute.array && _accessor.hasDeployment(_attribute))) {
             var String definition = ""
-            if (_attribute.array && _accessor.hasNonArrayDeployment(_attribute)) {
+            if (_attribute.array && _accessor.hasNonArrayDeployment(_attribute, _attribute.type)) {
                 if (_attribute.type.derived !== null) {
                     definition += _attribute.type.derived.generateDeploymentParameterDefinitions(_interface, _accessor)
                 }
@@ -198,7 +198,7 @@ class FInterfaceSomeIPDeploymentGenerator extends FTypeCollectionSomeIPDeploymen
 		        }
             }
             definition += _attribute.getDeploymentType(_interface, true) + " " + _attribute.name + "Deployment("
-            if (_attribute.array && _accessor.hasNonArrayDeployment(_attribute)) {
+            if (_attribute.array && _accessor.hasNonArrayDeployment(_attribute, _attribute.type)) {
                 definition += "&" + _attribute.name + "ElementDeployment, "
                 definition += getArrayDeploymentParameter(_attribute.type, _attribute, _interface, _accessor)
             } else {
@@ -213,7 +213,7 @@ class FInterfaceSomeIPDeploymentGenerator extends FTypeCollectionSomeIPDeploymen
     def protected String generateDeploymentDefinition(FArgument _argument, FMethod _method, FInterface _interface, PropertyAccessor _accessor) {
         if (_accessor.hasSpecificDeployment(_argument) || (_argument.array && _accessor.hasDeployment(_argument))) {
             var String definition = ""
-            if (_argument.array && _accessor.hasNonArrayDeployment(_argument)) {
+            if (_argument.array && _accessor.hasNonArrayDeployment(_argument, _argument.type)) {
                 if (_argument.type.derived !== null) {
                     definition += _argument.type.derived.generateDeploymentParameterDefinitions(_interface, _accessor)
                 }
@@ -227,7 +227,7 @@ class FInterfaceSomeIPDeploymentGenerator extends FTypeCollectionSomeIPDeploymen
                  }
             }
             definition += _argument.getDeploymentType(_interface, true) + " " + _method.name + "_" + _argument.name + "Deployment("
-            if (_argument.array && _accessor.hasNonArrayDeployment(_argument)) {
+            if (_argument.array && _accessor.hasNonArrayDeployment(_argument, _argument.type)) {
                 definition += "&" + _method.name + "_" + _argument.name + "ElementDeployment, "
                 definition += getArrayDeploymentParameter(_argument.type, _argument, _interface, _accessor)
             } else {
@@ -241,7 +241,7 @@ class FInterfaceSomeIPDeploymentGenerator extends FTypeCollectionSomeIPDeploymen
     def protected String generateDeploymentDefinition(FArgument _argument, FBroadcast _broadcast, FInterface _interface, PropertyAccessor _accessor) {
         if (_accessor.hasSpecificDeployment(_argument) || (_argument.array && _accessor.hasDeployment(_argument))) {
             var String definition = ""
-            if (_argument.array && _accessor.hasNonArrayDeployment(_argument)) {
+            if (_argument.array && _accessor.hasNonArrayDeployment(_argument, _argument.type)) {
                 definition += _argument.type.getDeploymentType(_interface, true) + " " + _broadcast.name + "_" + _argument.name + "ElementDeployment("
                 definition += getDeploymentParameter(_argument.type, _argument, _interface, _accessor)
                 definition += ");\n";
@@ -252,7 +252,7 @@ class FInterfaceSomeIPDeploymentGenerator extends FTypeCollectionSomeIPDeploymen
 		        }
             }
             definition += _argument.getDeploymentType(_interface, true) + " " + _broadcast.name + "_" + _argument.name + "Deployment("
-            if (_argument.array && _accessor.hasNonArrayDeployment(_argument)) {
+            if (_argument.array && _accessor.hasNonArrayDeployment(_argument, _argument.type)) {
                 definition += "&" + _broadcast.name + "_" + _argument.name + "ElementDeployment, "
                 definition += getArrayDeploymentParameter(_argument.type, _argument, _interface, _accessor)
             } else {

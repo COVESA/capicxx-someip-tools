@@ -143,6 +143,8 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/fidl/conf/ti_stability_sp.fdepl.in
     "${CMAKE_CURRENT_SOURCE_DIR}/fidl/ti_stability_sp.fdepl" @ONLY)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/fidl/conf/ti_threading.fdepl.in
     "${CMAKE_CURRENT_SOURCE_DIR}/fidl/ti_threading.fdepl" @ONLY)
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/fidl/conf/ClientIdService.fdepl.in
+    "${CMAKE_CURRENT_SOURCE_DIR}/fidl/ClientIdService.fdepl" @ONLY)
 
 file(GLOB FDEPL_FILES "fidl/*.fdepl")
 list(REMOVE_ITEM FDEPL_FILES "${CMAKE_CURRENT_SOURCE_DIR}/fidl/ti_datatypes_deployment.fdepl")
@@ -211,6 +213,7 @@ file(GLOB GLUE_SRCS
     "${COMMONAPI_SRC_GEN_DEST}/v1/commonapi/runtime/*SomeIP*.cpp"
     "${COMMONAPI_SRC_GEN_DEST}/v1/commonapi/threading/*SomeIP*.cpp"
     "${COMMONAPI_SRC_GEN_DEST}/v1/commonapi/stability/sp/*SomeIP*.cpp"
+    "${COMMONAPI_SRC_GEN_DEST}/v1/commonapi/vsomeipsec/*SomeIP*.cpp"
     ${DERIVED_TYPE_SRC}
     ${POLYMORPHIC_TYPE_SRC}
 )

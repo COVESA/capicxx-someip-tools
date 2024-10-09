@@ -419,13 +419,13 @@ class FTypeCollectionSomeIPDeploymentGenerator {
                 accessorName = _accessor.name.substring(0, _accessor.name.length() - 1)
 
             definition += _field.type.generateDeploymentDefinition(_tc, _accessor)
-            if (_field.array && _accessor.hasNonArrayDeployment(_field)) {
+            if (_field.array && _accessor.hasNonArrayDeployment(_field, _field.type)) {
                 definition += _field.type.getDeploymentType(_tc, false) + " " + accessorName + "ElementDeployment("
                 definition += getDeploymentParameter(_field.type, _field, _tc, _accessor)
                 definition += ");\n";
             }
             definition += _field.getDeploymentType(_tc, true) + " " + accessorName + "Deployment("
-            if (_field.array && _accessor.hasNonArrayDeployment(_field)) {
+            if (_field.array && _accessor.hasNonArrayDeployment(_field, _field.type)) {
                 definition += "&" + accessorName + "ElementDeployment, "
                 definition += getArrayDeploymentParameter(_field.type, _field, _tc, _accessor)
             } else {
@@ -520,13 +520,13 @@ class FTypeCollectionSomeIPDeploymentGenerator {
             var String accessorName = _accessor.name
             if (_accessor.name.length > 0)
                 accessorName = _accessor.name.substring(0, _accessor.name.length() - 1)
-            if (_field.array && _accessor.hasNonArrayDeployment(_field)) {
+            if (_field.array && _accessor.hasNonArrayDeployment(_field, _field.type)) {
                 definition += _field.type.getDeploymentType(_tc, false) + " " + accessorName + "ElementDeployment("
                 definition += getDeploymentParameter(_field.type, _field, _tc, _accessor)
                 definition += ");\n";
             }
             definition += _field.getDeploymentType(_tc, true) + " " + accessorName + "Deployment("
-            if (_field.array && _accessor.hasNonArrayDeployment(_field)) {
+            if (_field.array && _accessor.hasNonArrayDeployment(_field, _field.type)) {
                 definition += "&" + accessorName + "ElementDeployment, "
                 definition += getArrayDeploymentParameter(_field.type, _field, _tc, _accessor)
             } else {

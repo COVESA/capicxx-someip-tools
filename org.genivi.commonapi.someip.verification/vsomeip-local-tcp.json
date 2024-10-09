@@ -1,0 +1,44 @@
+{
+  "unicast" : "127.0.0.1",
+  "logging":
+  {
+    "level": "debug",
+    "console": "true",
+    "file": { "enable": "false", "path": "/var/log/vsomeip.log" },
+    "dlt": "false"
+  },
+  "applications": [
+    {
+      "name": "service-sample",
+      "id": "0x1277"
+    },
+    {
+      "name": "client-sample",
+      "id": "0x1343"
+    }
+  ],
+  "routing": {
+    "host": {
+      "name": "service-sample",
+      "uid": "1000",
+      "gid": "1000",
+      "unicast": "127.0.0.1",
+      "port": "31490"
+    },
+    "guests": {
+      "unicast": "127.0.0.1",
+      "ports": [
+        {
+          "uid": "1000",
+          "gid": "1000",
+          "ranges": [
+            {
+              "first": 31400,
+              "last": 31489
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
