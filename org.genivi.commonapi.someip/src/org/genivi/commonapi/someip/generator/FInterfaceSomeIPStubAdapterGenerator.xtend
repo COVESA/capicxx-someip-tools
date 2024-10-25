@@ -639,16 +639,21 @@ class FInterfaceSomeIPStubAdapterGenerator {
         #include <CommonAPI/SomeIP/AddressTranslator.hpp>
 
         «endInternalCompilation»
+        
+        namespace {
+        
+        std::shared_ptr<CommonAPI::SomeIP::StubAdapter> create«_interface.someipStubAdapterClassName»(
+                       const CommonAPI::SomeIP::Address &_address,
+                       const std::shared_ptr<CommonAPI::SomeIP::ProxyConnection> &_connection,
+                       const std::shared_ptr<CommonAPI::StubBase> &_stub) {
+            return std::make_shared< «_interface.someipStubAdapterClassName»<«_interface.interfaceHierarchy»>>(_address, _connection, _stub);
+        }
+        
+        }
 
         «_interface.generateVersionNamespaceBegin»
         «_interface.model.generateNamespaceBeginDeclaration»
 
-        std::shared_ptr<CommonAPI::SomeIP::StubAdapter> create«_interface.someipStubAdapterClassName»(
-                           const CommonAPI::SomeIP::Address &_address,
-                           const std::shared_ptr<CommonAPI::SomeIP::ProxyConnection> &_connection,
-                           const std::shared_ptr<CommonAPI::StubBase> &_stub) {
-            return std::make_shared< «_interface.someipStubAdapterClassName»<«_interface.interfaceHierarchy»>>(_address, _connection, _stub);
-        }
 
         void initialize«_interface.someipStubAdapterClassName»() {
             «FOR p : providers»
